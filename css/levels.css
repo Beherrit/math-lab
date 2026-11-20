@@ -1,0 +1,117 @@
+/* Levels: the level bar on home, signed answers, placement, and the Grown-ups level rows. */
+.level-bar {
+  margin-bottom: 14px;
+}
+
+.lb-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-bottom: 8px;
+}
+
+.lb-head b {
+  font-family: var(--font-num);
+  font-size: 22px;
+  color: var(--grape);
+}
+
+.lb-head span {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.lvl-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 6px;
+}
+
+.lvl-chip {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font-num);
+  font-size: 20px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lvl-chip.on {
+  background: var(--grape);
+  border-color: var(--grape);
+  color: #fff;
+}
+
+.lvl-chip.locked {
+  opacity: .55;
+  color: var(--ink-2);
+}
+
+.lvl-chip .ic {
+  width: 18px;
+  height: 18px;
+}
+
+.empty-level {
+  margin-bottom: 10px;
+}
+
+.empty-level p {
+  margin: 0;
+}
+
+/* signed answers */
+.keypad.signed .key.check {
+  grid-column: span 2;
+}
+
+.ans.frac .fneg {
+  font-family: var(--font-num);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--line);
+  align-self: center;
+  margin-right: 6px;
+}
+
+.ans.frac .fneg.on {
+  color: var(--ink);
+}
+
+sup {
+  font-size: .6em;
+  line-height: 0;
+}
+
+.sline .dot.good {
+  fill: var(--good);
+}
+
+.sline .dot.mine {
+  fill: var(--grape);
+}
+
+/* placement feedback: neutral, never red */
+.fb.soft {
+  color: var(--ink-2);
+}
+
+/* Grown-ups */
+.lrow.cur {
+  border-color: var(--grape);
+}
+
+.parent .grp {
+  margin: 12px 0 6px;
+  font-size: 15px;
+  color: var(--ink-2);
+}

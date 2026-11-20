@@ -1,0 +1,257 @@
+.pad {
+  position: sticky;
+  bottom: 0;
+  padding: 10px 12px calc(12px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter: blur(6px);
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+}
+
+.key {
+  min-height: 56px;
+  border-radius: 14px;
+  border: 0;
+  background: var(--key);
+  box-shadow: 0 3px 0 var(--key-edge),inset 0 0 0 1.5px var(--line);
+  font-family: var(--font-num);
+  font-size: 28px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  touch-action: manipulation;
+}
+
+.key:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--key-edge),inset 0 0 0 1.5px var(--line);
+}
+
+.key.fn {
+  font-size: 15px;
+  font-family: var(--font);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.key .ic {
+  width: 26px;
+  height: 26px;
+}
+
+.key.check {
+  grid-column: 1 / -1;
+  background: var(--grape);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--grape-2);
+  font-size: 22px;
+}
+
+.choices {
+  display: grid;
+  gap: 8px;
+}
+
+.choices.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.choices.big {
+  grid-template-columns: repeat(3,1fr);
+}
+
+.choices.big .choice {
+  font-size: 36px;
+  min-height: 72px;
+  font-family: var(--font-num);
+}
+
+.choices.big:has(.choice:nth-child(2):last-child) {
+  grid-template-columns: 1fr 1fr;
+}
+
+.choice {
+  min-height: 56px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 0;
+  background: var(--key);
+  box-shadow: 0 3px 0 var(--key-edge),inset 0 0 0 1.5px var(--line);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.25;
+  touch-action: manipulation;
+}
+
+.choice:active {
+  transform: translateY(2px);
+}
+
+.choice.ok {
+  background: var(--good-hi);
+  box-shadow: 0 3px 0 var(--good),inset 0 0 0 2px var(--good);
+}
+
+.choice.nope {
+  background: var(--bad-hi);
+  opacity: .7;
+  text-decoration: line-through;
+}
+
+.pad .btn.big + .btn.big {
+  margin-top: 8px;
+}
+
+.sheet {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,20,40,.45);
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.sheet.in {
+  opacity: 1;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sheet-card {
+  background: var(--card);
+  width: 100%;
+  max-width: 560px;
+  max-height: 88dvh;
+  overflow-y: auto;
+  border-radius: 24px 24px 0 0;
+  padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+  transform: translateY(30px);
+  transition: transform .25s;
+}
+
+.sheet.in .sheet-card {
+  transform: none;
+}
+
+.sheet-card.center {
+  text-align: center;
+  border-radius: 24px;
+  margin: auto 16px;
+}
+
+.sheet-card.center .btn.big {
+  margin: 8px 0;
+}
+
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.sheet-ans {
+  font-size: 20px;
+}
+
+.sheet-card>.btn.big {
+  margin-top: 14px;
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin: 4px 0 8px;
+  scrollbar-width: none;
+}
+
+.tab {
+  flex: none;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.tab.on {
+  background: var(--grape);
+  color: #fff;
+  border-color: var(--grape);
+}
+
+.way {
+  display: none;
+}
+
+.way.on {
+  display: block;
+}
+
+.steps {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  counter-reset: st;
+}
+
+.steps li {
+  counter-increment: st;
+  position: relative;
+  padding: 10px 0 10px 40px;
+  border-bottom: 1.5px dashed var(--line);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.steps li:last-child {
+  border-bottom: 0;
+}
+
+.steps li::before {
+  content: counter(st);
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--grape-soft);
+  color: var(--grape);
+  font-family: var(--font-num);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+.steps b {
+  background: var(--hi-soft);
+  padding: 0 3px;
+  border-radius: 3px;
+}
+
+.steps .line {
+  font-family: var(--font-num);
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.steps .viz,.steps table,.steps pre {
+  margin-top: 8px;
+}

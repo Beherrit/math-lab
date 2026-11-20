@@ -1,0 +1,193 @@
+.viz {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.viz text {
+  font-family: var(--font);
+  fill: var(--ink);
+}
+
+.viz .lbl {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.viz .lbl.dim {
+  fill: var(--ink-2);
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.viz .lbl.strong {
+  fill: var(--grape);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fbar rect {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.fbar rect.on {
+  fill: var(--fbar-on);
+}
+
+.fbar rect.off {
+  fill: var(--fbar-off);
+}
+
+.nline .axis,.lplot .axis {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+.nline .tick,.lplot .tick {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.nline .dot {
+  fill: var(--bad);
+}
+
+.lplot .tk {
+  font-size: 12px;
+  fill: var(--ink-2);
+  font-weight: 600;
+}
+
+.lplot .xm {
+  font-size: 15px;
+  fill: var(--grape);
+  font-weight: 700;
+}
+
+.prism .front {
+  fill: #c9bdff;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.prism .top {
+  fill: #e6e0ff;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.prism .side {
+  fill: #a796f5;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.prism .grid line {
+  stroke: var(--ink);
+  stroke-width: 1;
+  opacity: .55;
+}
+
+.prism .lbl {
+  font-size: 14px;
+}
+
+.plane .gl {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.plane .ax {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+.plane .tk {
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+
+.plane .axn {
+  font-size: 15px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.plane .pt {
+  fill: var(--grape);
+}
+
+.plane .pt.given {
+  fill: var(--ink-2);
+}
+
+.plane .ptl {
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--grape);
+}
+
+.plane .path {
+  stroke: var(--grape);
+  stroke-width: 3;
+  stroke-dasharray: 6 5;
+  fill: none;
+}
+
+.plane.tap {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.plane .guide {
+  stroke: var(--grape);
+  stroke-dasharray: 4 4;
+  stroke-width: 1.5;
+}
+
+.plane .mine {
+  fill: var(--hi);
+  stroke: var(--grape);
+  stroke-width: 3;
+}
+
+.plane .mine.ok {
+  fill: var(--good-hi);
+  stroke: var(--good);
+}
+
+.farea rect {
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.farea .off {
+  fill: var(--card);
+}
+
+.farea .rowon {
+  fill: #d7cfff;
+}
+
+.farea .colon {
+  fill: #ffe9a3;
+}
+
+.farea .both {
+  fill: #6a4ff0;
+}
+
+.shape .body {
+  fill: #e6e0ff;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.shape .mark {
+  stroke: var(--bad);
+  stroke-width: 2.2;
+  fill: none;
+}

@@ -1,0 +1,5 @@
+tests/
+tools/
+package.json
+CLAUDE.md
+.gitignore

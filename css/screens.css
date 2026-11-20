@@ -1,0 +1,60 @@
+.intro .intro-card,.sum-card {
+  text-align: center;
+  margin-top: 8vh;
+  padding: 28px 20px;
+}
+
+.intro-card h1 {
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+.intro-card p {
+  font-size: 18px;
+}
+
+.intro-card .btn {
+  margin-top: 12px;
+}
+
+.so-far {
+  color: #b88900;
+  font-weight: 600;
+}
+
+.huge {
+  font-family: var(--font-num);
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1;
+  margin: 18px 0 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: var(--grape);
+}
+
+.huge .ic {
+  color: #f4b400;
+}
+
+.sum-list {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0;
+  text-align: left;
+}
+
+.sum-list li {
+  padding: 10px 0;
+  border-bottom: 1.5px dashed var(--line);
+}
+
+.new-stickers {
+  margin: 6px 0 18px;
+}
+
+.new-stickers .stickers {
+  justify-content: center;
+}

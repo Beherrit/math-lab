@@ -1,0 +1,267 @@
+.welcome {
+  text-align: center;
+  padding-top: 12vh;
+}
+
+.logo-big .logo {
+  width: 96px;
+  height: 96px;
+}
+
+.welcome h1 {
+  font-size: 52px;
+  margin: 12px 0 8px;
+}
+
+.lead {
+  font-size: 18px;
+  color: var(--ink-2);
+  max-width: 30ch;
+  margin: 0 auto 28px;
+}
+
+.name-form {
+  display: grid;
+  gap: 12px;
+  max-width: 360px;
+  margin: 0 auto 20px;
+  text-align: left;
+}
+
+.name-form label {
+  font-weight: 600;
+}
+
+.name-form input,.set input,.set select {
+  font: inherit;
+  font-size: 20px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 2px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+}
+
+.fine {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.hello {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.date {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  font-family: var(--font-num);
+  font-size: 18px;
+}
+
+.chip.flame .ic {
+  color: #ff7a1a;
+}
+
+.chip.starc .ic {
+  color: #f4b400;
+}
+
+.today h2 {
+  margin: 18px 0 8px;
+  font-size: 26px;
+}
+
+.done-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--good);
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  gap: 6px;
+}
+
+.day {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.day .dn {
+  font-size: 12px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.day .stamp {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px dashed var(--line);
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+
+.day.today .stamp {
+  border-color: var(--grape);
+  border-style: solid;
+}
+
+.day.some .stamp {
+  background: var(--hi-soft);
+  border-style: solid;
+  border-color: var(--hi);
+}
+
+.day.done .stamp {
+  background: var(--grape);
+  border: 0;
+  transform: rotate(-8deg);
+}
+
+.day.done .stamp .ic {
+  width: 20px;
+  height: 20px;
+  color: var(--hi);
+}
+
+.plan {
+  list-style: none;
+  counter-reset: s;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.plan li {
+  counter-increment: s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1.5px dashed var(--line);
+  flex-wrap: wrap;
+}
+
+.plan li::before {
+  content: counter(s);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--grape-soft);
+  color: var(--grape);
+  font-family: var(--font-num);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.plan li b {
+  flex: 1;
+  min-width: 0;
+}
+
+.plan li span {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.plan li .link {
+  font-size: 14px;
+  padding: 0;
+}
+
+.block {
+  margin-top: 26px;
+}
+
+.block-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.tt-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.tt-text b {
+  font-family: var(--font-num);
+  font-size: 26px;
+}
+
+.mini {
+  display: grid;
+  grid-template-columns: repeat(12,7px);
+  gap: 1.5px;
+  flex: none;
+}
+
+.mini i {
+  width: 7px;
+  height: 7px;
+  border-radius: 1.5px;
+}
+
+.mx,.gc.mx,.mini .mx {
+  background: var(--m-x);
+}
+
+.m0 {
+  background: var(--m0);
+}
+
+.m1 {
+  background: var(--m1);
+}
+
+.m2 {
+  background: var(--m2);
+}
+
+.m3 {
+  background: var(--m3);
+}
+
+.m4 {
+  background: var(--m4);
+}
+
+.m5 {
+  background: var(--m5);
+}

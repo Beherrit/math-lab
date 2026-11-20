@@ -1,4 +1,4 @@
-import { rnd, pick, chance, gcd, lcm, simp, F, M, fr, b, k, way, nm, num, frac, choice, fracBar, fracArea } from './util.js';
+import { rnd, pick, chance, gcd, lcm, simp, F, M, fr, b, k, way, nm, num, frac, choice, fracBar, fracArea } from '../../util.js';
 const cn = d => { let n; do { n = rnd(1, d - 1); } while (gcd(n, d) !== 1); return n; };
 const improperOf = (w, n, d) => w * d + n;
 const mixedHTML = (w, n, d) => M(w, n, d);

@@ -1,0 +1,38 @@
+@media (min-width: 600px) {
+  .play .qarea {
+    padding-top: 24px;
+  }
+  .grid12 .gc {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  h1 {
+    font-size: 28px;
+  }
+  .key {
+    min-height: 50px;
+  }
+  .stat-row b {
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.ans.no .val,.ans.no.pt {
+  border-color: var(--bad);
+  color: var(--bad);
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+}
+
+.qcard.has-story .ask {
+  margin-top: 10px;
+}

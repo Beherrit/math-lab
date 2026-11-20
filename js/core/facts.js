@@ -1,4 +1,4 @@
-import { way, b } from './util.js';
+import { way, b } from '../util.js';
 export const START = [1, 2, 5, 10];
 export const NEXT = [3, 4, 9, 11, 6, 8, 7, 12];
 export const fkey = (a, c) => a <= c ? `${a}x${c}` : `${c}x${a}`;

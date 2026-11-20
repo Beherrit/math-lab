@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "name": "Maya",
+  "created": "2026-10-01",
+  "settings": { "minutes": 15, "gradual": true, "off": { "shapes": true }, "focus": "auto" },
+  "facts": { "2x3": { "b": 4, "n": 9, "c": 8, "t": 2100 }, "7x8": { "b": 1, "n": 3, "c": 1, "t": 6000 } },
+  "unlocked": [1, 2, 5, 10, 3],
+  "skills": {
+    "oa": { "L": 3, "run": 0, "miss": 0, "hist": [true, true, true, true, true, true, true, true], "n": 40, "c": 33, "last": "2026-11-10", "mastered": true },
+    "pv": { "L": 2, "run": 3, "miss": 0, "hist": [], "n": 12, "c": 9, "last": "2026-11-12", "mastered": false }
+  },
+  "days": { "2026-11-10": { "ms": 600000, "q": 40, "c": 31, "done": true } },
+  "stars": 143,
+  "streak": { "n": 4, "last": "2026-11-10" },
+  "badges": ["first", "streak3", "stars100"],
+  "focusLog": [{ "d": "2026-11-10", "id": "pv" }],
+  "counters": { "story": 6, "sprintBest": 14 },
+  "todayFocus": { "d": "2026-11-10", "id": "pv" }
+}
