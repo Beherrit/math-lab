@@ -121,6 +121,12 @@ export function noPluralOfOne(p, where) {
   }
 }
 
+// ---- no "1x", "0x", "+ -3" or invented "+ 0" terms anywhere a child can read ----
+const ODD_TERMS = /(?<![\d.\w])[01](?=[a-z]\b)|[+] [−-]\d|[+−-] 0(?![.\d%])/;
+export function noOddTerms(p, where) {
+  for (const s of shownStrings(p)) assert.doesNotMatch(s, ODD_TERMS, `${where}: odd term in: ${s}`);
+}
+
 // ---- fixed facts, written here on their own: question text -> the correct choice ----
 export const FACTS = {
   ...FACTS_NEW,

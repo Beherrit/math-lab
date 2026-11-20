@@ -27,13 +27,13 @@ function pickCalcQ(x) {
 }
 // "Sam stopped after the first step and said ..." What is the answer to the whole problem?
 function stoppedQ(x) {
-  return { story: `${x.row[0]} ${nm()} stopped after the first step and says the answer is ${f(x.first)}.`, ask: 'What is the correct answer to the whole problem?', answer: num(x.ans), suffix: x.row[5], _t: tOf(x.type, x.v), hint: 'Step 1 is only the first part. What does the story still ask for?',
+  return { story: `${x.row[0]} ${nm()} stopped after the first step and says the answer is ${f(x.first)}.`, ask: 'What is the correct answer to the whole problem?', answer: num(x.ans), suffix: x.row[5], _t: tOf(x.type, x.v), hint: 'The first step is only the first part. What does the story still ask for?',
     ways: [way('Find the slip', [`${f(x.first)} is the answer to Step 1 only.`, `Step 2 still has to be done: ${x.s2}`]), ...stepWays(x)] };
 }
 // Which answer is reasonable? Round the numbers, estimate, and pick the one that is close. The slips are far out.
 function reasonQ(x) {
   const [text, est] = x.T.est(x.v), slips = [x.ans * 2, x.ans * 10, Math.round(x.ans / 2), x.ans + 100].filter(w => w > 0 && Math.abs(w - x.ans) / x.ans >= 0.4);
-  return { story: `${x.row[0]} ${x.row[1]}`, ask: 'Estimate first by rounding the numbers. Which answer is reasonable?', answer: numChoice(x.ans, slips), choiceBig: true, _t: tOf(x.type, x.v), hint: 'Round each number to a friendly one, then do the two steps with those.',
+  return { story: `${x.row[0]} ${x.row[1]}`, ask: 'Estimate first by rounding the numbers. Which answer is reasonable?', answer: numChoice(x.ans, slips), choiceBig: true, _t: { f: 'reasonable', type: x.type, ...x.v }, hint: 'Round each number to a friendly one, then do the two steps with those.',
     ways: [way('Estimate, then pick', [`Round to friendly numbers: ${text}.`, `${text} = ${f(est)}.`, `Only ${b(f(x.ans))} is close to ${f(est)}.`]), way('Work it out exactly', [x.s1, x.s2])] };
 }
 const MAKERS = { full: fullQ, first: firstStepQ, calc: pickCalcQ, stopped: stoppedQ, reason: reasonQ };

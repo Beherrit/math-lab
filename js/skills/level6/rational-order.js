@@ -79,7 +79,7 @@ const SEQ = [
 function sequence() {
   for (;;) {
     const sc = pick(SEQ), s = sc.whole ? nz(-40, 40) : tenths(-9, 9), r = sc.whole ? rnd(2, 9) : pick([0.5, 1.5, 2, 2.5, 3.5, 4]), h = rnd(2, 5), adj = sc.whole ? rnd(2, 30) : rnd(1, 9), d1 = chance(0.5) ? 1 : -1, d2 = chance(0.5) ? 1 : -1, val = R(s + d1 * r * h + d2 * adj);
-    if (Math.abs(val) > 60 || !Number.isInteger(R(val * 100))) continue;
+    if (Math.abs(val) > 60 || !Number.isInteger(R(val * 100)) || R(s + d1 * r * h) === 0 || R(d1 * r * h + d2 * adj) === 0) continue;
     return tag({ story: `${sc.start(s)} ${(d1 > 0 ? sc.up : sc.down)(r, h)} ${(d2 > 0 ? sc.up2 : sc.down2)(adj)}`, ask: sc.ask, answer: snum(val), op: 'multi',
       ways: [way('One step at a time', [`The ${h} equal changes: ${fmt(r)} × ${h} = ${fmt(R(r * h))}.`, `Start ${fmt(s)}, then ${d1 > 0 ? '+' : '−'} ${fmt(R(r * h))} = ${fmt(R(s + d1 * r * h))}.`, `Then ${d2 > 0 ? '+' : '−'} ${fmt(adj)} = ${b(fmt(val))}`]),
         way('Add the changes first', [`Net change: ${d1 > 0 ? '' : '−'}${fmt(R(r * h))} ${d2 > 0 ? '+' : '−'} ${fmt(adj)} = ${fmt(R(d1 * r * h + d2 * adj))}.`, `${fmt(s)} + ${par(R(d1 * r * h + d2 * adj))} = ${b(fmt(val))}`])],

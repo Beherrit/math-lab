@@ -97,4 +97,4 @@ function story(L) {
 }
 const SHAPES = { 1: [() => pickNumber(1), () => yesNo(1), () => inequality(1), () => story(1), () => whichEquation(1)], 2: [() => pickNumber(2), () => yesNo(2), () => inequality(2), () => inequality(2, true), () => whichEquation(2), () => story(2)], 3: [() => pickNumber(3), () => inequality(3, true), () => story(3), yesNoIneq, () => whichEquation(3), () => inequality(3)] };
 export const genSolution = L => pick(SHAPES[L])();
-export const solutionWord = () => story(2);
+export const solutionWord = L => story(L === 1 ? 1 : 2);

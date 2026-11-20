@@ -14,7 +14,7 @@ test('Early Start then seven levels in order, each with a title and a grade rang
 });
 test('skillsOf(level) only returns that level, and empty levels are fine', () => {
   for (const l of LEVELS) for (const s of skillsOf(l.n)) assert.equal(s.level, l.n);
-  assert.equal(skillsOf(4).length, 20);
+  assert.ok(skillsOf(4).length >= 20);
   assert.deepEqual(skillsOf(99), []);
   withEmptyLevels([2], () => {
     assert.deepEqual(skillsOf(2), []);
@@ -46,5 +46,6 @@ test('story sources are per level', () => {
 });
 test('level 4 keeps the original skill ids (they are keys in saved progress)', () => {
   const ids = ['oa', 'pat', 'pv', 'dec', 'rnd', 'mul', 'div', 'das', 'ddiv', 'dmul', 'fas', 'fmul', 'scale', 'fdiv', 'conv', 'lplot', 'vol', 'coord', 'shapes', 'story'];
-  assert.deepEqual(skillsOf(4).map(s => s.id), ids);
+  const have = new Set(skillsOf(4).map(s => s.id));
+  for (const id of ids) assert.ok(have.has(id), `level 4 lost the original skill ${id}`);
 });

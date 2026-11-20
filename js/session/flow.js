@@ -16,6 +16,7 @@ import { finish, bankTime } from './summary.js';
 import { dayResult } from './extra-run.js';
 import { extraNext } from '../core/extra.js';
 import { phaseIntro } from './intro.js';
+import { speechCap, speechUsable } from '../core/speech-gate.js';
 function makeFactProblem(table) {
 const due = sess.retry.findIndex(r => r.at <= sess.n);
 const key = FX.pickFact(S, sess.recentFacts, table, due >= 0 ? [sess.retry.splice(due, 1)[0].key] : []);
@@ -34,7 +35,7 @@ if (sess.mode === 'extra') bankTime();
 const type = sess.mode === 'place' ? 'place' : mix ? mix.id : ph.type;
 if (type === 'place') { q = placementQuestion(); if (!q) return; }
 else if (type === 'facts') q = makeFactProblem(ph.table);
-else { const id = type === 'skill' ? ph.skill : type; q = id ? generate(id, skillState(S, id).L, sess.avoid) : null; }
+else { const id = type === 'skill' ? ph.skill : type; q = id ? generate(id, speechCap(id, skillState(S, id).L, speechUsable(S)), sess.avoid) : null; }
 if (!q) q = makeFactProblem();
 if (mix?.review && q.skill === mix.id) q.review = true;
 sess.avoid.add(q.key || q.expr); if (sess.avoid.size > 40) sess.avoid = new Set([...sess.avoid].slice(-30));

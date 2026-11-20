@@ -4,7 +4,7 @@ import { skips, rep } from './words.js';
 import { hops } from './arith.js';
 import { near } from './kit.js';
 
-const pay = p => pick([20, 50, 100, 200, 300, 500].filter(x => x > p + 4));
+const pay = p => pick([20, 50, 100, 200, 300, 500].filter(x => x > p + 4).slice(0, 2));
 const S = (a, r) => [`Step 1: ${a}`, `Step 2: ${r}`];
 // vars(L): the numbers; ans, s1: answer and first-step value; expr: the whole thing as one line; steps and alt: two ways.
 export const TYPES = {

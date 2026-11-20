@@ -27,8 +27,8 @@ export const CALC_NEW = {
   perimarea: t => 2 * (t.w + even(t.area, t.w)),
 };
 // The largest number a learner should meet at each step (operands and answer).
-export const LIMIT_NEW = { l2add1000: [900, 1000, 1000], l2patterns: [100, 150, 150], l2props: [100, 300, 500], l2divfacts: [45, 81, 144], l2twostep: [90, 300, 500], l2equiv: [16, 16, 16],
-  l2clock: [60, 99, 240], l2massvol: [1000, 3000, 6000], l2graphs: [40, 200, 200], l2measure: [30, 30, 30], l2tiling: [40, 100, 150], l2quads: [4, 4, 4] };
+export const LIMIT_NEW = { l2add1000: [900, 1000, 1000], l2patterns: [90, 90, 144], l2props: [100, 300, 500], l2divfacts: [45, 81, 144], l2twostep: [100, 450, 800], l2equiv: [16, 48, 48],
+  l2clock: [60, 99, 240], l2massvol: [1000, 3000, 6000], l2graphs: [40, 200, 200], l2measure: [10, 20, 20], l2tiling: [40, 130, 150], l2quads: [4, 4, 4] };
 
 // Reference facts the question checks use (typed here, not imported from the generators).
 export const HAS = { square: ['equal', 'square', 'two'], rectangle: ['unequal', 'square', 'two'], rhombus: ['equal', 'none', 'two'], parallelogram: ['unequal', 'none', 'two'], trapezoid: ['unequal', 'none', 'one'] };

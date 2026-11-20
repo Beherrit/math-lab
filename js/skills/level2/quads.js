@@ -7,7 +7,7 @@ import { RULEOUT, DEF, COUNTER, ATTR, needText } from './quadfacts.js';
 // What is this shape called? The most exact name: a square is a rectangle too, but "square" says more.
 function nameQ(kind, pool) {
   const pts = shapePoints(kind), pic = shapeSvg(pts), others = shuffle(pool.filter(k => k !== kind)).slice(0, 3);
-  return { ask: mark('What is the most exact name for this shape?', kind, pts[0].join(',')), visual: pic, answer: choice(kind, others), choiceBig: true, _t: { f: 'shapename', pic: true }, hint: 'Count the equal sides and the square corners. Then check for sides that are parallel (always the same distance apart).',
+  return { ask: mark('What is the most exact name for this shape?', kind, pts[0].join(',')), visual: pic, answer: choice(kind, others), choiceBig: true, _t: { f: 'shapename', pic: true }, hint: 'Count the equal sides and the corners that are like the corner of a page. Then check for sides that are parallel (always the same distance apart).',
     ways: [way('Check the sides and corners', [pic, RULEOUT[kind], `So it is a ${b(kind)}.`]), way('Rule out the others', [...others.map(k => `Not a ${k}: ${RULEOUT[k]} This shape does not match.`), `That leaves ${b(kind)}.`])] };
 }
 // "I have four equal sides and no square corners. What shape am I?" Each description fits exactly one of the choices.

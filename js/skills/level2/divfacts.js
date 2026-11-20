@@ -67,7 +67,7 @@ const two = (lo, hi, lo2, hi2) => { const d = rnd(lo, hi); return [d * rnd(lo2, 
 export function genDivFacts(L) {
   const [lo, hi, qlo, qhi] = L === 1 ? [2, 5, 2, 9] : L === 2 ? [3, 9, 3, 9] : [6, 12, 4, 12], [t, d] = two(lo, hi, qlo, qhi), n = rnd(L === 1 ? 2 : 4, L === 3 ? 12 : 9);
   const pool = L === 1 ? [() => unknownQ(t, d), () => specialQ(pick(['one', 'self', 'zero']), n), () => helpsQ(t, d), () => nearQ(d, rnd(2, 8), pick(['plus', 'minus'])), () => storyQ(t, d), () => missingQ(t, d)]
-    : L === 2 ? [() => unknownQ(t, d), () => specialQ(pick(['one', 'self', 'zero']), n), () => sayQ(n, pick([true, false])), () => noAnswerQ(n), () => (coin() ? nearQ(d, rnd(3, 8), pick(['plus', 'minus'])) : nearQ(rnd(3, 9), rnd(2, 5), 'double')), () => helpsQ(t, d), () => missingQ(t, d), () => storyQ(t, d)]
+    : L === 2 ? [() => unknownQ(t, d), () => specialQ(pick(['one', 'self', 'zero']), n), () => sayQ(n, pick([true, false])), () => noAnswerQ(n), () => (coin() ? nearQ(d, rnd(3, 8), pick(['plus', 'minus'])) : nearQ(rnd(3, 9), rnd(2, 4), 'double')), () => helpsQ(t, d), () => missingQ(t, d), () => storyQ(t, d)]
       : [() => unknownQ(t, d), () => (coin() ? nearQ(rnd(3, 12), 2 * rnd(2, 6), 'half') : nearQ(d, rnd(3, 11), pick(['plus', 'minus']))), () => missingQ(t, d), () => noAnswerQ(n), () => sayQ(n, pick([true, false])), () => helpsQ(t, d), () => storyQ(t, d)];
   return pick(pool)();
 }

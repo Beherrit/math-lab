@@ -12,7 +12,7 @@ const join = xs => xs.join(' × ');
 function arrange(r, [p, q]) { return pick([[p, r, q], [q, r, p]]); }
 function threeQ(r, pair, ask) {
   const [x, y, z] = arrange(r, pair), tot = x * y * z, fr = x * z;
-  return { ask, expr: join([x, y, z]), answer: num(tot), _t: { f: 'prod', xs: [x, y, z] }, hint: 'Look for two numbers that make an easy product, like 10 or 20, and multiply those first.',
+  return { ask, expr: join([x, y, z]), answer: num(tot), _t: { f: 'prod', xs: [x, y, z] }, hint: 'Look for two numbers that make an easy product, such as a round number of tens, and multiply those first.',
     ways: [way('Group the friendly pair', [`${x} × ${z} = ${fr} is easy, and you can multiply in any order.`, `${fr} × ${y} = ${b(tot)}.`]), way('Left to right', [`${x} × ${y} = ${x * y}.`, `${x * y} × ${z} = ${b(tot)}.`])] };
 }
 // Side by side rectangles: a x n = a x s + a x t.

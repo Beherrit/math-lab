@@ -55,6 +55,17 @@ export const RULES_B = {
   slicearea: t => ({ num: area(t) }), pyrcut: t => ({ num: (t.s * (t.h - t.y) / t.h) ** 2 }),
   sliceperim: t => { const sides = t.solid === 'box' ? { top: [t.l, t.d], front: [t.l, t.h], side: [t.d, t.h] }[t.cut] : t.cut === 'floor' ? [t.w / 2, t.d] : [t.h, t.d]; return { num: 2 * (sides[0] + sides[1]) }; },
   slicecmp: (t, p) => ({ label: area({ ...t, solid: 'box', cut: t.cuts[0] }) > area({ ...t, solid: 'box', cut: t.cuts[1] }) ? 'Cut A' : 'Cut B', ok: area({ ...t, solid: 'box', cut: t.cuts[0] }) !== area({ ...t, solid: 'box', cut: t.cuts[1] }) }),
+  cbFromA: t => ({ num: Math.sqrt(t.A / t.pi) * (t.wantD ? 2 : 1) }), cbAfromC: t => ({ num: t.pi * (t.C / (2 * t.pi)) ** 2 }), cbCfromA: t => ({ num: 2 * t.pi * Math.sqrt(t.A / t.pi) }),
+  semirect: t => ({ num: t.w * t.d + 0.5 * t.pi * (t.d / 2) ** 2 }), hole: t => ({ num: t.s * t.s - t.pi * t.r * t.r }), stadium: t => ({ num: t.w * t.d + t.pi * (t.d / 2) ** 2 }),
+  trackperim: t => ({ num: 2 * t.w + t.pi * t.d }), ring: t => ({ num: t.pi * (t.Rr * t.Rr - t.r * t.r) }), winperim: t => ({ num: 2 * t.h + t.pi * t.w / 2 }),
+  bigger: t => ({ label: `The sample of ${Math.max(t.a, t.c)}` }), meanest: t => ({ num: (t.xs[0] + t.xs[1] + t.xs[2]) / 3 / t.n * t.pop }), capture: t => ({ num: t.tagged * t.caught / t.found }),
+  devi: t => ({ num: t.actual - t.trials * t.fav / t.total }), combo: t => ({ num: (t.h1 + t.h2) / (t.n1 + t.n2) * t.N }),
+  closerexp: t => ({ label: Math.abs(t.h1 / t.n1 - 0.5) < Math.abs(t.h2 / t.n2 - 0.5) ? 'Experiment A' : 'Experiment B' }), biggerexp: t => ({ label: t.a > t.c ? t.who[0] : t.who[1] }),
+  groupgap: t => { const m = xs => xs.reduce((a, v) => a + v, 0) / xs.length, d = xs => m(xs.map(v => Math.abs(v - m(xs))));
+    return { num: Math.abs(m(t.A) - m(t.B)) / t.mad, ok: near(d(t.A), t.mad) && near(d(t.B), t.mad) }; },
+  groupoverlap: (t, p) => { const r = Math.abs(t.mB - t.mA) / t.mad, want = r <= 1 ? 'The groups overlap a lot' : r >= 3 ? 'The groups barely overlap' : 'The groups overlap somewhat'; return { label: want }; },
+  groupmean: t => ({ label: t.A.reduce((a, v) => a + v, 0) > t.B.reduce((a, v) => a + v, 0) ? 'Group A' : 'Group B' }), groupb: t => ({ num: t.mA + t.k * t.mad }),
+  groupverdict: t => ({ label: t.gap / t.mad >= 2 ? 'The difference is large compared with the spread' : 'The difference is small compared with the spread' }),
   rwsame: (t, p) => { const o = p.answer.options, fits = s => SAMPLES.every(v => near(evalVars(s, v), SAME[t.item](t.k, v)));
     return { ok: o.filter(fits).length === 1 && fits(o[p.answer.correct]) }; },
 };

@@ -1,5 +1,6 @@
 // Measurement: area, surface area and volume.
 import { skillIn } from './skill.js';
+import { genFracVol } from './fracvol.js';
 import { genArea } from './area.js';
 import { genSolid } from './solids.js';
 
@@ -12,4 +13,7 @@ export const SKILLS = [
   skill('l5solid', '6.G.2, 4', 'Surface area and volume', 'Nets and fraction edges', genSolid, 'Surface area is the total area of the outside of a solid. Volume is the space inside. A net shows every face laid flat.',
     ['Surface area: find the area of each face of the net and add them.', 'A box has 3 pairs of matching faces.', 'Volume of a box = length × width × height, even when the edges are fractions.', 'Small cubes with fraction edges pack a box exactly, which is why the rule still works.'],
     [['net', 'a solid unfolded flat'], ['face', 'a flat side of a solid'], ['surface area', 'the area of all the faces together'], ['volume', 'the space inside']]),
+  skill('l5fracvol', '6.G.2', 'Packing boxes with fractions', 'Volume with fraction edges, layer by layer', genFracVol, 'You can find the volume of a box with fraction edges by packing it with small cubes that have a unit fraction as their edge, then counting them. The formula length × width × height gives the same answer.',
+    ['A cube with edge 1/4 is 1/4 × 1/4 × 1/4 = 1/64 of a cubic unit, because 64 of them fill a unit cube.', 'Count one layer (length by width), then multiply by the number of layers.', 'Volume = base area × height, even when the numbers are fractions.', 'To find a missing edge, divide the volume by the other two edges multiplied together.'],
+    [['unit fraction', 'a fraction with 1 on top, like 1/4'], ['layer', 'one level of cubes in a box'], ['cubic unit', 'a cube that is 1 unit on each edge']]),
 ];

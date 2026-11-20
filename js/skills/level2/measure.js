@@ -56,8 +56,8 @@ function diffPlotQ(sub, max) {
 function buildPlotQ(sub, max) {
   const { list, marks } = plotData(sub, max, true), q = pick(marks), c = list.filter(x => x === q).length, shown = list.map(x => frText(x, sub)).join(', ');
   return { ask: `A line plot is made from these lengths in inches: ${shown}. How many circles go above the ${frText(q, sub)} inch mark?`, answer: num(c), _t: { f: 'plotbuild' }, hint: `Go through the list and count how many are exactly ${frText(q, sub)}.`,
-    ways: [way('Tally the list', [`Go along the list and make a tally mark each time you see ${frText(q, sub)}.`, `There ${c === 1 ? 'is' : 'are'} ${cnt(c, 'tally mark')}, so ${b(c)} ${c === 1 ? 'circle goes' : 'circles go'} above ${frText(q, sub)}.`]),
-      way('Sort the list first', [`In order: ${list.slice().sort((x, y) => x - y).map(x => frText(x, sub)).join(', ')}.`, `The ${frText(q, sub)}s sit together: ${b(c)}.`])] };
+    ways: [way('Tally the list', [`Go along the list and make a tally mark each time you see ${frText(q, sub)}.`, `You make ${cnt(c, 'tally mark')}, so the number of circles is ${b(c)}.`]),
+      way('Sort the list first', [`In order: ${list.slice().sort((x, y) => x - y).map(x => frText(x, sub)).join(', ')}.`, `The ones that match sit together in a row, and there are ${b(c)}.`])] };
 }
 const frac1 = (sub, lo) => { let q; do { q = rnd(lo * sub + 1, 5 * sub - 1); } while (q % sub === 0); return q; };
 export function genMeasure(L) {

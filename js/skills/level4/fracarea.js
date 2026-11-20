@@ -1,7 +1,7 @@
 // Skill l4fmix: multiplying mixed numbers and the area of rectangles with fraction sides (5.NF.4b, 5.NF.6).
 import { R, rnd, pick, chance, gcd, lcm, F, fr, b, k, way, nm, num, frac, choice } from '../../util.js';
 import { T, rd } from './helpers.js';
-import { term, imp, mix } from './fracs.js';
+import { term, imp, mix, cn } from './fracs.js';
 import { sideGrid, areaTable } from './visuals.js';
 
 // Ways to multiply two mixed numbers: as fractions, or with the four boxes of an area model.
@@ -12,7 +12,7 @@ function mixWays(A, B) {
     way('Area model', [areaTable(A, B), `Write each box with the bottom ${bot}, then add the tops: ${boxes.join(' + ')} = ${top}.`, `${F(top, bot)} = ${b(fr(top, bot))}`])] };
 }
 function fmWF() {
-  const w = rnd(2, 5), d = pick([2, 3, 4, 5]), n = rnd(1, d - 1);
+  const w = rnd(2, 5), d = pick([2, 3, 4, 5]), n = cn(d);
   return T({ ask: 'What is the area of this rectangle, in square units?', visual: sideGrid([w, 1], [n, d]), answer: frac(w * n, d),
     ways: [way('Count the small pieces', [`Each unit square is cut into ${d} equal strips, so every small piece is ${F(1, d)} of a square unit.`, `The rectangle covers ${w} × ${n} = ${w * n} pieces.`, `${w * n} pieces of ${F(1, d)} make ${b(fr(w * n, d))}`]),
       way('Multiply the sides', [`${w} × ${F(n, d)} = ${F(w * n, d)} = ${b(fr(w * n, d))}`])],
@@ -26,7 +26,7 @@ function fmTiles(L) {
     hint: 'Find the area of one small square first. Then count the squares.' }, 'fmTiles', { q, r, c });
 }
 function fmPic(L) {
-  const proper = () => { const d = rnd(2, 4); return [rnd(1, d - 1), d]; }, side = () => { const x = term(rnd(1, 2), rnd(2, 4)); return [imp(x), x.d]; };
+  const proper = () => { const d = rnd(2, 4); return [cn(d), d]; }, side = () => { const x = term(rnd(1, 2), rnd(2, 4)); return [imp(x), x.d]; };
   const [a, c] = L === 1 ? [proper(), proper()] : [side(), side()], top = a[0] * c[0], bot = a[1] * c[1];
   return T({ ask: 'What is the area of the shaded rectangle, in square units?', visual: sideGrid(a, c), answer: frac(top, bot),
     ways: [way('Count the small pieces', [`Each unit square is cut into ${a[1]} columns and ${c[1]} rows, so ${bot} equal pieces.`, `The shaded part is ${a[0]} columns by ${c[0]} rows: ${a[0]} × ${c[0]} = ${top} pieces.`, `${top} pieces out of ${bot} is ${F(top, bot)} = ${b(fr(top, bot))}`]),

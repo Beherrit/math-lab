@@ -12,6 +12,12 @@ import { eqWord } from './equations.js';
 import { areaWord } from './area.js';
 import { boxWord } from './solids.js';
 import { statWord } from './stats.js';
+import { divWord } from './longdiv.js';
+import { convWord } from './unitconv.js';
+import { whatPctWord } from './whatpct.js';
+import { polyWord } from './polyplane.js';
+import { solutionWord } from './solution.js';
+import { fracVolWord } from './fracvol.js';
 import { skillIn } from './skill.js';
 import { makeStory } from '../level4/story.js';
 import { SKILLS as MULDIV } from './defs-muldiv.js';
@@ -24,12 +30,12 @@ import { SKILLS as ALGEBRA } from './defs-algebra.js';
 import { SKILLS as DATA } from './defs-data.js';
 
 // Story problems for this level: each source is (L) => a story problem object.
-export const STORY_SOURCES = [ratioWord, mixWord, rateWord, pctWord, wholeWord, fracDivWord, gcfWord, addWord, subWord, changeWord, splitWord, tempWord, exprWord, eqWord, areaWord, boxWord, statWord];
+export const STORY_SOURCES = [ratioWord, mixWord, rateWord, pctWord, wholeWord, fracDivWord, gcfWord, addWord, subWord, changeWord, splitWord, tempWord, exprWord, eqWord, areaWord, boxWord, statWord, divWord, convWord, whatPctWord, polyWord, solutionWord, fracVolWord];
 // The three steps of the story skill: one operation first, then the standard mix, then problems that take several steps.
 const STORY_STEPS = [
-  [addWord, subWord, rateWord, eqWord, areaWord, tempWord, gcfWord],
-  [ratioWord, mixWord, rateWord, pctWord, wholeWord, fracDivWord, gcfWord, eqWord, areaWord, tempWord, statWord, addWord, subWord],
-  [changeWord, splitWord, pctWord, wholeWord, exprWord, boxWord, statWord, mixWord, fracDivWord, gcfWord, rateWord, ratioWord],
+  [addWord, subWord, rateWord, eqWord, areaWord, tempWord, gcfWord, divWord, () => solutionWord(1)],
+  [ratioWord, mixWord, rateWord, pctWord, wholeWord, fracDivWord, gcfWord, eqWord, areaWord, tempWord, statWord, addWord, subWord, divWord, convWord, whatPctWord, solutionWord],
+  [changeWord, splitWord, pctWord, wholeWord, exprWord, boxWord, statWord, mixWord, fracDivWord, gcfWord, rateWord, ratioWord, convWord, whatPctWord, polyWord, fracVolWord, solutionWord],
 ];
 const genStory = L => makeStory(STORY_STEPS[L - 1], L);
 const skill = skillIn('Stories');

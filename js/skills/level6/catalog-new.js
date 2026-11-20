@@ -1,4 +1,4 @@
-// Level 6: the skills added to cover the full seventh-grade standards. index.js puts them in the learning path.
+// Level 6: the skills added to cover the full standards for this level. index.js puts them in the learning path.
 import { genUnitRate } from './unit-rates.js';
 import { genIsProp } from './prop-tests.js';
 import { genPctMore } from './percent-more.js';
@@ -9,6 +9,10 @@ import { genRealWorld } from './realworld.js';
 import { genWriteEq } from './write-equations.js';
 import { genTriangles } from './triangles.js';
 import { genSlices } from './slices.js';
+import { genCircleBack } from './circle-back.js';
+import { genSampling } from './sampling.js';
+import { genExpProb } from './experiments.js';
+import { genGroups } from './two-groups.js';
 import { skill } from './skill.js';
 
 export const NEW = [
@@ -27,7 +31,7 @@ export const NEW = [
   skill('l6ratdiv', '7.NS.2', 'Dividing integers and signs in fractions', 'Where the minus sign sits, and decimals that stop or repeat', genRatDiv, {
     big: 'A division with different signs is negative. So −3/4, (−3)/4 and 3/(−4) are all the same number. A fraction as a decimal either stops or repeats.',
     tips: ['One minus sign anywhere in a division makes the answer negative. Two make it positive.', 'Dividing by 0 is not allowed: no number times 0 can make anything but 0.', 'Long division turns a fraction into a decimal. If a remainder comes back, the digits repeat from there.', 'A fraction in lowest terms stops only when its bottom number is made of 2s and 5s.'],
-    words: [['terminating decimal', 'a decimal that stops, like 0.75'], ['repeating decimal', 'a decimal whose digits repeat forever, like 0.333...'], ['quotient', 'the answer to a division'], ['undefined', 'has no answer, like dividing by 0']] }),
+    words: [['terminating decimal', 'a decimal that stops, like 0.75'], ['repeating decimal', 'a decimal whose digits repeat forever, like 0.333...'], ['quotient', 'the answer to a division'], ['division by 0', 'not allowed: no number times 0 can make anything but 0']] }),
   skill('l6order', '7.NS.1–3', 'Order of operations and distance', 'Rational numbers, and |a − b| on the number line', genOrder, {
     big: 'The order of operations works with negatives, decimals and fractions exactly as it does with whole numbers. The distance between two numbers is the size of their difference.',
     tips: ['Brackets first, then multiply and divide, then add and subtract.', 'Keep the sign with its number. Put a negative number in brackets after an operation sign.', 'Distance between a and b is |a − b|. It never comes out negative.', 'Numbers on opposite sides of 0 are far apart: add their sizes. On the same side: subtract.'],
@@ -52,4 +56,20 @@ export const NEW = [
     big: 'When a flat cut goes through a solid, the cut surface is a flat shape. A cut parallel to a face copies that face. A cut through the top point of a pyramid makes a triangle.',
     tips: ['Picture slicing a loaf of bread. A slice parallel to an end looks just like that end.', 'Check which edges the cut crosses. Each crossing is a corner of the cut shape.', 'A cut halfway up a pyramid, parallel to the base, makes a smaller square with half the side.', 'A prism has the same cross-section all the way along, so slices parallel to its ends are all identical.'],
     words: [['cross-section', 'the flat shape you see when a solid is cut through'], ['pyramid', 'a solid with a flat base and sloping sides that meet at a point'], ['prism', 'a solid with the same shape all the way along its length']] }),
+  skill('l6circback', '7.G.4, 7.G.6', 'Circles backwards and mixed shapes', 'Radius from area, and shapes with circle parts', genCircleBack, {
+    big: 'You can work the circle formulas backwards: area gives the radius, circumference gives the radius. Shapes made of rectangles and parts of circles are found piece by piece.',
+    tips: ['Area = 3.14 × r × r. To go back, divide by 3.14, then ask which number times itself gives the answer.', 'Circumference = 2 × 3.14 × r. Divide by 6.28 to get the radius.', 'Two half circles make one whole circle. A half circle is half of the circle formula.', 'A shape with a hole: area of the whole minus area of the hole.'],
+    words: [['composite shape', 'a shape made from simpler shapes'], ['semicircle', 'half of a circle'], ['radius', 'centre to edge']] }),
+  skill('l6sampling', '7.SP.1, 7.SP.2', 'Samples and estimates', 'Random or biased, and scaling a sample up', genSampling, {
+    big: 'A random sample is a small copy of a whole group, so what you find in it can be scaled up to estimate the whole group. A biased sample leaves out some people, so it misleads.',
+    tips: ['A fair sample gives every member of the whole group the same chance of being picked.', 'To scale up: find the fraction or percent in the sample, then take that part of the whole group.', 'Bigger random samples usually give estimates closer to the truth.', 'Two samples of the same size can give different results. That is normal, and it shows how much an estimate can vary.'],
+    words: [['population', 'the whole group you want to know about'], ['sample', 'a small part of the whole group that you ask'], ['biased', 'unfair to some members of the group'], ['estimate', 'a good guess based on a sample']] }),
+  skill('l6expprob', '7.SP.6, 7.SP.7', 'Experiments and chance', 'What happened compared with what should happen', genExpProb, {
+    big: 'Theoretical probability says what should happen when outcomes are equally likely. Relative frequency says what did happen in a real experiment. They are close, but rarely equal.',
+    tips: ['Relative frequency = the number of times it happened ÷ the number of trials.', 'To predict, multiply the probability by the number of trials.', 'Results of a few trials can be far from the theoretical probability just by chance.', 'More trials usually bring the relative frequency closer to the theoretical probability.'],
+    words: [['relative frequency', 'how often something happened out of all the trials'], ['theoretical probability', 'what should happen, worked out from equally likely outcomes'], ['trial', 'one go at an experiment']] }),
+  skill('l6groups', '7.SP.3, 7.SP.4', 'Comparing two groups', 'The gap between centres in spreads, and overlap', genGroups, {
+    big: 'To compare two groups, see how far apart their centres are compared with how spread out each group is. A gap of several spreads means the groups hardly overlap.',
+    tips: ['Find each mean. The gap is the difference of the means.', 'Divide the gap by the mean absolute deviation to measure it in spreads.', 'About 1 spread or less: the groups overlap a lot. 3 spreads or more: they barely overlap.', 'Two dot plots on one number line show overlap at a glance.'],
+    words: [['mean absolute deviation', 'the average distance of the values from the mean'], ['overlap', 'sharing the same part of the number line'], ['dot plot', 'a number line with a dot for each value']] }),
 ];

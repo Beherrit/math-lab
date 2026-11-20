@@ -61,7 +61,7 @@ function readQ(h, m) {
 }
 function minutesQ(h, m, until) {
   return { ask: mark(until ? 'How many minutes is it until the next full hour?' : 'How many minutes past the hour does the clock show?', h, m), visual: clockFace(h, m), answer: num(until ? 60 - m : m), _t: { f: until ? 'clockuntil' : 'clockmin', pic: true },
-    hint: until ? 'The long hand has to go all the way round to the 12. How far has it already gone?' : 'Count the small marks from the 12 round to the long hand.',
+    hint: until ? 'The long hand has to go all the way round to the top. How far has it already gone?' : 'Count the small marks from the top of the clock round to the long hand.',
     ways: until ? [way('Take it from 60', [clockFace(h, m), `The long hand is ${m} minutes past the hour. An hour is 60 minutes.`, `60 − ${m} = ${b(60 - m)}.`]), way('Count on to the 12', [`Count on from ${m} to 60 in jumps of 5 and 1.`, `The jumps add up to ${b(60 - m)} minutes.`])]
       : [way('Count the marks', [clockFace(h, m), `Count in fives from the 12, then count the small marks left over.`, `The long hand shows ${b(m)} minutes past.`]), way('Use the numbers', [`Each number on the clock is 5 minutes.`, `${Math.floor(m / 5)} × 5 = ${Math.floor(m / 5) * 5}${m % 5 ? `, and ${m % 5} more small marks makes ${m}` : ''}. The answer is ${b(m)}.`])] };
 }

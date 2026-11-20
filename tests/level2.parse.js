@@ -1,13 +1,13 @@
 // Readers for the pictures the new level 2 skills draw. Each one rebuilds the numbers from the SVG or HTML itself, so a test can compare them
 // with the answer without trusting the generator that drew the picture.
-export const plain = s => String(s ?? '').replace(/<!--[\s\S]*?-->/g, '').replace(/<\/span><span class="d">/g, '/').replace(/<span class="mxs"><\/span>/g, ' ').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ');
+export const plain = s => String(s ?? '').replace(/<!--[\s\S]*?-->/g, '').replace(/<\/(text|td|th|li)>/g, ' ').replace(/<\/span><span class="d">/g, '/').replace(/<span class="mxs"><\/span>/g, ' ').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ');
 export const nums = s => (plain(s).replace(/(\d),(\d{3})/g, '$1$2').match(/\d+(?:\.\d+)?/g) || []).map(Number);
 export const tags = (s, name) => [...String(s).matchAll(new RegExp(`<${name}\\b[^>]*>`, 'g'))].map(m => m[0]);
 export const at = (tag, a) => (tag.match(new RegExp(`\\b${a}="([^"]*)"`)) || [])[1];
 export const withClass = (s, name, cls) => tags(s, name).filter(t => new RegExp(`class="([^"]* )?${cls}( [^"]*)?"`).test(t));
 export const texts = s => [...String(s).matchAll(/<text\b([^>]*)>([^<]*)<\/text>/g)].map(m => ({ attrs: m[1], text: m[2], x: +at(m[1], 'x'), y: +at(m[1], 'y') }));
 export const svgs = html => String(html).split('<svg').slice(1).map(x => '<svg' + x);
-export const mixed = t => { const m = plain(t).trim().match(/^(?:(\d+) )?(?:(\d+)\/(\d+))?$/); return m ? +(m[1] || 0) + (m[2] ? m[2] / m[3] : 0) : NaN; };
+export const mixed = t => { const m = plain(t).trim().match(/^(\d+)?(?:\s*(\d+)\/(\d+))?$/); return m ? +(m[1] || 0) + (m[2] ? m[2] / m[3] : 0) : NaN; };
 
 const deg = ([x, y]) => (Math.atan2(x, y) * 180 / Math.PI + 360) % 360;
 export function readClock(svg) {

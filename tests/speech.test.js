@@ -102,3 +102,13 @@ test('Hear it repeats the question; Hear the choices speaks sayOptions in order,
     assert.deepEqual(f.log, []);
   });
 });
+test('the spoken-only first-sounds step is not served without speech: capped at step 2', async () => {
+  const { speechCap, speechUsable } = await import('../js/core/speech-gate.js');
+  assert.equal(speechCap('l0sound', 3, false), 2); assert.equal(speechCap('l0sound', 2, false), 2); assert.equal(speechCap('l0sound', 3, true), 3);
+  assert.equal(speechCap('l0count', 3, false), 3);
+  const f = fake();
+  assert.equal(speechUsable(learner(0)), false); // no engine in Node
+  withGlobals(f, () => {
+    assert.equal(speechUsable(learner(0)), true); assert.equal(speechUsable(learner(0, false)), false); assert.equal(speechUsable(learner(3)), false);
+  });
+});

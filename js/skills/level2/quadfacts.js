@@ -5,6 +5,7 @@ export const RULEOUT = {
   rhombus: 'A rhombus has four equal sides, and its corners are not square.',
   parallelogram: 'A parallelogram has two pairs of parallel sides, corners that are not square, and sides that are not all equal.',
   trapezoid: 'A trapezoid has just one pair of parallel sides.',
+  triangle: 'A triangle has three sides and three corners, and none of its sides are parallel.',
   kite: 'A kite has no parallel sides and two pairs of equal sides that sit next to each other.',
 };
 // What "is a ..." asks for.

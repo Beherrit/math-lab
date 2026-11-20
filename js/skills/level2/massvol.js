@@ -25,9 +25,9 @@ function estimateQ(item = pick(sortOf())) {
 }
 // True or false: "A cat has a mass of about 4 kg" (or 4 g, which is far too small).
 function senseQ(item = pick(sortOf()), ok = Math.random() < 0.5) {
-  const [name, u] = item, n = typical(item), shown = ok ? u : OTHER[u], cap = name[0].toUpperCase() + name.slice(1);
-  return { ask: 'True or false?', expr: `${cap} ${VOLUME.includes(item) ? 'holds' : 'has a mass of'} about ${n} ${UNIT_NAME[shown]}.`, answer: yesNo(ok), choiceBig: true, _t: { f: 'unitsense', item: name, n, unit: shown }, hint: 'Picture it. Is that a sensible amount for a thing like that?',
-    ways: [way('Picture it', [`${n} ${UNIT_NAME[shown]} is ${ok ? 'about right' : shown === 'g' || shown === 'mL' ? 'far too small' : 'far too big'} for ${name}.`, ok ? `The sentence is ${b('True')}.` : `The sentence is ${b('False')}.`]),
+  const [name, u] = item, n = typical(item), shown = ok ? u : OTHER[u], un = n === 1 ? UNIT_NAME[shown].replace(/s$/, '') : UNIT_NAME[shown], cap = name[0].toUpperCase() + name.slice(1);
+  return { ask: 'True or false?', expr: `${cap} ${VOLUME.includes(item) ? 'holds' : 'has a mass of'} about ${n} ${un}.`, answer: yesNo(ok), choiceBig: true, _t: { f: 'unitsense', item: name, n, unit: shown }, hint: 'Picture it. Is that a sensible amount for a thing like that?',
+    ways: [way('Picture it', [`${n} ${un} is ${ok ? 'about right' : shown === 'g' || shown === 'mL' ? 'far too small' : 'far too big'} for ${name}.`, ok ? `The sentence is ${b('True')}.` : `The sentence is ${b('False')}.`]),
       way('Try the other unit', [`${n} ${UNIT_NAME[OTHER[shown]]} would be ${ok ? 'far too big or small' : 'a sensible amount'} for ${name}.`, ok ? `So the unit in the sentence is right: ${b('True')}.` : `So the unit in the sentence is wrong: ${b('False')}.`])] };
 }
 // Reading a jug or a pointer scale. Step 1 marks every 100, step 2 marks every 100 with halfway readings, step 3 marks every 20.
@@ -78,7 +78,7 @@ function convertQ(toSmall) {
 // A story for the level's story skill: equal amounts of mass or liquid, multiplied or shared. Steps 2 and 3 only.
 export function measureWord(L) {
   if (L === 1) return null;
-  const m = nm(), g = L === 2 ? rnd(2, 6) : rnd(4, 9), s = pick(L === 2 ? [150, 200, 250, 300, 500] : [120, 250, 330, 450, 500]), mul = Math.random() < 0.5;
+  const m = nm(), g = L === 2 ? rnd(2, 5) : rnd(4, 9), s = pick(L === 2 ? [50, 100, 150, 200] : [120, 250, 330, 450, 500]), mul = Math.random() < 0.5;
   const [story, ask, unit] = mul ? pick(MUL)(g, s, m) : pick(DIV)(g * s, g);
   const know = mul ? [`${g} of them`, `${f(s)} ${unit} each`] : [`${f(g * s)} ${unit} in all`, `${g} equal parts`];
   const row = [story, ask, mul ? `The total in ${unit}.` : `The amount in one part, in ${unit}.`, know, mul ? 'Equal amounts again and again means multiply.' : '"Equally" means divide.'];

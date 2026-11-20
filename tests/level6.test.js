@@ -7,7 +7,7 @@ import { check, ANSWER_KINDS, fmt } from '../js/util.js';
 import { plural } from '../js/skills/level6/helpers.js';
 import { sum, prod, sorted, median, mean, holds, toNum, near } from './level6.maths.js';
 import { RULES, LIMITS, NEW_IDS, STRANDS } from './level6.rules.js';
-import { seeded, plain, storyMatchesOperands, countNamesEveryChoice, hintKeepsTheAnswer, firstWayEndsOnAnswer, noPluralOfOne, FACTS } from './level6.checks.js';
+import { seeded, plain, storyMatchesOperands, countNamesEveryChoice, hintKeepsTheAnswer, firstWayEndsOnAnswer, noPluralOfOne, noOddTerms, FACTS } from './level6.checks.js';
 
 const N = 300;
 // Evaluate a linear expression such as "−2(x − 4) + 3x" at a value of x.
@@ -104,6 +104,7 @@ function sanity(p, where, strict = false) {
   if (_t.kind === 'fixed') assert.ok(plain(p.ask) in FACTS, `${where}: no independent fact for "${p.ask}"`);
   hintKeepsTheAnswer(p, _t, where); firstWayEndsOnAnswer(p, where); noPluralOfOne(p, where);
   if (p.story || strict) storyMatchesOperands(p, _t, where);
+  if (strict) noOddTerms(p, where);
   if (_t.kind === 'count') countNamesEveryChoice(p, _t, where);
   return _t;
 }

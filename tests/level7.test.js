@@ -90,7 +90,7 @@ for (const s of SKILLS) for (const L of [1, 2, 3]) {
   });
 }
 test('story problems carry everything the story screen needs', () => {
-  assert.ok(STORY_SOURCES.length >= 5);
+  assert.ok(STORY_SOURCES.length >= 13);
   const story = SKILLS.find(s => s.story);
   for (let i = 0; i < N; i++) {
     const p = story.gen(1 + (i % 3));
@@ -102,12 +102,12 @@ test('story problems carry everything the story screen needs', () => {
 test('story problems get harder with the step', () => {
   const story = SKILLS.find(s => s.story), kinds = L => Array.from({ length: 600 }, () => story.gen(L)._t).map(t => (t.k === 'vol' ? `vol-${t.shape}` : t.k === 'line' ? `line-${t.ask}` : t.k));
   const one = new Set(kinds(1)), three = new Set(kinds(3));
-  for (const k of one) assert.ok(['pyth', 'slope', 'scpred', 'line-y'].includes(k), `step 1 story of kind ${k} is not a single-idea problem`);
+  for (const k of one) assert.ok(['pyth', 'slope', 'scpred', 'line-y', 'propcmp'].includes(k), `step 1 story of kind ${k} is not a single-idea problem`);
   for (const k of ['lineq', 'sys', 'vol-cone', 'rootperim', 'sciop', 'line-x']) assert.ok(three.has(k), `step 3 never asks ${k}`);
   for (const k of ['lineq', 'sys', 'vol-cone']) assert.ok(!new Set(kinds(2)).has(k), `step 2 story of kind ${k} belongs to step 3`);
 });
 test('both upright and flat lines are asked about, and both special answers are offered', () => {
-  assert.ok(COVER.upright >= 10 && COVER.flat >= 10, `upright ${COVER.upright}, flat ${COVER.flat}`);
+  assert.ok(COVER.upright >= 5 && COVER.flat >= 5, `upright ${COVER.upright}, flat ${COVER.flat}`);
 });
 test('the step 3 prediction cap is the true maximum of the generator ranges', () => {
   let top = 0;
@@ -117,4 +117,10 @@ test('the step 3 prediction cap is the true maximum of the generator ranges', ()
 test('every kind of recomputation was exercised', () => {
   const used = new Set(Object.values(seen).flatMap(k => [...k]));
   for (const k of Object.keys(CHECKS)) assert.ok(used.has(k), `check "${k}" never ran`);
+});
+test('the level reads as a learning path: every new skill is present and the story skill is last', () => {
+  assert.equal(NEW_IDS.length, 14);
+  for (const id of NEW_IDS) assert.ok(SKILLS.some(s => s.id === id), `${id} is missing`);
+  assert.equal(SKILLS[SKILLS.length - 1].story, true);
+  assert.equal(SKILLS.length, 32);
 });

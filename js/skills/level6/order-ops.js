@@ -33,6 +33,7 @@ function build(name, vals, shown) {
 }
 function arith(shape, name, vals, shown, nums) {
   const e = build(name, vals, shown);
+  if (/[+−-] \(?0\)?(?![.\d])|[×÷] \(?0\)?(?![.\d])/.test(e.steps.join(' '))) return null;
   return tag({ ask: 'Work out the value, following the order of operations.', expr: e.text, answer: snum(e.val),
     ways: [way('Follow the order step by step', [...(shape === 'fracorder' ? [`Write each fraction as a decimal first: ${shown.filter(s => /\//.test(s)).map((s, i) => `${s} = ${fmt(vals[shown.indexOf(s)])}`).join(', ')}.`] : []), ...e.steps]),
       way('Spot the common slip', [`A common slip is to do the operations in the wrong order. That gives ${fmt(e.alt)}.`, `It is a different number, because brackets come first, then multiplying and dividing, then adding and subtracting. The right answer is ${b(fmt(e.val))}.`])],

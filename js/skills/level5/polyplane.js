@@ -85,4 +85,4 @@ function findY() {
 }
 const SHAPES = { 1: [() => side(1), () => triArea(1), () => missing(1), tap], 2: [() => side(2), () => triArea(2), () => missing(2), scaled, lPerimeter, tap], 3: [lArea, lPerimeter, scaled, findY, () => missing(3), () => triArea(3)] };
 export const genPolyPlane = L => pick(SHAPES[L])();
-export const polyWord = () => pick([scaled, lPerimeter])();
+export const polyWord = scaled;

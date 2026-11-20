@@ -8,7 +8,7 @@ import { LINES } from './level7.lines.js';
 import { GRAPHS } from './level7.graphs.js';
 import { SYSTEMS } from './level7.systems.js';
 import { GEO } from './level7.geo.js';
-import { IRR } from './level7.nums.js';
+import { IRR, TWOWAY, FITL, EQF, SCIU } from './level7.nums.js';
 import { eqText } from './level7.eq.js';
 export { text, ans };
 const near = (x, y, msg) => assert.ok(Math.abs(x - y) <= 1e-9 * Math.max(1, Math.abs(y)), `${msg || ''} got ${x}, expected ${y}`);
@@ -54,6 +54,10 @@ export const CHECKS = {
   ...SYSTEMS,
   ...GEO,
   ...IRR,
+  ...TWOWAY,
+  ...FITL,
+  ...EQF,
+  ...SCIU,
   exp(t, p, L) {
     const v = EXP[t.op](t), e = v.toString(2).length - 1;
     assert.notEqual(WRONG_LAW[t.op](t), e, `the wrong law gives the same exponent ${e}: ${text(p.expr)}`);

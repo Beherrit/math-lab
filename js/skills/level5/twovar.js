@@ -95,4 +95,3 @@ function doubling(fee) {
 }
 const SHAPES = { 1: [role, () => rateFromTable(1), () => useTable(1), () => equationFromTable(1), () => doubling(false)], 2: [role, () => equationFromTable(2), equationFromStory, () => useEquation(false), graph, () => useTable(2)], 3: [equationWithFee, () => useEquation(true), solveFor, () => doubling(true), graph, () => useEquation(false)] };
 export const genTwoVar = L => pick(SHAPES[L])();
-export const twoVarWord = () => pick([() => useEquation(true), solveFor, () => useEquation(false)])();

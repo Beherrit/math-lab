@@ -103,7 +103,7 @@ function ruRel() {
 function ruStory(L) {
   const n1 = nm(), same = L === 2 && chance(0.5), a0 = rnd(0, 20), da = rnd(2, 8), b0 = a0 + rnd(2, 15), db = same ? da : da + rnd(1, 4), w = rnd(4, 10);
   let n2 = nm(); while (n2 === n1) n2 = nm();
-  const r = { a0, da, b0, db }, x = A(r, w), y = B(r, w), gap = y - x;
+  const r = { a0, da, b0, db }, x = a0 + w * da, y = b0 + w * db, gap = y - x;
   return T({ story: `${n1} has ${k('$' + a0)} and saves ${k('$' + da)} each week. ${n2} has ${k('$' + b0)} and saves ${k('$' + db)} each week.`, ask: `After ${pl(w, 'week')}, how much more money does ${n2} have than ${n1}?`, answer: num(gap), op: 'multi',
     ways: [way('Work out each total', [`${n1}: ${a0} + ${w} × ${da} = ${x}`, `${n2}: ${b0} + ${w} × ${db} = ${y}`, `${y} − ${x} = ${b(gap)}`]),
       way('Compare the patterns', [`Start gap: ${b0} − ${a0} = ${b0 - a0}.`, `Each week the gap grows by ${db} − ${da} = ${db - da}, so after ${w} weeks it is ${b0 - a0} + ${w} × ${db - da} = ${b(gap)}`])],

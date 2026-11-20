@@ -8,7 +8,7 @@ function tableTest(L) {
   const i = rnd(0, SHOPS.length - 1), yes = chance(0.5), k = pick(L === 1 ? [2, 3, 4, 5] : [1.5, 2.5, 3, 4, 6, 0.5]), f = rnd(1, 5), zero = L > 1 && chance(0.3);
   const xs = zero ? [0, ...xsFrom([1, 2, 3, 4, 5, 6], 3)] : xsFrom(L === 1 ? [1, 2, 3, 4, 5] : [2, 3, 4, 5, 6, 8, 10]), ys = xs.map(x => R(k * x + (yes ? 0 : f)));
   const [a, c2] = zero ? [1, 2] : [0, 1], cross = [ys[a] * xs[c2], ys[c2] * xs[a]];
-  return tag({ story: `A shop charges for ${SHOPS[i]}. The table shows how many are bought and what the total cost is.`, ask: 'Is the cost proportional to the number bought?',
+  return tag({ story: `A shop charges for ${SHOPS[i]}. The table shows how many are bought and what the total cost is. In the first column, ${fmt(xs[0])} cost $${fmt(ys[0])}.`, ask: 'Is the cost proportional to the number bought?',
     visual: costTable(SHOPS[i], xs, ys), answer: yesNo(yes), choiceBig: true,
     ways: [way('Divide cost by number in every column', zero ? [ratioLines(xs.slice(1), ys.slice(1)), `The column with 0 shows y = ${fmt(ys[0])} when x = 0. A proportional relationship needs y = 0 there.`, yes ? `The answers match and (0, 0) fits: ${b('yes')}.` : `${b('no')}: the answers differ, and zero bought still costs ${fmt(ys[0])}.`]
       : [ratioLines(xs, ys), yes ? `The answer is ${fmt(k)} every time, so ${b('yes')}: cost = ${fmt(k)} × number.` : `The answers are not all the same, so ${b('no')}.`]),
@@ -33,7 +33,7 @@ function graphTest(L) {
     if (xs.length < 2) continue;
     const [x1, x2] = shuffle(xs).slice(0, 2).sort((p, q) => p - q), end = xs[xs.length - 1], at = x => R(m * x + c);
     const P = { x: x1, y: at(x1), label: `(${x1}, ${at(x1)})` }, Q = { x: x2, y: at(x2), label: `(${x2}, ${at(x2)})` };
-    return tag({ ask: 'The graph is a straight line through the two labelled points. Is the relationship it shows proportional?', visual: plane({ pts: [P, Q], path: [{ x: 0, y: c }, { x: end, y: at(end) }] }),
+    return tag({ ask: `The graph is a straight line through (${P.x}, ${P.y}) and (${Q.x}, ${Q.y}). Is the relationship it shows proportional?`, visual: plane({ pts: [P, Q], path: [{ x: 0, y: c }, { x: end, y: at(end) }] }),
       answer: yesNo(yes), choiceBig: true,
       ways: [way('Where does the line start?', ['A proportional graph is a straight line that goes through (0, 0). Follow the line back to the y-axis.',
         yes ? `The line reaches the axis at (0, 0): ${b('yes')}.` : `The line reaches the y-axis at height ${c}, not 0: ${b('no')}. Zero of x would still give ${c} of y.`]),

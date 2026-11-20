@@ -107,3 +107,23 @@
     padding: 6px;
   }
 }
+
+/* The hundred chart uses the whole card width and a larger number size so it stays readable on small phones. */
+.visual svg[aria-label^="a chart"] {
+  max-width: none !important;
+  width: 100%;
+}
+
+.visual svg[aria-label^="a chart"] text {
+  font-size: 16px;
+}
+
+.play.early .qcard:has(svg[aria-label^="a chart"]) {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.play.early .qarea:has(svg[aria-label^="a chart"]) {
+  padding-left: 6px;
+  padding-right: 6px;
+}

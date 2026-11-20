@@ -47,4 +47,6 @@ const PATH = [
   ['Stories', ['l6realworld', 'l6story']],
 ];
 const BY_ID = Object.fromEntries([...CORE, ...NEW, STORY].map(s => [s.id, s]));
-export const SKILLS = PATH.flatMap(([strand, ids]) => ids.filter(id => BY_ID[id]).map(id => ({ ...BY_ID[id], strand })));
+const missing = PATH.flatMap(([, ids]) => ids).filter(id => !BY_ID[id]);
+if (missing.length) throw new Error(`level 6 path names unknown skills: ${missing}`);
+export const SKILLS = PATH.flatMap(([strand, ids]) => ids.map(id => ({ ...BY_ID[id], strand })));

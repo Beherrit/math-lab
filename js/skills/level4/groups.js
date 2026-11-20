@@ -24,14 +24,14 @@ function grFirst(L) {
 const OPS = ['+', '−', '×'];
 function grFix(L) {
   for (let t = 0; t < 400; t++) {
-    const [a, c, d] = [n(2, 9), n(2, 9), n(2, 6)], o1 = pick(L === 1 ? ['+', '×'] : OPS), o2 = pick(L === 1 ? ['+', '×'] : OPS);
-    const opts = [`(${a} ${o1} ${c}) ${o2} ${d}`, `${a} ${o1} (${c} ${o2} ${d})`, `${a} ${o1} ${c} ${o2} ${d}`], vs = opts.map(calc);
-    if (new Set(vs).size < 3 || vs.some(v => !clean(v) || v > 150)) continue;
-    const i = rnd(0, 1), good = opts[i], bare = `${a} ${o1} ${c} ${o2} ${d}`;
-    return T({ ask: 'Put one pair of brackets in so the sum is true.', expr: `${bare} = ${vs[i]}`, answer: choice(good, opts.filter((_, j) => j !== i)),
-      ways: [way('Try each placement', [...opts.map((o, j) => `${o} = ${vs[j]}`), `Only ${b(good)} makes ${vs[i]}.`]),
-        way('Compare with no brackets', [`With no brackets, ${bare} = ${vs[2]}, not ${vs[i]}.`, `So the brackets must change the order of the steps, and ${b(good)} gives ${vs[i]}.`])],
-      hint: 'Work out what you get with no brackets. Then try the brackets in each place.' }, 'grFix', { a, o1, c, o2, d, target: vs[i] });
+    const [a, c, d] = [n(2, 9), n(2, 9), n(2, 6)], o1 = pick(L === 1 ? ['+', '×'] : OPS), o2 = pick(L === 1 ? ['+', '×'] : OPS), bare = `${a} ${o1} ${c} ${o2} ${d}`;
+    const p1 = `(${a} ${o1} ${c}) ${o2} ${d}`, p2 = `${a} ${o1} (${c} ${o2} ${d})`, v0 = calc(bare), v1 = calc(p1), v2 = calc(p2), i = rnd(0, 1), target = i ? v2 : v1;
+    if (v1 === v2 || !clean(v1) || !clean(v2) || target === v0 || target > 150) continue;
+    const good = i ? p2 : p1, opts = [p1, p2, ...(v0 !== v1 && v0 !== v2 ? [bare] : [])], vs = opts.map(calc);
+    return T({ ask: 'Put one pair of brackets in so the sum is true.', expr: `${bare} = ${target}`, answer: choice(good, opts.filter(o => o !== good)),
+      ways: [way('Try each placement', [...opts.map((o, j) => `${o} = ${vs[j]}`), `Only ${b(good)} makes ${target}.`]),
+        way('Compare with no brackets', [`With no brackets, ${bare} = ${v0}, not ${target}.`, `So the brackets must change the order of the steps, and ${b(good)} gives ${target}.`])],
+      hint: 'Work out what you get with no brackets. Then try the brackets in each place.' }, 'grFix', { a, o1, c, o2, d, target });
   }
 }
 const MISSING = [

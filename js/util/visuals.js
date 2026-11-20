@@ -117,7 +117,7 @@ const x = m + i * step;
 s += `<line x1="${x}" y1="${base - 5}" x2="${x}" y2="${base + 5}" class="tick"/>`;
 s += `<text x="${x}" y="${base + 22}" text-anchor="middle" class="tk">${frText(i, den)}</text>`;
 const c = data[i] || 0;
-for (let j = 0; j < c; j++) s += `<text x="${x}" y="${base - 10 - j * 15}" text-anchor="middle" class="xm">✕</text>`;
+for (let j = 0; j < c; j++) s += `<text x="${x}" y="${base - 10 - j * 15}" text-anchor="middle" class="xm">X</text>`;
 }
 if (title) s += `<text x="${W / 2}" y="${H - 4}" text-anchor="middle" class="lbl">${title}${unit ? ` (${unit})` : ''}</text>`;
 return s + '</svg>';

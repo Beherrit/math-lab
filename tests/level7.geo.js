@@ -118,6 +118,7 @@ export const PYTH = {
         assert.deepEqual(boxLabels(p.visual).sort(), t.dims.slice().sort(), 'the labels on the box are its sides'); mustShow(p, t.dims);
         return t.shape === 'box-3d' ? near(a, Math.sqrt(t.dims.reduce((s, v) => s + v * v, 0))) : near(a, roundTo(hyp(t.dims[0], t.dims[1]), 1));
       }
+      case 'box-rod': mustShow(p, t.dims); return near(a, Math.sqrt(t.dims.reduce((s, v) => s + v * v, 0)));
       case 'box-fit': mustShow(p, [...t.dims, t.stick]); return assert.equal(a, t.stick < Math.sqrt(t.dims.reduce((s, v) => s + v * v, 0)) ? 'Yes' : 'No');
       case 'rect-hidden': mustShow(p, [t.a, t.h]); return near(a, t.a * Math.sqrt(t.h ** 2 - t.a ** 2));
       case 'sq-diag': mustShow(p, [t.s]); return near(a, roundTo(t.s * Math.SQRT2, 1));

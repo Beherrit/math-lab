@@ -16,7 +16,7 @@ const dig = (n, i) => Math.floor(n / 10 ** i) % 10;
 function friendly(op) {
   if (op === 'add') { const [h, t, o] = [rnd(1, 5), rnd(1, 5), rnd(1, 5)]; return [h * 100 + t * 10 + o, rnd(1, 3) * 100 + rnd(0, 9 - t) * 10 + rnd(0, 9 - o)]; }
   let a, c;
-  do { const [h, t, o] = [rnd(3, 9), rnd(2, 9), rnd(2, 9)]; a = h * 100 + t * 10 + o; c = rnd(0, h - 1) * 100 + rnd(0, t) * 10 + rnd(0, o); } while (!c);
+  do { const [h, t, o] = [rnd(3, 6), rnd(2, 9), rnd(2, 9)]; a = h * 100 + t * 10 + o; c = rnd(0, h - 1) * 100 + rnd(0, t) * 10 + rnd(0, o); } while (!c);
   return [a, c];
 }
 const regroups = (op, a, c) => (op === 'add' ? a % 10 + c % 10 >= 10 || (a % 100) + (c % 100) >= 100 : a % 10 < c % 10 || a % 100 < c % 100);
