@@ -8,7 +8,7 @@ const ways = [
 way('Slide the digits', [`${mult ? 'Multiplying' : 'Dividing'} by ${fmt(P10(k2))} slides every digit ${b(k2 + ' place' + (k2 > 1 ? 's' : ''))} to the ${dir}.`,
 pvChart([{ label: 'before', x }, { label: 'after', x: ans }]), `So the answer is ${b(fmt(ans))}.`]),
 way('Move the decimal point', [`${fmt(P10(k2))} has ${b(k2 + ' zero' + (k2 > 1 ? 's' : ''))}, so the decimal point hops ${k2} place${k2 > 1 ? 's' : ''} to the ${pt}.`,
-`${plain(x)} → ${b(plain(ans))}${places(x) === 0 && mult ? ` (add zeros to fill the empty spots)` : ''}`]),
+`${plain(x)} becomes ${b(plain(ans))}${places(x) === 0 && mult ? ` (add zeros to fill the empty spots)` : ''}`]),
 ];
 if (expShown) ways.unshift(way('Read the exponent', [`10<sup>${k2}</sup> means ${Array(k2).fill('10').join(' × ')} = ${fmt(P10(k2))}.`, `So this is the same as ${plain(x)} ${mult ? '×' : '÷'} ${fmt(P10(k2))}.`]));
 return { ans, ways };
@@ -128,7 +128,7 @@ const x = R(rnd(1, 30) + rnd(1, 999) / 1000); if (places(x) < 3) return genDec(3
 const c = decWords(x);
 const wrong = [c.replace('thousandth', 'hundredth'), decWords(R(Math.floor(x) * 10 + (x - Math.floor(x)))), `${w999(Math.round((x % 1) * 1000))} and ${w999(Math.floor(x))} thousandths`];
 return { ask: `Which words match ${plain(x)}?`, answer: choice(c, wrong),
-ways: [way('Read it in two parts', [`Whole number part: ${Math.floor(x)} → “${w999(Math.floor(x))}”`, `Say “and” for the decimal point.`, `Read the digits after the point as a number, then say the place of the LAST digit (thousandths).`, b(c)]),
+ways: [way('Read it in two parts', [`Whole number part: ${Math.floor(x)} is “${w999(Math.floor(x))}”`, `Say “and” for the decimal point.`, `Read the digits after the point as a number, then say the place of the LAST digit (thousandths).`, b(c)]),
 way('Use a place value chart', [pvChart([{ label: '', x, dp: 3 }]), 'The last digit sits in the thousandths place, so the name ends in “thousandths.”'])],
 hint: 'What place is the last digit in?' };
 }

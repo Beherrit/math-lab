@@ -18,7 +18,7 @@ if (done) return `<h2 class="done-title">Today’s page is done ${I.check}</h2><
 <button class="btn ghost" data-act="start">Do another round</button>`;
 return `<h2>Today’s ${mins} minutes</h2>
 <ol class="plan">
-<li><b>Times tables warm-up</b><span>${Math.round(mins * sp.facts)} min</span></li>
+${sp.facts ? `<li><b>Times tables warm-up</b><span>${Math.round(mins * sp.facts)} min</span></li>` : ''}
 <li><b>Focus: ${focus ? SKILL[focus].title : 'Times tables'}</b><span>${Math.round(mins * sp.focus)} min</span><button class="link" data-go="pick">change</button></li>
 <li><b>Mix-up</b><span>${Math.max(1, Math.round(mins * sp.mix))} min</span></li>
 </ol>

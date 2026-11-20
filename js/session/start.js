@@ -13,6 +13,7 @@ if (focus) logFocus(S, focus); save();
 const phases = [{ type: 'facts', ms: M * sp.facts, label: 'Times tables warm-up', intro: 'Answer as many as you can. Quick and correct grows your facts!' }];
 if (focus) phases.push({ type: 'skill', skill: focus, ms: M * sp.focus, label: `Focus: ${SKILL[focus].title}`, intro: SKILL[focus].learn.big });
 else phases[0].ms = M * (sp.facts + sp.focus);
+if (!sp.facts && focus) phases.shift();
 phases.push({ type: 'mix', ms: M * sp.mix, label: 'Mix-up', intro: 'A little of everything you’ve practiced, plus story problems.' });
 setSess(newSess('daily', phases));
 phaseIntro();

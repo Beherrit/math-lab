@@ -80,27 +80,27 @@ const A = rnd(3, 15), B = rnd(2, 9), C = rnd(2, 9), K = rnd(2, 9);
 const n = nm();
 const T = story ? pick([
 () => ({ w: `${n} buys ${k(A + ' packs')} of stickers with ${k(B + ' stickers in each pack')}. Then a friend gives ${n} ${k(C + ' more')} stickers.`, ask: `Which expression shows how many stickers ${n} has?`, c: `${A} × ${B} + ${C}`, d: [`${A} × (${B} + ${C})`, `${A} + ${B} + ${C}`, `${A} + ${B} × ${C}`],
-p: [`${A} packs with ${B} in each → ${A} × ${B}`, `${C} more are added at the end → + ${C}`, `Multiplying already happens first, so you don't need parentheses: ${b(`${A} × ${B} + ${C}`)}`],
-read: { find: 'An expression for the total stickers (you don’t have to solve it).', know: [`${A} packs`, `${B} stickers in each pack`, `${C} extra stickers`], clue: '“in each” means equal groups → multiply. “more” means add.', plan: `${A} × ${B} + ${C}` } }),
+p: [`${A} packs with ${B} in each: ${A} × ${B}`, `${C} more are added at the end: + ${C}`, `Multiplying already happens first, so you don't need parentheses: ${b(`${A} × ${B} + ${C}`)}`],
+read: { find: 'An expression for the total stickers (you don’t have to solve it).', know: [`${A} packs`, `${B} stickers in each pack`, `${C} extra stickers`], clue: '“in each” means equal groups, so multiply. “more” means add.', plan: `${A} × ${B} + ${C}` } }),
 () => ({ w: `There are ${k(C + ' tables')}. At each table there are ${k(A + ' kids')} and ${k(B + ' grown-ups')}.`, ask: 'Which expression shows how many people there are in all?', c: `${C} × (${A} + ${B})`, d: [`${C} × ${A} + ${B}`, `${C} + ${A} + ${B}`, `${A} + ${B} × ${C}`],
 p: [`People at one table: ${A} + ${B}`, `There are ${C} tables just like it, so the whole group gets multiplied: ${b(`${C} × (${A} + ${B})`)}`, `The parentheses make sure you add first.`],
-read: { find: 'An expression for everyone at all the tables.', know: [`${C} tables`, `${A} kids at each`, `${B} grown-ups at each`], clue: '“at each table” → every table has the same group → multiply the whole group.', plan: `${C} × (${A} + ${B})` } }),
+read: { find: 'An expression for everyone at all the tables.', know: [`${C} tables`, `${A} kids at each`, `${B} grown-ups at each`], clue: '“at each table” means every table has the same group, so multiply the whole group.', plan: `${C} × (${A} + ${B})` } }),
 () => { const X = B + C * K; return { w: `${n} had ${k('$' + X)}. ${n} spent ${k('$' + B)}, then split the rest equally into ${k(C + ' envelopes')}.`, ask: 'Which expression shows how much money goes in each envelope?', c: `(${X} − ${B}) ÷ ${C}`, d: [`${X} − ${B} ÷ ${C}`, `${X} ÷ ${C} − ${B}`, `(${X} + ${B}) ÷ ${C}`],
 p: [`First take away what was spent: ${X} − ${B}`, `“The rest” is split equally, so divide that whole amount: ${b(`(${X} − ${B}) ÷ ${C}`)}`],
-read: { find: 'An expression for the money in one envelope.', know: [`started with $${X}`, `spent $${B}`, `${C} envelopes`], clue: '“spent” → subtract. “split equally” → divide. “the rest” means divide AFTER subtracting.', plan: `(${X} − ${B}) ÷ ${C}` } }; },
+read: { find: 'An expression for the money in one envelope.', know: [`started with $${X}`, `spent $${B}`, `${C} envelopes`], clue: '“spent” means subtract. “split equally” means divide. “the rest” means divide AFTER subtracting.', plan: `(${X} − ${B}) ÷ ${C}` } }; },
 ]) : pick([
 () => ({ w: `Add ${A} and ${B}, then multiply by ${C}.`, c: `${C} × (${A} + ${B})`, d: [`${C} × ${A} + ${B}`, `${A} + ${B} × ${C}`, `(${C} + ${A}) × ${B}`],
-p: [`“Add ${A} and ${B}” → ${A} + ${B}`, `“then multiply by ${C}” → the whole sum gets multiplied, so the sum goes in parentheses: ${b(`${C} × (${A} + ${B})`)}`] }),
+p: [`“Add ${A} and ${B}” means ${A} + ${B}`, `“then multiply by ${C}” means the whole sum gets multiplied, so the sum goes in parentheses: ${b(`${C} × (${A} + ${B})`)}`] }),
 () => ({ w: `Multiply ${A} by ${B}, then add ${C}.`, c: `${A} × ${B} + ${C}`, d: [`${A} × (${B} + ${C})`, `${A} + ${B} × ${C}`, `(${A} + ${C}) × ${B}`],
-p: [`“Multiply ${A} by ${B}” → ${A} × ${B}`, `“then add ${C}” → ${b(`${A} × ${B} + ${C}`)}. Multiplying happens first anyway, so no parentheses needed.`] }),
+p: [`“Multiply ${A} by ${B}” means ${A} × ${B}`, `“then add ${C}” means ${b(`${A} × ${B} + ${C}`)}. Multiplying happens first anyway, so no parentheses needed.`] }),
 () => { const X = B + C * K; return { w: `Subtract ${B} from ${X}, then divide by ${C}.`, c: `(${X} − ${B}) ÷ ${C}`, d: [`${X} − ${B} ÷ ${C}`, `(${B} − ${X}) ÷ ${C}`, `${C} ÷ (${X} − ${B})`],
-p: [`“Subtract ${B} from ${X}” means start with ${X} and take away ${B}: ${X} − ${B}`, `“then divide by ${C}” → the difference gets divided, so it goes in parentheses: ${b(`(${X} − ${B}) ÷ ${C}`)}`] }; },
+p: [`“Subtract ${B} from ${X}” means start with ${X} and take away ${B}: ${X} − ${B}`, `“then divide by ${C}” means the difference gets divided, so it goes in parentheses: ${b(`(${X} − ${B}) ÷ ${C}`)}`] }; },
 () => ({ w: `Double the sum of ${A} and ${B}.`, c: `2 × (${A} + ${B})`, d: [`2 × ${A} + ${B}`, `2 + ${A} + ${B}`, `(2 + ${A}) × ${B}`],
-p: [`“The sum of ${A} and ${B}” → ${A} + ${B}`, `“Double” means × 2, and it doubles the whole sum: ${b(`2 × (${A} + ${B})`)}`] }),
+p: [`“The sum of ${A} and ${B}” means ${A} + ${B}`, `“Double” means × 2, and it doubles the whole sum: ${b(`2 × (${A} + ${B})`)}`] }),
 () => { const X = A + B; return { w: `Triple the difference of ${X} and ${B}.`, c: `3 × (${X} − ${B})`, d: [`3 × ${X} − ${B}`, `3 − (${X} − ${B})`, `(3 + ${X}) − ${B}`],
-p: [`“The difference of ${X} and ${B}” → ${X} − ${B}`, `“Triple” means × 3, and it triples the whole difference: ${b(`3 × (${X} − ${B})`)}`] }; },
+p: [`“The difference of ${X} and ${B}” means ${X} − ${B}`, `“Triple” means × 3, and it triples the whole difference: ${b(`3 × (${X} − ${B})`)}`] }; },
 () => { const X = C * (B + K); return { w: `Divide ${X} by ${C}, then subtract ${B}.`, c: `${X} ÷ ${C} − ${B}`, d: [`${X} ÷ (${C} − ${B})`, `${B} − ${X} ÷ ${C}`, `(${X} − ${B}) ÷ ${C}`],
-p: [`“Divide ${X} by ${C}” → ${X} ÷ ${C}`, `“then subtract ${B}” → ${b(`${X} ÷ ${C} − ${B}`)}. Dividing already comes first.`] }; },
+p: [`“Divide ${X} by ${C}” means ${X} ÷ ${C}`, `“then subtract ${B}” means ${b(`${X} ÷ ${C} − ${B}`)}. Dividing already comes first.`] }; },
 ]);
 const t = T();
 const right = solveSteps(t.c).value;
@@ -153,7 +153,7 @@ const miss = pick([5, 5, 3, 4]); const ans = seq[miss];
 const shown = seq.map((v, i) => i === miss ? '<span class="blank">?</span>' : fmt(v)).join(', ');
 return {
 ask: 'What number is missing?', expr: shown, exprSmall: true, answer: num(ans),
-ways: [way('Find the rule', [`Look at the jumps: ${seq[0]} → ${seq[1]} → ${seq[2]}. Each jump is ${b('+' + add)}.`, `So the missing number is ${seq[miss - 1]} + ${add} = ${b(ans)}.`]),
+ways: [way('Find the rule', [`Look at the jumps: ${seq[0]}, ${seq[1]}, ${seq[2]}. Each jump is ${b('+' + add)}.`, `So the missing number is ${seq[miss - 1]} + ${add} = ${b(ans)}.`]),
 way('Skip count', [`Start at ${start} and count by ${add}s: ${seq.slice(0, miss + 1).map((v, i) => i === miss ? b(v) : v).join(', ')}.`])],
 hint: 'How much bigger is each number than the one before it?',
 };
@@ -174,7 +174,7 @@ hint: `What does Rule B add each time?`,
 }
 return {
 ask: 'Each number in Pattern B is how many times the matching number in Pattern A?', visual: tbl(-1), answer: num(m),
-ways: [way('Compare the rules', why), way('Check a pair', [`Look at the 3rd numbers: ${A[2]} and ${B[2]}.`, `${A[2]} × ${m} = ${B[2]} ✓. Try another pair, it works every time.`])],
+ways: [way('Compare the rules', why), way('Check a pair', [`Look at the 3rd numbers: ${A[2]} and ${B[2]}.`, `${A[2]} × ${m} = ${B[2]}. Try another pair, it works every time.`])],
 hint: 'Pick a pair stacked on top of each other. What do you multiply the top one by?',
 };
 }
@@ -186,7 +186,7 @@ return {
 ask: 'Make ordered pairs (Pattern A, Pattern B). Which pair belongs?', visual: tbl(-1),
 answer: choice(c, [`(${B[i]}, ${A[i]})`, `(${A[i]}, ${B[i] + a})`, `(${A[i] + a}, ${B[i]})`]),
 ways: [way('Read straight down', [`An ordered pair takes the A number first, then the B number right under it.`, `${A[i]} is in Pattern A, and right under it is ${B[i]}. So ${b(c)}.`]),
-way('Use the rule', [`B is always ${m} × A. In ${c}, ${A[i]} × ${m} = ${B[i]} ✓`, `In (${B[i]}, ${A[i]}) the order is flipped, which is a common trap.`])],
+way('Use the rule', [`B is always ${m} × A. In ${c}, ${A[i]} × ${m} = ${B[i]}`, `In (${B[i]}, ${A[i]}) the order is flipped, which is a common trap.`])],
 hint: 'The first number comes from Pattern A, the second from Pattern B, in the same column.',
 };
 }

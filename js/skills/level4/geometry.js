@@ -127,7 +127,7 @@ const ang = { equilateral: 'acute', isosceles: 'acute', rightScalene: 'right', r
 const side = { equilateral: 'equilateral', isosceles: 'isosceles', rightScalene: 'scalene', rightIso: 'isosceles', obtuse: 'scalene', acuteScalene: 'scalene' }[key];
 if (byAngle) return { ask: 'Name this triangle by its ANGLES.', visual: drawShape(key), answer: choice(ang, [], { all: ['acute', 'right', 'obtuse'] }), choiceBig: true,
 ways: [way('Look at the corners', ['Right: one corner is a perfect square corner.', 'Obtuse: one corner is wider than a square corner.', 'Acute: every corner is narrower than a square corner.', `This one is ${b(ang)}.`]),
-way('The paper corner test', ['Hold the corner of a sheet of paper inside each angle.', 'Fits exactly → right angle. Paper sticks out past the sides → that angle is wider (obtuse). Sides go past the paper → narrower (acute).'])], hint: 'Is any corner a square corner? Wider than one?' };
+way('The paper corner test', ['Hold the corner of a sheet of paper inside each angle.', 'Fits exactly: right angle. Paper sticks out past the sides: that angle is wider (obtuse). Sides go past the paper: narrower (acute).'])], hint: 'Is any corner a square corner? Wider than one?' };
 return { ask: 'Name this triangle by its SIDES.', visual: drawShape(key), answer: choice(side, [], { all: ['equilateral', 'isosceles', 'scalene'] }), choiceBig: true,
 ways: [MARKS_WAY, way('Count the equal sides', ['Equilateral: all 3 sides equal.', 'Isosceles: 2 sides equal.', 'Scalene: no sides equal.', `This one is ${b(side)}.`])], hint: 'Count the sides with matching tick marks.' };
 }

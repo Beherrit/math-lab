@@ -6,6 +6,7 @@ import { levelComplete, levelProgress, checkLevelUp, unlockedLevel, workingLevel
 import { autoFocus } from '../js/core/focus.js';
 import { phaseSplit } from '../js/core/daily.js';
 import { recordSkill } from '../js/core/mastery.js';
+import { withEmptyLevels } from './fixtures/without-skills.js';
 const learner = level => { const s = freshState('T', '2026-11-19'); s.placed = true; s.level = level; return s; };
 const master = (S, ids) => ids.forEach(id => { S.skills[id] = { L: 3, run: 0, miss: 0, hist: [], n: 9, c: 9, last: null, mastered: true }; });
 test('level 4 is not complete until every enabled school skill is mastered', () => {
@@ -37,12 +38,14 @@ test('non-school skills do not block completion', () => {
   assert.equal(levelComplete(S, 4), true);
 });
 test('an empty level is never complete and never breaks progress or focus', () => {
-  const S = learner(2);
-  assert.deepEqual(levelProgress(S, 2), { done: 0, total: 0 });
-  assert.equal(levelComplete(S, 2), false); assert.equal(checkLevelUp(S), null);
-  assert.equal(workingLevel(S), 4);
-  assert.ok(autoFocus(S));
-  assert.deepEqual(reviewPool(S), []);
+  withEmptyLevels([1, 2, 3], () => {
+    const S = learner(2);
+    assert.deepEqual(levelProgress(S, 2), { done: 0, total: 0 });
+    assert.equal(levelComplete(S, 2), false); assert.equal(checkLevelUp(S), null);
+    assert.equal(workingLevel(S), 4);
+    assert.ok(autoFocus(S));
+    assert.deepEqual(reviewPool(S), []);
+  });
 });
 test('lower levels stay unlocked: a learner placed at 4 can see 1-4 but not 5', () => {
   const S = learner(4); assert.equal(unlockedLevel(S), 4);
@@ -61,6 +64,10 @@ test('facts phase shrinks to 15% once 90% of the 78 facts are solid', () => {
   assert.equal(p.facts, 0.15); assert.ok(Math.abs(p.facts + p.focus + p.mix - 1) < 1e-9); assert.equal(p.mix, 0.2);
   S.facts[keys[70]].b = 0;
   assert.equal(phaseSplit(S).facts, 0.4);
+});
+test('level 1 has no times tables warm-up; level 2 does', () => {
+  assert.deepEqual(phaseSplit(learner(1)), { facts: 0, focus: 0.8, mix: 0.2 });
+  assert.equal(phaseSplit(learner(2)).facts, 0.4);
 });
 test('mastery rules are unchanged: 4 right to step 2, 5 to step 3, 7 of 8 to master', () => {
   const S = learner(4);

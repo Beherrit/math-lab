@@ -25,8 +25,9 @@ slot.innerHTML = `<div class="ans frac">${neg}${box('w')}<div class="fstack">${b
 if (!$('.keypad', pad)) pad.innerHTML = keypad(true, q.answer.signed);
 }
 function renderChoice(q, slot, pad) {
-const opts = q.answer.options; const long = opts.some(o => String(o).replace(/<[^>]+>/g, '').length > 16);
-pad.innerHTML = `<div class="choices ${q.choiceBig ? 'big' : long ? 'one' : 'two'}">${opts.map((o, i) => `<button class="choice ${sess.wrongChoices.has(i) ? 'nope' : ''}" data-act="choice" data-i="${i}" ${sess.wrongChoices.has(i) ? 'disabled' : ''}>${o}</button>`).join('')}</div>`;
+const opts = q.answer.options; const len = o => String(o).replace(/<[^>]+>/g, '').length;
+const long = opts.some(o => len(o) > 16); const big = q.choiceBig && opts.every(o => len(o) <= 5); // big buttons only fit short answers
+pad.innerHTML = `<div class="choices ${big ? 'big' : long ? 'one' : 'two'}">${opts.map((o, i) => `<button class="choice ${sess.wrongChoices.has(i) ? 'nope' : ''}" data-act="choice" data-i="${i}" ${sess.wrongChoices.has(i) ? 'disabled' : ''}>${o}</button>`).join('')}</div>`;
 slot.innerHTML = '';
 }
 export function renderInput() {

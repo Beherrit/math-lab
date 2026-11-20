@@ -53,15 +53,15 @@ export function strategy(a, c) {
 const f = EASE.find(x => x === a || x === c); const o = f === a ? c : a; const p = a * c;
 switch (f) {
 case 1: return `Anything times 1 stays the same: ${o} × 1 = ${p}.`;
-case 10: return `Times 10: just put a 0 on the end. ${o} → ${p}.`;
+case 10: return `Times 10: just put a 0 on the end. ${o} becomes ${p}.`;
 case 2: return `Times 2 is a double: ${o} + ${o} = ${p}.`;
 case 5: return `Times 5 is half of times 10: ${o} × 10 = ${o * 10}, and half of that is ${p}.`;
-case 11: return o <= 9 ? `11 times a one-digit number: write the digit twice → ${p}.` : `Times 11 is times 10 plus one more group: ${o * 10} + ${o} = ${p}.`;
+case 11: return o <= 9 ? `11 times a one-digit number: write the digit twice: ${p}.` : `Times 11 is times 10 plus one more group: ${o * 10} + ${o} = ${p}.`;
 case 9: return `Times 9 is times 10 minus one group: ${o * 10} − ${o} = ${p}.`;
-case 4: return `Times 4 is double, then double again: ${o} → ${o * 2} → ${p}.`;
+case 4: return `Times 4 is double, then double again: ${o}, ${o * 2}, ${p}.`;
 case 3: return `Times 3 is a double plus one more group: ${o * 2} + ${o} = ${p}.`;
 case 6: return `Times 6 is times 5 plus one more group: ${o * 5} + ${o} = ${p}.`;
-case 8: return `Times 8 is double, double, double: ${o} → ${o * 2} → ${o * 4} → ${p}.`;
+case 8: return `Times 8 is double, double, double: ${o}, ${o * 2}, ${o * 4}, ${p}.`;
 case 12: return `Times 12 is times 10 plus times 2: ${o * 10} + ${o * 2} = ${p}.`;
 default: return `Times 7 is times 5 plus times 2: ${o * 5} + ${o * 2} = ${p}.`;
 }
@@ -79,12 +79,12 @@ export const TABLE_TIPS = {
 1: 'Anything times 1 stays exactly the same.',
 2: 'Times 2 is a double. 7 × 2 = 7 + 7.',
 3: 'Times 3 is a double plus one more group. 3 × 8 = 16 + 8.',
-4: 'Times 4 is double, then double again. 4 × 6: 6 → 12 → 24.',
+4: 'Times 4 is double, then double again. 4 × 6: 6, 12, 24.',
 5: 'Times 5 always ends in 0 or 5. It’s half of times 10: 5 × 8 = half of 80.',
 6: 'Times 6 is times 5 plus one more group. 6 × 7 = 35 + 7.',
 7: 'Times 7 is times 5 plus times 2. 7 × 8 = 40 + 16. (And 7 × 8 = 56 — think “5, 6, 7, 8”: 56 = 7 × 8!)',
-8: 'Times 8 is double, double, double. 8 × 6: 6 → 12 → 24 → 48.',
-9: 'Times 9 is times 10 minus one group. 9 × 7 = 70 − 7. The digits always add up to 9: 63 → 6 + 3 = 9.',
+8: 'Times 8 is double, double, double. 8 × 6: 6, 12, 24, 48.',
+9: 'Times 9 is times 10 minus one group. 9 × 7 = 70 − 7. The digits always add up to 9: For 63: 6 + 3 = 9.',
 10: 'Times 10: just put a 0 on the end.',
 11: 'Up to 9: write the digit twice (11 × 4 = 44). After that: times 10 plus one more group.',
 12: 'Times 12 is times 10 plus times 2. 12 × 7 = 70 + 14.',

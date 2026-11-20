@@ -7,4 +7,4 @@ setState(loadSaved());
 wireEvents();
 render();
 if (/[?&]debug\b/.test(location.search)) installDebug();
-if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('/sw.js').catch(() => { });
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('./sw.js').catch(() => { });

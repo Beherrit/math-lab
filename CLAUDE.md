@@ -1,7 +1,7 @@
 # Math Lab
 
 A kids' math practice web app. One learner per browser, no accounts, no server. Static site, vanilla JS ES modules,
-no build step, no dependencies. Progress lives in `localStorage` (`mathlab.v2`). Deployed to Vercel as plain files.
+no build step, no dependencies. Progress lives in `localStorage` (`mathlab.v2`). Hosted on GitHub Pages as plain files (all paths are relative, so it runs from a subfolder).
 
 Daily page = ten minutes in three phases: times-table facts, one focus skill, a mix. Skills are grouped in a ladder of
 seven levels; a placement check ("Let's find your starting point") puts a new learner on a level.
@@ -55,7 +55,8 @@ service-worker precache list). Raise `CACHE_NAME` in that script when a release 
 
 A level is complete when every enabled school skill (`school: true`, not switched off) in it is mastered. Completing the
 learner's current level opens and selects the next one. Earlier levels stay reachable from the level chips on home.
-Levels 1-3 and 5-7 are empty until content is added; every screen and the placement check cope with empty levels (an
+All seven levels have content. Level 1 has no times tables warm-up on its daily page; the warm-up starts at level 2.
+Every screen and the placement check still cope with an empty level (an
 empty level is a ceiling for placement, and practice uses the nearest lower level that has skills).
 
 ## Code map
