@@ -54,7 +54,7 @@ rightIso: { pts: [[15, 15], [15, 85], [85, 85]], ticks: [1, 1, 0], right: [1] },
 obtuse: { pts: [[35, 55], [90, 80], [10, 80]], ticks: [0, 0, 0], right: [] },
 acuteScalene: { pts: [[65, 12], [90, 85], [15, 85]], ticks: [0, 0, 0], right: [] },
 };
-function drawShape(key) {
+export function drawShape(key) {
 const s = SHAPES[key]; const ang = pick([0, 0, 0, 180, 12, -12, 90, 20]);
 const th = ang * Math.PI / 180;
 const pts = s.pts.map(([x, y]) => [50 + (x - 50) * Math.cos(th) - (y - 50) * Math.sin(th), 50 + (x - 50) * Math.sin(th) + (y - 50) * Math.cos(th)]);

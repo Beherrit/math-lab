@@ -1,6 +1,7 @@
 // Checks for level 6 that read the problem the way a child does: the rendered words, not the generator's own numbers.
 // Also holds the seeded random numbers, so a failing run can be repeated exactly.
 import assert from 'node:assert/strict';
+import { FACTS_NEW } from './level6.facts.js';
 
 // ---- seeded randomness: the seed is printed whenever a test fails; L6_SEED=<n> repeats the run ----
 export const SEED = Number(process.env.L6_SEED) || (Math.floor(Math.random() * 2 ** 31) + 1);
@@ -60,9 +61,11 @@ function derivable(v, pool) {
 }
 
 // ---- story text must carry the numbers the answer uses, and no others ----
+// Axis tick labels are the scale of a graph, not data the question hands the child.
+const noTicks = h => String(h ?? '').replace(/<text[^>]*class="tk"[^>]*>[^<]*<\/text>/g, '');
 const ALIAS = { interest: t => (Number.isInteger(t.t) ? [] : [t.t * 12]) };
 export function storyMatchesOperands(p, t, where) {
-  const text = [p.story, p.ask, p.expr, p.visual].map(h => plain(h, true)).join(' '), list = numbersIn(text), shown = new Set(list), words = wordNumbers(text), low = text.toLowerCase();
+  const text = [p.story, p.ask, p.expr, noTicks(p.visual)].map(h => plain(h, true)).join(' '), list = numbersIn(text), shown = new Set(list), words = wordNumbers(text), low = text.toLowerCase();
   const answer = p.answer.kind === 'num' ? Math.abs(p.answer.value) : null, ops = operandsOf(t), alias = (ALIAS[t.kind]?.(t) || []).map(Math.abs);
   const implied = [...(low.includes('number cube') ? [2, 3, 4, 5, 6] : []), ...(low.includes('coin') ? [2] : []), 0, 1, 100];
   for (const v of operandsOf(t, true)) {
@@ -120,6 +123,7 @@ export function noPluralOfOne(p, where) {
 
 // ---- fixed facts, written here on their own: question text -> the correct choice ----
 export const FACTS = {
+  ...FACTS_NEW,
   'About how many times does the diameter of a circle fit around its edge?': 'A little more than 3 times',
   'What do we call the distance all the way around a circle?': 'circumference',
   'Which is longer: the radius or the diameter of the same circle?': 'The diameter (it is 2 radii)',

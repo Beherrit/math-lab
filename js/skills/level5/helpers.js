@@ -23,6 +23,11 @@ export const sorted = xs => xs.slice().sort((a, b) => a - b);
 // Comparison signs inside HTML text must be escaped: a bare < would be read as the start of a tag.
 export const sg = s => ({ '<': '&lt;', '>': '&gt;' }[s] ?? s);
 export const par = v => (v < 0 ? `(${fmt(v)})` : fmt(v));
+// Values joined for a sentence, and a percent written with its sign.
+export const list = xs => xs.map(fmt).join(', ');
+export const pct = v => `${fmt(v)}%`;
+// Distinct whole numbers in a range (for data sets and wrong answers).
+export function distinct(n, lo, hi) { const xs = new Set(); while (xs.size < n) xs.add(rnd(lo, hi)); return [...xs]; }
 
 // Pairs of things for ratio stories. s(x, y) is the sentence; a, b name the two groups; all names both together.
 export const PAIRS = [

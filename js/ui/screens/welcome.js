@@ -1,6 +1,6 @@
 // First screen for a new learner, and the "find your starting point" intro and result.
 import { S } from '../../core/store.js';
-import { levelInfo } from '../../levels.js';
+import { levelFull } from '../../levels.js';
 import { I } from '../icons.js';
 import { mount, esc } from '../dom.js';
 import { logoSVG } from '../fragments.js';
@@ -17,16 +17,21 @@ mount(`<div class="page welcome">
 <p class="fine">Progress saves on this device. Grown-ups can back it up from the settings page.</p>
 </div>`);
 }
+// The two ways in for a new learner, equal in weight and size.
+export function renderPlaceChoice() {
+mount(`<div class="page intro"><div class="intro-card paper-card choose"><h1>Hi, ${esc(S.name)}!</h1>
+<button class="btn primary big" data-go="place">Find my starting point</button>
+<button class="btn primary big" data-act="beginearly">Start from the very beginning</button></div></div>`);
+}
 export function renderPlaceIntro() {
-mount(`<div class="page intro"><header class="top">${S.placed ? `<button class="iconbtn" data-go="home" aria-label="Back">${I.back}</button>` : ''}</header>
+mount(`<div class="page intro"><header class="top"><button class="iconbtn" data-go="home" aria-label="Back">${I.back}</button></header>
 <div class="intro-card paper-card"><h1>Let’s find your starting point</h1>
 <p>Try a few questions, ${esc(S.name)}. Skip any you haven’t learned yet. There is no timer and no score.</p>
 <button class="btn primary big" data-act="placestart">Let’s go</button></div></div>`);
 }
 export function renderPlaceResult() {
-const l = levelInfo(S.level);
 mount(`<div class="page intro"><div class="intro-card paper-card">
-<h1>You’re starting at Level ${l.n}: ${l.title}</h1>
+<h1>You’re starting at ${levelFull(S.level)}</h1>
 <p>You can change levels any time from the home page.</p>
 <button class="btn primary big" data-go="home">Go</button></div></div>`);
 }

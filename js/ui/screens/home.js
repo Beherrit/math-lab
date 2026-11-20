@@ -12,6 +12,7 @@ import { I } from '../icons.js';
 import { mount, esc } from '../dom.js';
 import { sticker } from '../fragments.js';
 import { weekStrip, miniGrid, skillRow, levelBar, emptyLevelNote } from './home-parts.js';
+import { strandList } from './strand-list.js';
 function todayCard(focus) {
 const done = S.days[today()]?.done; const mins = S.settings.minutes; const sp = phaseSplit(S);
 if (done) return `<h2 class="done-title">Today’s page is done ${I.check}</h2><p class="muted">Great work. Come back tomorrow to keep your streak going, or practice anything below.</p>
@@ -24,6 +25,12 @@ ${sp.facts ? `<li><b>Times tables warm-up</b><span>${Math.round(mins * sp.facts)
 </ol>
 <button class="btn primary big" data-act="start">Start</button>`;
 }
+// The times tables card is hidden at Early Start.
+const timesCard = solid => `<section class="block">
+<div class="block-head"><h2>Times tables</h2><button class="link" data-go="lab">Fact lab</button></div>
+<button class="tt-card" data-go="lab">${miniGrid()}<span class="tt-text"><b>${solid}</b> of 78 facts are solid<br><span class="muted">Tap to see tricks for each table</span></span></button>
+<div class="row2"><button class="btn" data-act="facts">Practice facts</button><button class="btn" data-act="sprint">1-minute sprint</button></div>
+</section>`;
 export function renderHome() {
 const focus = getFocus(S); const solid = solidCount(S);
 const skills = enabledIn(S, S.level);
@@ -36,16 +43,12 @@ mount(`<div class="page home">
 ${weekStrip()}
 ${todayCard(focus)}
 </section>
-<section class="block">
-<div class="block-head"><h2>Times tables</h2><button class="link" data-go="lab">Fact lab</button></div>
-<button class="tt-card" data-go="lab">${miniGrid()}<span class="tt-text"><b>${solid}</b> of 78 facts are solid<br><span class="muted">Tap to see tricks for each table</span></span></button>
-<div class="row2"><button class="btn" data-act="facts">Practice facts</button><button class="btn" data-act="sprint">1-minute sprint</button></div>
-</section>
+${S.level === 0 ? '' : timesCard(solid)}
 <section class="block">
 ${levelBar()}
 <div class="block-head"><h2>Skills</h2><span class="muted small">Tap one to learn or practice</span></div>
 ${emptyLevelNote()}
-<div class="skills">${skills.map(skillRow).join('')}</div>
+${strandList(S, skills, skillRow, focus)}
 </section>
 <section class="block">
 <div class="block-head"><h2>Stickers</h2><button class="link" data-go="badges">See all</button></div>

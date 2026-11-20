@@ -1,23 +1,24 @@
 // Level 1 content: every skill, every step, 300 problems each. Answers are recomputed from the raw operands in p._t, from the
 // question text, and (for choices) by checking that exactly one option is true; stories must print the numbers the generator holds.
+// Helpers live in tests/level1.util.js, the tables and recompute rules for the added skills in level1.new.js, the choice judges
+// in level1.special.js and the picture readers in level1.visual.js.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SKILLS, STORY_SOURCES } from '../js/skills/level1/index.js';
 import { check, answerHTML, ANSWER_KINDS, NAMES } from '../js/util.js';
+import { strip, js, isMath, evalMath, sum, digits, numsIn, roundTo, only } from './level1.util.js';
+import { STRANDS, CALC_NEW, LIMIT_NEW, PRINTED } from './level1.new.js';
+import { SPECIAL_NEW } from './level1.special.js';
+import { checkVisual } from './level1.visual.js';
 
 const N = 300;
-const strip = s => String(s ?? '').replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, '');
-const js = s => s.replace(/,/g, '').replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
-const isMath = s => /^\d+(\s*[+\-*/]\s*\d+)*$/.test(s.trim());
-const evalMath = s => { assert.match(s, /^[\d\s+\-*/().]+$/, `not plain arithmetic: ${s}`); return Function(`return (${s})`)(); };
-const sum = xs => xs.reduce((s, x) => s + x, 0);
-const digits = n => [Math.floor(n / 100), Math.floor(n / 10) % 10, n % 10];
-const numsIn = s => (strip(s).replace(/(\d),(\d{3})/g, '$1$2').match(/\d+(?:\.\d+)?/g) || []).map(Number);
-function roundTo(n, to) { const lo = n - n % to, hi = lo + to; return n - lo < hi - n ? lo : hi; }
 const rounders = (t, to) => Array.from({ length: 1200 }, (_, n) => n).filter(n => roundTo(n, to) === t);
 const clock = mins => `${Math.floor(mins / 60)}:${String(mins % 60).padStart(2, '0')}`;
 const COIN = { penny: 1, pennies: 1, nickel: 5, nickels: 5, dime: 10, dimes: 10, quarter: 25, quarters: 25, 'dollar bill': 100, 'dollar bills': 100 };
 const coinsWorth = s => [...strip(s).matchAll(/(\d+) (pennies|penny|nickels|nickel|dimes|dime|quarters|quarter|dollar bills|dollar bill)/g)].reduce((t, m) => t + +m[1] * COIN[m[2]], 0);
+const NEW_IDS = ['l1count', 'l1evenodd', 'l1mental', 'l1equal', 'l1addmany', 'l1array', 'l1shapes', 'l1shares', 'l1length', 'l1graph'];
+// No emoji, arrows, check marks or other icon glyphs (the minus sign, times and divide signs are fine).
+const GLYPHS = /[←-⇿☀-➿⬀-⯿️\u{1F000}-\u{1FAFF}]/u;
 
 // Independent recomputation: operands -> the expected answer (a number, or the text of the right choice).
 const CALC = {
@@ -34,10 +35,11 @@ const CALC = {
   family: t => `${t.x + t.y} − ${t.x} = ${t.y}`,
   clock: t => clock(t.h * 60 + t.m + t.d),
   elapsed: t => t.h2 * 60 + t.m2 - (t.h1 * 60 + t.m1),
+  ...CALC_NEW,
 };
 // The largest number a learner should meet at each step (operands and answer).
 const LIMIT = { l1add20: [20, 20, 20], l1sub20: [20, 20, 20], l1pv: [99, 999, 1000], l1cmp: [99, 999, 999], l1addbig: [99, 999, 1000], l1subbig: [99, 999, 999],
-  l1skip: [100, 1000, 150], l1round: [100, 1000, 1000], l1money: [100, 125, 500], l1story: [100, 125, 1000] };
+  l1skip: [100, 1000, 150], l1round: [100, 1000, 1000], l1money: [100, 125, 500], l1story: [100, 125, 1000], ...LIMIT_NEW };
 const NEEDS_VARIED_HINT = { l1cmp: [1, 2] };
 
 const numbersIn = v => (typeof v === 'number' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(numbersIn) : []);
@@ -54,6 +56,7 @@ function sane(p, where) {
   const text = JSON.stringify([p.ask, p.expr, p.story, p.hint, p.ways, p.visual, p.read, p.pre, p.suffix, p.answer.options]);
   assert.doesNotMatch(text.replace(/,null/g, '').replace(/null,/g, ''), /undefined|NaN|null|Infinity/, `${where}: broken text`);
   assert.doesNotMatch(strip(text), /\bgrade\b/i, `${where}: grade wording`);
+  assert.doesNotMatch(text, GLYPHS, `${where}: icon or arrow glyph`);
   if (p.answer.kind === 'choice') {
     const o = p.answer.options;
     assert.ok(o.length >= 2 && new Set(o).size === o.length, `${where}: options must be unique`);
@@ -68,7 +71,6 @@ const EQ = /(\d+)\s*([+−×÷])\s*(\d+)\s*=\s*(\d+)/;
 const eqOf = s => { const m = strip(s).match(EQ); return m && { a: +m[1], op: m[2], b: +m[3], c: +m[4] }; };
 const holds = ({ a, op, b, c }) => ({ '+': a + b, '−': a - b, '×': a * b, '÷': a / b })[op] === c;
 const bag = ({ a, b, c }) => [a, b, c].sort((x, y) => x - y).join();
-const only = (hits, a, where, why) => assert.deepEqual(hits, [a.options[a.correct]], `${where}: exactly the marked option must ${why}`);
 function truth(p, where) {
   const t = p._t, says = p.answer.options[p.answer.correct] === 'True';
   let really;
@@ -86,6 +88,7 @@ const SPECIAL = {
   coinset: (p, where) => only(p.answer.options.filter(o => coinsWorth(o) === p._t.total), p.answer, where, `be worth ${p._t.total}`),
   between: (p, where) => only(p.answer.options.filter(o => { const [x, y] = numsIn(o); return x <= p._t.n && p._t.n <= y; }), p.answer, where, 'bracket the number'),
   inpat: (p, where) => only(p.answer.options.filter(o => +o >= p._t.start && (+o - p._t.start) % p._t.step === 0), p.answer, where, 'be in the pattern'),
+  ...SPECIAL_NEW,
 };
 function oneCorrect(p, where) {
   const a = p.answer;
@@ -106,6 +109,17 @@ function storyNumbers(p, where) {
   if (!p.story) return;
   const shown = numsIn([p.story, p.ask, p.expr].join(' ')), text = strip(p.story + ' ' + p.ask);
   for (const v of new Set(flat(p._t))) if (!(v === 60 && /hour/.test(text))) assert.ok(shown.includes(v), `${where}: ${v} (from ${JSON.stringify(p._t)}) is not in the text a child reads: ${shown.join(', ')}`);
+}
+// Without a picture, the operands of the added skills must be printed in the question (1 and 2 may be words such as "next" or "two").
+function printedOperands(p, id, where) {
+  const get = PRINTED[p._t.f];
+  if (!NEW_IDS.includes(id) || !get || p.visual) return;
+  const shown = numsIn([p.story, p.ask, p.expr].join(' '));
+  for (const v of get(p._t).map(Math.abs)) if (v > 2) assert.ok(shown.includes(v), `${where}: operand ${v} of ${JSON.stringify(p._t)} is not printed; the text has ${shown.join(', ')}`);
+}
+// A question that is only a picture must carry the hidden marker, so repeat-avoidance can tell two pictures apart.
+function markerOnPictureOnly(p, id, where) {
+  if (NEW_IDS.includes(id) && p.visual && !p.expr && !p.story && !numsIn(p.ask).length) assert.match(p.ask, /<!--/, `${where}: a picture-only question needs the hidden marker`);
 }
 function endsOnAnswer(p, where) {
   if (p.answer.kind !== 'num') return;
@@ -143,17 +157,25 @@ function trades(a, c, sub) {
   for (let i = 2; i >= 0; i--) { const over = sub ? A[i] - carry < C[i] : A[i] + C[i] + carry > 9; if (over && (sub || i > 0)) n++; carry = over ? 1 : 0; }
   return n;
 }
+function everyCheck(p, id, L, where) {
+  sane(p, where); recompute(p, where); inRange(p, id, L, where); oneCorrect(p, where); storyNumbers(p, where); endsOnAnswer(p, where); hintKeepsQuiet(p, where);
+  checkVisual(p, where); printedOperands(p, id, where); markerOnPictureOnly(p, id, where);
+}
 
-test('level 1: ids are unique, prefixed, and every skill is complete', () => {
+test('level 1: ids are unique, prefixed, every skill is complete and has a strand', () => {
   assert.equal(new Set(SKILLS.map(s => s.id)).size, SKILLS.length);
   for (const s of SKILLS) {
     assert.match(s.id, /^l1[a-z0-9]+$/);
     assert.equal(s.level, 1);
     assert.equal(s.school, true);
+    assert.ok(STRANDS.includes(s.strand), `${s.id}: strand "${s.strand}" is not one of the ten`);
     assert.ok(s.std && s.title && s.sub && s.learn.big && s.learn.tips.length >= 2 && s.learn.words.length >= 1);
     assert.doesNotMatch(JSON.stringify([s.title, s.sub, s.learn]), /\bgrade\b/i);
+    assert.doesNotMatch(JSON.stringify([s.title, s.sub, s.learn, s.strand]), GLYPHS, `${s.id}: icon glyph`);
   }
   assert.ok(Object.keys(LIMIT).every(id => SKILLS.some(s => s.id === id)) && SKILLS.every(s => LIMIT[s.id]));
+  for (const id of NEW_IDS) assert.ok(SKILLS.some(s => s.id === id), `missing skill ${id}`);
+  assert.equal(SKILLS[SKILLS.length - 1].story, true, 'the story skill comes last');
 });
 
 for (const s of SKILLS) for (const L of [1, 2, 3]) {
@@ -161,7 +183,7 @@ for (const s of SKILLS) for (const L of [1, 2, 3]) {
     const seen = [];
     for (let i = 0; i < N; i++) {
       const p = s.gen(L), where = `${s.id} L${L} "${strip(p?.story)} ${strip(p?.ask)} ${strip(p?.expr)}"`;
-      sane(p, where); recompute(p, where); inRange(p, s.id, L, where); oneCorrect(p, where); storyNumbers(p, where); endsOnAnswer(p, where); hintKeepsQuiet(p, where);
+      everyCheck(p, s.id, L, where);
       seen.push(p);
     }
     const shapes = new Set(seen.map(shapeOf));
@@ -191,6 +213,13 @@ test('level 1 story sources: every maker gives a full story at the steps it supp
     if (p === null) continue;
     const where = `${make.name} L${L}`;
     assert.ok(p.story && p.ask && p.read && p.op && p.ways.length >= 2 && p.hint, where);
-    recompute(p, where); oneCorrect(p, where); storyNumbers(p, where); endsOnAnswer(p, where); hintKeepsQuiet(p, where);
+    recompute(p, where); oneCorrect(p, where); storyNumbers(p, where); endsOnAnswer(p, where); hintKeepsQuiet(p, where); checkVisual(p, where);
+  }
+});
+test('level 1 story sources: the new comparison stories exist at every step and show a bar picture', () => {
+  for (const name of ['cmpFewer', 'changeUnknown', 'startAfterTake', 'startBeforeAdd', 'otherAmount']) {
+    const make = STORY_SOURCES.find(f => f.name === name);
+    assert.ok(make, `${name} is a story source`);
+    for (const L of [1, 2, 3]) { const p = make(L); assert.ok(p && p.visual && p.visual.includes('<svg'), `${name} L${L}: bar picture`); }
   }
 });

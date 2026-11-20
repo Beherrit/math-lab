@@ -1,6 +1,6 @@
 // Which screen is showing. Screens never import this; they navigate with data-go buttons.
 import { S } from '../core/store.js';
-import { renderWelcome, renderPlaceIntro } from './screens/welcome.js';
+import { renderWelcome, renderPlaceIntro, renderPlaceChoice } from './screens/welcome.js';
 import { renderHome } from './screens/home.js';
 import { renderLab, renderTable } from './screens/lab.js';
 import { renderBadges, renderPickFocus } from './screens/lists.js';
@@ -15,6 +15,6 @@ parent: renderParent, pick: renderPickFocus, badges: renderBadges, place: render
 };
 export function render() {
 if (!S) return renderWelcome();
-if (!S.placed) return renderPlaceIntro();
+if (!S.placed) return view === 'place' ? renderPlaceIntro() : renderPlaceChoice();
 (SCREENS[view] || renderHome)(viewArg);
 }

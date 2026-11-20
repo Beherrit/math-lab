@@ -2,8 +2,8 @@
 import { S, save } from '../core/store.js';
 import { today } from '../core/dates.js';
 import { unlockedLevel } from '../core/progression.js';
+import { setCurrentLevel, canOpenLevel, startFromBeginning } from '../core/entry.js';
 import { SKILL } from '../skills/registry.js';
-import { clampLevel } from '../levels.js';
 import { $, $$ } from './dom.js';
 import { go, currentView } from './router.js';
 import { renderSkill } from './screens/skill.js';
@@ -17,10 +17,13 @@ import { submit, skipQuestion } from '../session/answer.js';
 import { advance, playPhase } from '../session/flow.js';
 import { startDaily, startFree, startPlacementCheck } from '../session/start.js';
 import { finish } from '../session/summary.js';
+import { keepGoing, nextSkill } from '../session/extra-run.js';
 import { abortPlacement } from '../session/placement-run.js';
 import { adultActions } from './parent-actions.js';
+import { lessonActions } from '../session/lesson-run.js';
+import { aloudActions } from '../session/aloud.js';
 function setLevel(n, after) {
-S.level = clampLevel(n); S.todayFocus = null; save(); after();
+setCurrentLevel(S, n); save(); after();
 }
 function selectTab(el) {
 const wrap = el.closest('.ways');
@@ -30,7 +33,7 @@ $$('.way', wrap).forEach(w => w.classList.toggle('on', w.dataset.i === el.datase
 function quit() {
 if (!sess) return;
 if (sess.mode === 'place') return abortPlacement();
-if (sess.mode === 'free' || !$('.sheet')) return finish(false);
+if (sess.mode === 'free' || sess.mode === 'extra' || !$('.sheet')) return finish();
 return pauseOverlay('quit');
 }
 function presolve() {
@@ -47,10 +50,11 @@ practice: el => startFree('skill', el.dataset.id),
 skill: el => go('skill', el.dataset.id),
 setfocus: el => { S.todayFocus = { d: today(), id: el.dataset.id }; save(); toast(`Today’s focus: ${SKILL[el.dataset.id].title}`); go('home'); },
 newex: () => renderSkill(currentView().arg),
-setlevel: el => { if (+el.dataset.n <= unlockedLevel(S)) setLevel(el.dataset.n, () => go('home')); },
+setlevel: el => { if (canOpenLevel(S, +el.dataset.n) && +el.dataset.n <= unlockedLevel(S)) setLevel(el.dataset.n, () => go('home')); },
 parentlevel: el => setLevel(el.dataset.n, renderParent),
 replace: () => go('place'),
 placestart: () => startPlacementCheck(),
+beginearly: () => { startFromBeginning(S); save(); go('home'); },
 skipq: () => skipQuestion(),
 tab: selectTab,
 phasego: () => playPhase(),
@@ -68,7 +72,11 @@ closesheet: () => closeSheet(),
 pause: () => pauseOverlay('pause'),
 quit,
 resume: () => { sess.paused = false; sess.last = performance.now(); closeSheet(); },
-stop: () => finish(false),
+stop: () => finish(),
+keepgoing: () => keepGoing(),
+nextskill: () => nextSkill(),
 closeparent: () => { parentState.open = false; go('home'); },
 ...adultActions,
+...lessonActions,
+...aloudActions,
 };

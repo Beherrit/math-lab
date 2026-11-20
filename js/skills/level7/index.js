@@ -14,12 +14,23 @@ import { genSys } from './systems-elim.js';
 import { genPyth } from './pythag.js';
 import { genTrans } from './transform-more.js';
 import { genAngles } from './angles.js';
+import { genPropCmp } from './propcmp.js';
+import { genSlopeWhy } from './slopewhy.js';
+import { genLineEq } from './lineeq.js';
+import { genFuncCmp } from './funccmp.js';
+import { genGraphStory } from './graphstory.js';
+import { genSysStory } from './sysstory.js';
+import { genCongruent } from './congruent.js';
+import { genSimilar } from './similar.js';
+import { genPythReal } from './pythreal.js';
+import { genIrrLine } from './irrline.js';
 import { genVol } from './volume.js';
 import { genScatter } from './scatter-lines.js';
 import { powerStory, sameCostStory, lineStory, ticketStory } from './stories-algebra.js';
 import { triangleStory, volumeStory, squareStory, rateStory, predictStory } from './stories-shape.js';
 import { makeStory } from '../level4/story.js';
 import { LEARN } from './learn.js';
+import { LEARN_MORE } from './learn-more.js';
 
 // A generator may return null for an unlucky draw. Try again here so the app always gets a problem.
 const steady = gen => L => { for (let i = 0; i < 60; i++) { const p = gen(L); if (p) return tagged(p); } return null; };
@@ -37,24 +48,35 @@ const STEP_SOURCES = [[triangleStory, rateStory, predictStory, lineStory], [tria
   [triangleStory, rateStory, lineStory, volumeStory, squareStory, powerStory, sameCostStory, ticketStory, sameCostStory, ticketStory]];
 const genStory = L => makeStory(STEP_SOURCES[L - 1], L);
 
-const skill = (id, std, title, sub, gen, extra = {}) => ({ id, level: 7, std, title, sub, gen: steady(gen), school: true, learn: LEARN[id], ...extra });
+const LEARN_ALL = { ...LEARN, ...LEARN_MORE };
+const skill = (id, strand, std, title, sub, gen, extra = {}) => ({ id, level: 7, strand, std, title, sub, gen: steady(gen), school: true, learn: LEARN_ALL[id], ...extra });
 export const SKILLS = [
-  skill('l7explaw', '8.EE.1', 'Exponent laws', 'Product, quotient, power of a power', genExpLaw),
-  skill('l7expneg', '8.EE.1', 'Zero and negative exponents', 'What they mean and how to use them', genExpNeg),
-  skill('l7sci', '8.EE.3', 'Scientific notation', 'Read, write and compare', genSci),
-  skill('l7sciops', '8.EE.4', 'Scientific notation: × and ÷', 'Front numbers and powers of 10', genSciOps),
-  skill('l7roots', '8.EE.2, 8.NS.2', 'Square roots and cube roots', 'Exact roots and estimates', genRoots),
-  skill('l7rational', '8.NS.1', 'Rational and irrational numbers', 'Repeating decimals as fractions', genRational),
-  skill('l7eqboth', '8.EE.7b', 'Equations with x on both sides', 'Balance, brackets, like terms', genEqBoth),
-  skill('l7eqcount', '8.EE.7a', 'How many solutions?', 'One, none, or infinitely many', genEqCount),
-  skill('l7slope', '8.EE.6', 'Slope', 'Rise over run from graphs, tables, points', genSlope),
-  skill('l7line', '8.EE.6, 8.F.3', 'Lines: y = mx + b', 'Slope, y-intercept, points on the line', genLine),
-  skill('l7func', '8.F.1–5', 'Functions', 'Rules, tables, linear or not, rate of change', genFunc),
-  skill('l7sys', '8.EE.8', 'Systems of equations', 'Graphing, substitution, elimination', genSys),
-  skill('l7pyth', '8.G.6–8', 'Pythagorean theorem', 'Missing sides and distance on a grid', genPyth),
-  skill('l7trans', '8.G.1–4', 'Transformations', 'Slides, flips, turns, resizing', genTrans),
-  skill('l7angles', '8.G.5', 'Angles and parallel lines', 'Transversals and triangle angles', genAngles),
-  skill('l7vol', '8.G.9', 'Volume of round solids', 'Cylinders, cones and spheres', genVol),
-  skill('l7scatter', '8.SP.1–3', 'Scatter plots', 'Associations and lines of best fit', genScatter),
-  skill('l7story', 'All', 'Story problems', 'Read it, plan it, solve it', genStory, { story: true }),
+  skill('l7explaw', 'Numbers', '8.EE.1', 'Exponent laws', 'Product, quotient, power of a power', genExpLaw),
+  skill('l7expneg', 'Numbers', '8.EE.1', 'Zero and negative exponents', 'What they mean and how to use them', genExpNeg),
+  skill('l7sci', 'Numbers', '8.EE.3', 'Scientific notation', 'Read, write and compare', genSci),
+  skill('l7sciops', 'Multiplying and dividing', '8.EE.4', 'Scientific notation: × and ÷', 'Front numbers and powers of 10', genSciOps),
+  skill('l7roots', 'Numbers', '8.EE.2, 8.NS.2', 'Square roots and cube roots', 'Exact roots and estimates', genRoots),
+  skill('l7rational', 'Numbers', '8.NS.1', 'Rational and irrational numbers', 'Repeating decimals as fractions', genRational),
+  skill('l7irrline', 'Numbers', '8.NS.2', 'Irrational numbers on the number line', 'Roots and pi between tenths, compared and ordered', genIrrLine),
+  skill('l7eqboth', 'Algebra', '8.EE.7b', 'Equations with x on both sides', 'Balance, brackets, like terms', genEqBoth),
+  skill('l7eqcount', 'Algebra', '8.EE.7a', 'How many solutions?', 'One, none, or infinitely many', genEqCount),
+  skill('l7slope', 'Algebra', '8.EE.6', 'Slope', 'Rise over run from graphs, tables, points', genSlope),
+  skill('l7line', 'Algebra', '8.EE.6, 8.F.3', 'Lines: y = mx + b', 'Slope, y-intercept, points on the line', genLine),
+  skill('l7propcmp', 'Ratios and percents', '8.EE.5', 'Comparing proportional relationships', 'Rule, table, graph and words: which is faster or cheaper', genPropCmp),
+  skill('l7slopewhy', 'Algebra', '8.EE.6', 'Why slope is the same everywhere', 'Slope triangles, and where y = mx + b comes from', genSlopeWhy),
+  skill('l7lineeq', 'Algebra', '8.F.4, 8.EE.6', 'Writing the equation of a line', 'From a graph, a point, two points, a table or a story', genLineEq),
+  skill('l7func', 'Algebra', '8.F.1–5', 'Functions', 'Rules, tables, linear or not, rate of change', genFunc),
+  skill('l7funccmp', 'Algebra', '8.F.2', 'Comparing two functions', 'Rule, table, graph or words: rate of change and starting value', genFuncCmp),
+  skill('l7graphstory', 'Algebra', '8.F.5', 'Graphs and stories', 'Going up, level or down, straight or curved', genGraphStory),
+  skill('l7sys', 'Algebra', '8.EE.8', 'Systems of equations', 'Graphing, substitution, elimination', genSys),
+  skill('l7sysstory', 'Algebra', '8.EE.8b-c', 'Systems in stories', 'Two equations, how many solutions, what the crossing means', genSysStory),
+  skill('l7similar', 'Shapes and space', '8.G.4-5', 'Similarity and dilations', 'Scale factors, similar triangles and angle-angle', genSimilar),
+  skill('l7pyth', 'Shapes and space', '8.G.6–8', 'Pythagorean theorem', 'Missing sides and distance on a grid', genPyth),
+  skill('l7pythreal', 'Shapes and space', '8.G.6-7', 'Pythagoras at work', 'Screens, ladders, boxes in 3D and the converse', genPythReal),
+  skill('l7trans', 'Shapes and space', '8.G.1–4', 'Transformations', 'Slides, flips, turns, resizing', genTrans),
+  skill('l7congruent', 'Shapes and space', '8.G.1-2', 'Congruence by moves', 'Slides, flips and turns: what changes and what stays', genCongruent),
+  skill('l7angles', 'Shapes and space', '8.G.5', 'Angles and parallel lines', 'Transversals and triangle angles', genAngles),
+  skill('l7vol', 'Measurement', '8.G.9', 'Volume of round solids', 'Cylinders, cones and spheres', genVol),
+  skill('l7scatter', 'Data and chance', '8.SP.1–3', 'Scatter plots', 'Associations and lines of best fit', genScatter),
+  skill('l7story', 'Stories', 'All', 'Story problems', 'Read it, plan it, solve it', genStory, { story: true }),
 ];

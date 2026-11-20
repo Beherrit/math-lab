@@ -215,7 +215,7 @@ b {
 }
 
 .btn.sm {
-  min-height: 40px;
+  min-height: 44px;
   padding: 6px 14px;
   font-size: 15px;
 }
@@ -230,6 +230,9 @@ b {
   border: 0;
   color: var(--grape);
   font-weight: 600;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   padding: 6px 2px;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -270,5 +273,5 @@ b {
   font-size: 14px;
   font-weight: 600;
   color: var(--grape);
-  min-height: 40px;
+  min-height: 44px;
 }

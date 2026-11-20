@@ -13,6 +13,7 @@ import { renderInput } from '../session/pad.js';
 import { closeSheet } from '../session/sheet.js';
 import { submit } from '../session/answer.js';
 import { advance } from '../session/flow.js';
+import { stop as stopSpeech } from '../core/speech.js';
 function onClick(e) {
 const el = e.target.closest('[data-act],[data-go]'); if (!el) return;
 if (el.dataset.go) {
@@ -53,5 +54,5 @@ app.addEventListener('change', onChange);
 app.addEventListener('submit', onSubmit);
 wireHold(app);
 document.addEventListener('keydown', onKey);
-document.addEventListener('visibilitychange', () => { if (sess) sess.last = performance.now(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopSpeech(); if (sess) sess.last = performance.now(); });
 }

@@ -23,7 +23,10 @@ export const numbersIn = html => (visible(html).match(/\d{1,3}(?:,\d{3})+(?:\.\d
 const counts = xs => xs.reduce((m, x) => m.set(x, (m.get(x) || 0) + 1), new Map());
 
 // Operands that are meant to stay out of the question text (the learner works them out or sees them another way).
-const HIDDEN = { digit: ['p'], cmp: ['c'], times: ['hi', 'lo'], round: ['to'], which: ['to'], est: ['to'], box: ['x', 'y'], dot: ['lo', 'step', 'i'], atype: ['deg'], turn: ['n', 'd'], apart: ['total'], nth: ['i'], units: ['w'] };
+const LP = ['den', 'lo', 'counts'];
+const HIDDEN_NEW = { patmiss: ['step', 'at'], tenfold: ['hiP', 'loP'], fpbar: ['n'], mxpic: ['w', 'n', 'd'], docloser: ['i'], dogrid: ['a', 'c'], prread: ['deg'], prdiff: ['r1', 'r2'], prsplit: ['total'], prest: ['deg'], eswhich: ['to'], sycomplete: ['half'],
+  lpAt: LP, lpTotal: LP, lpMore: LP, lpDiff: LP, lpMost: LP, lpSum: LP, lpCmp: ['den', 'base', 'counts'] };
+const HIDDEN = { ...HIDDEN_NEW, digit: ['p'], cmp: ['c'], times: ['hi', 'lo'], round: ['to'], which: ['to'], est: ['to'], box: ['x', 'y'], dot: ['lo', 'step', 'i'], atype: ['deg'], turn: ['n', 'd'], apart: ['total'], nth: ['i'], units: ['w'] };
 // Operands that only the picture shows, when there is one.
 const PICTURE = { f2d: ['n'], dot: ['lo', 'step', 'i'], atype: ['deg'] };
 // The numbers the answer depends on, taken from the raw operands of the problem.
@@ -74,7 +77,9 @@ export function holdsAnswer(answer, html) {
     return formsIn(html).some(f => near(f.v, want) && (answer.d > 1 ? f.kind === 'frac' : f.kind === 'whole'));
   }
   const opt = answer.options[answer.correct];
-  if (/class="fr"/.test(opt)) { const [, w, n, d] = /^\s*(\d+)?(?:<span class="mxs"><\/span>)?<span class="fr"><span class="n">(\d+)<\/span><span class="d">(\d+)<\/span>/.exec(opt); return formsIn(html).some(f => f.kind === 'frac' && near(f.v, Number(w || 0) + n / d)); }
+  const single = /^\s*(\d+)?(?:<span class="mxs"><\/span>)?<span class="fr"><span class="n">(\d+)<\/span><span class="d">(\d+)<\/span><\/span>\s*$/.exec(opt);
+  if (single) { const [, w, n, d] = single; return formsIn(html).some(f => f.kind === 'frac' && near(f.v, Number(w || 0) + n / d)); }
+  if (/class="fr"/.test(opt)) return String(html).includes(opt) || visible(html).toLowerCase().includes(visible(opt).toLowerCase()); // a sum of fractions: the step must write all of it
   const want = visible(opt).toLowerCase();
   if (/^[\d,.]+$/.test(want)) return numbersIn(html).some(v => near(v, Number(want.replace(/,/g, ''))));
   return visible(html).toLowerCase().includes(want);

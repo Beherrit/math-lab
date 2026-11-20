@@ -1,0 +1,228 @@
+/* Learn it lesson, the bottom action bar, and strand groups. Mobile first: 44px+ targets, 8px+ gaps, no hover-only parts. */
+.page.has-bar,.page.lesson {
+  padding-bottom: 0;
+}
+
+.page.lesson {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.lbar {
+  margin: auto -16px 0;
+  padding-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.page.has-bar > .lbar,.page.has-bar .lbar {
+  margin-top: 18px;
+}
+
+.pad.lbar .btn.big + .btn.big {
+  margin-top: 0;
+}
+
+.lbar.row2 {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.btn.wide {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.lhead .lt {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.lhead .lt b {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.ldots {
+  display: flex;
+  gap: 6px;
+}
+
+.ldots i {
+  width: 26px;
+  height: 8px;
+  border-radius: 99px;
+  background: var(--m-x);
+}
+
+.ldots i.past {
+  background: var(--m4);
+}
+
+.ldots i.now {
+  background: var(--grape);
+}
+
+.lprob {
+  margin-bottom: 12px;
+  overflow-x: auto;
+}
+
+.lmain {
+  flex: 1;
+}
+
+.lmain .qcard {
+  margin-bottom: 0;
+}
+
+.lwork {
+  margin-bottom: 14px;
+}
+
+.lway {
+  font-weight: 600;
+  color: var(--grape);
+  margin: 0 0 6px;
+}
+
+.lsteps {
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.lsteps li.newest {
+  background: var(--hi-soft);
+  border-radius: var(--r-sm);
+}
+
+.lhelp {
+  margin-top: 12px;
+  text-align: left;
+}
+
+.lhint {
+  font-size: 16px;
+  background: var(--hi-soft);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  margin: 0 0 10px;
+}
+
+.lasks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.lasks .btn {
+  flex: 1 1 140px;
+  min-height: 48px;
+  font-size: 16px;
+}
+
+.lwhy {
+  font-size: 16px;
+  background: var(--good-hi);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  margin: 10px 0 0;
+}
+
+.ldone {
+  text-align: center;
+  padding: 28px 18px;
+}
+
+.ldone h1 {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.offer {
+  font-size: 20px;
+}
+
+.intro.has-bar,.summary.has-bar {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.intro.has-bar .lbar,.summary.has-bar .lbar {
+  margin-top: auto;
+}
+
+.stat-row.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.stat-row.two span {
+  font-size: 14px;
+}
+
+/* strand groups: native details, so they open and close with a tap and no script */
+.strands {
+  display: grid;
+  gap: 10px;
+}
+
+.strand summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 48px;
+  padding: 8px 4px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+}
+
+.strand summary::-webkit-details-marker {
+  display: none;
+}
+
+.strand summary::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-right: 2.5px solid var(--grape);
+  border-bottom: 2.5px solid var(--grape);
+  transform: rotate(-45deg);
+  transition: transform .15s;
+}
+
+.strand[open] summary::before {
+  transform: rotate(45deg);
+}
+
+.st-name {
+  flex: 1;
+  font-size: 17px;
+}
+
+.st-count {
+  font-size: 15px;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.strand .skills {
+  padding-bottom: 6px;
+}
+
+@media (max-width: 340px) {
+  .lbar.row2 {
+    grid-template-columns: 1fr;
+  }
+  .st-count {
+    font-size: 14px;
+  }
+}

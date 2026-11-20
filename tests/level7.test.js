@@ -5,6 +5,7 @@ import { FITS } from '../js/skills/level7/scatter-lines.js';
 import { check, ANSWER_KINDS } from '../js/util.js';
 import { CHECKS, text } from './level7.checks.js';
 import { COVER } from './level7.facts.js';
+import { CAP_NEW, NEW_IDS, STRANDS } from './level7.new.js';
 import { leaks, SYMBOLS, arrowsOutsideRules, inventedTerm, operandsShown, hintKeepsAnswer, firstWayEnds } from './level7.rules.js';
 
 // A seeded random source, so a failing run can be repeated: LEVEL7_SEED=1234 node --test tests/level7.test.js
@@ -20,7 +21,7 @@ const corners = f => [f.m[0], f.m[1]].flatMap(m => [f.c[0], f.c[1]].flatMap(c =>
 const SCATTER_MAX = Math.max(...FITS.flatMap(corners));
 // Largest size a typed number answer may have at each step (keeps every step in its intended range).
 const CAP = { l7explaw: [8, 36, 36], l7expneg: [1, 16, 30], l7sci: [9.9e6, 9.9e7, 9.9e7], l7sciops: [14, 16, 20], l7roots: [12, 50, 20], l7rational: [0, 0, 0], l7eqboth: [9, 9, 9], l7eqcount: [0, 0, 60],
-  l7slope: [8, 6, 30], l7line: [60, 65, 30], l7func: [70, 80, 400], l7sys: [0, 9, 10], l7pyth: [181, 50, 50], l7trans: [0, 0, 0], l7angles: [180, 180, 180], l7vol: [250, 500, 1400], l7scatter: [10, 10, SCATTER_MAX], l7story: [310, 1400, 3800] };
+  l7slope: [8, 6, 30], l7line: [60, 65, 30], l7func: [70, 80, 400], l7sys: [0, 9, 10], l7pyth: [181, 50, 50], l7trans: [0, 0, 0], l7angles: [180, 180, 180], l7vol: [250, 500, 1400], l7scatter: [10, 10, SCATTER_MAX], l7story: [310, 1400, 3800], ...CAP_NEW };
 function strings(o, out = []) {
   if (typeof o === 'string') out.push(o);
   else if (o && typeof o === 'object') for (const [k, v] of Object.entries(o)) if (k !== '_t') strings(v, out);
@@ -64,10 +65,11 @@ test('level 7 skills: ids, fields and wording', () => {
     assert.ok(s.learn && s.learn.big && s.learn.tips.length >= 3 && s.learn.words.length >= 2, `learn card for ${s.id}`);
     for (const str of strings([s.title, s.sub, s.learn])) assert.ok(!leaks(str) && !SYMBOLS.test(str) && !arrowsOutsideRules(str) &&!/\bgrade\b/i.test(str), `${s.id}: ${str}`);
     assert.ok(CAP[s.id], `no range set for ${s.id}`);
+    assert.ok(STRANDS.includes(s.strand), `${s.id} has strand ${s.strand}`);
   }
   assert.equal(SKILLS.filter(s => s.story).length, 1);
 });
-const seen = {};
+const seen = {}, shapes = {};
 for (const s of SKILLS) for (const L of [1, 2, 3]) {
   test(`${s.id} step ${L}: ${N} problems are sane and match an independent recomputation`, () => {
     const keys = new Set();
@@ -80,9 +82,11 @@ for (const s of SKILLS) for (const L of [1, 2, 3]) {
       CHECKS[p._t.k](p._t, p, L);
       operandsShown(p);
       (seen[s.id] ??= new Set()).add(p._t.k);
+      if (p._t.shape) ((shapes[s.id] ??= {})[L] ??= new Set()).add(p._t.shape);
       keys.add((p.expr || '') + (p.story || '') + (p.ask || ''));
     }
     assert.ok(keys.size >= 30, `only ${keys.size} different questions in ${N}`);
+    if (NEW_IDS.includes(s.id)) assert.ok(shapes[s.id][L].size >= 4, `${s.id} step ${L} has only ${shapes[s.id][L].size} question shapes: ${[...shapes[s.id][L]].join(', ')}`);
   });
 }
 test('story problems carry everything the story screen needs', () => {

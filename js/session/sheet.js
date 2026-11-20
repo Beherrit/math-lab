@@ -5,6 +5,7 @@ import { I } from '../ui/icons.js';
 import { $, $$ } from '../ui/dom.js';
 import { waysHTML } from '../ui/fragments.js';
 import { fb } from './feedback.js';
+import { stop as stopSpeech } from '../core/speech.js';
 const showSheet = sh => { sh.hidden = false; requestAnimationFrame(() => sh.classList.add('in')); };
 export function closeSheet() { const sh = $('.sheet'); if (sh && !sh.hidden) { sh.classList.remove('in'); sh.hidden = true; } }
 export function openWays(afterMiss) {
@@ -35,7 +36,7 @@ fb(`${ok ? `${I.check} Yes! ` : `It’s <b>${q.pre.correct}</b>. `}<span class="
 $('.pad').insertAdjacentHTML('beforeend', `<button class="btn primary big" data-act="presolve">Now solve it</button>`);
 }
 export function pauseOverlay(kind) {
-sess.paused = true;
+sess.paused = true; stopSpeech();
 const sh = $('.sheet'); if (!sh) return;
 sh.innerHTML = `<div class="sheet-card center">${kind === 'quit' ? `<h2>Stop for now?</h2><p class="muted">Everything you’ve done is saved.${sess.mode === 'daily' ? ' Finish every part to complete today’s page.' : ''}</p>
 <div class="row2"><button class="btn" data-act="resume">Keep going</button><button class="btn primary" data-act="stop">Stop</button></div>`

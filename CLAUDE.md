@@ -1,9 +1,9 @@
 # Math Lab
 
 A kids' math practice web app. One learner per browser, no accounts, no server. Static site, vanilla JS ES modules,
-no build step, no dependencies. Progress lives in `localStorage` (`mathlab.v2`). Hosted on GitHub Pages as plain files (all paths are relative, so it runs from a subfolder).
+no build step, no dependencies. Progress lives in `localStorage` (`mathlab.v3`). Hosted on GitHub Pages as plain files (all paths are relative, so it runs from a subfolder).
 
-Daily page = ten minutes in three phases: times-table facts, one focus skill, a mix. Skills are grouped in a ladder of
+Daily page = ten minutes in three phases: times-table facts, one focus skill, a mix. When the time is up the day is marked done (streak moves once) and the child chooses "Keep going" (untimed, no end) or "Finish". Skills are grouped in a ladder of
 seven levels; a placement check ("Let's find your starting point") puts a new learner on a level.
 
 ## Run it
@@ -72,32 +72,62 @@ js/util/math.js        random, gcd/lcm, formatting (fmt, plain, places, money, a
 js/util/text.js        HTML snippets: b, k, way, nm, pow, F/M/fr/frText, column, table
 js/util/answers.js     num, frac, point, choice, answerHTML, check
 js/util/visuals.js     SVG/HTML diagrams: fracBar, numberLine, signedLine, pvChart, areaModel, prism, plane, linePlot, fracArea
-js/core/state.js       state shape, defaults, migrate (v1 -> v2)
+js/core/state.js       state shape, defaults, migrate (v1, v2 -> v3)
 js/core/store.js       live state S, localStorage load/save/clear, backup parse/export
 js/core/mastery.js     per-skill steps (L 1-3) and mastery
 js/core/progression.js level progress, completion, unlock, working level, review pool
-js/core/focus.js       today's focus skill
+js/core/focus.js       today's focus skill (learning path order), pathPick (next skill on the path)
+js/core/lesson.js      guided "Learn it" sequencing (pure): stages, steps, help, answers never counted
+js/core/learned.js     S.learned, markLearned, needsOffer (the one-time "learn it first?" offer)
+js/core/review.js      spaced review of mastered skills (INTERVALS, recordReview, dueReviews), dates injected
+js/core/mix.js         what the Mix-up phase asks next (due reviews first)
+js/core/extra.js       "Keep going" picker: alternates focus and mix, follows the path across level-ups
+js/core/strands.js     groups a level's skills by `strand` with mastered counts
 js/core/daily.js       streak, day log, phase split (facts/focus/mix)
 js/core/badges.js      stickers
 js/core/facts.js       times tables 1-12 box engine
 js/core/dates.js       date helpers
 js/skills/registry.js  SKILLS, SKILL, skillsOf(level), storySources(level), storySkillOf(level), generate()
 js/skills/levelN/      one folder per level; index.js exports SKILLS (and optional STORY_SOURCES)
+js/session/lesson-run.js, lesson-task.js   the Learn it lesson on screen (stage flow; answer input and help)
+js/session/extra-run.js  result screen after the daily page, keep going, Next skill
 js/session/            practice: start, flow (next question, clock), play (screen), pad (answer input UI),
                        input (keys), answer (check/stars/mastery/level-up), sheet (overlays), intro, summary,
                        placement-run (placement on screen), feedback (toast/confetti), timer, state
 js/ui/                 router, events, actions, parent-actions, dom, fragments, icons
-js/ui/screens/         one file per screen (welcome, home, lab, lists, skill, parent) plus *-parts.js helpers
+js/ui/screens/         one file per screen (welcome, home, lab, lists, skill, parent, lesson) plus *-parts.js helpers;
+                       strand-list.js draws collapsible strand groups for home and the focus picker
 tests/                 node:test files and fixtures; tools/build-sw.mjs builds sw.js
 ```
 
-## State (`mathlab.v2`)
+## State (`mathlab.v3`)
 
-`{ v:2, name, created, level, placed, levelsDone, settings:{minutes, gradual, off, focus}, facts, unlocked,
-skills:{id:{L,run,miss,hist,n,c,last,mastered}}, days, stars, streak, badges, focusLog, counters, todayFocus }`
+`{ v:3, name, created, level, placed, levelsDone, settings:{minutes, gradual, off, focus}, facts, unlocked,
+skills:{id:{L,run,miss,hist,n,c,last,mastered,rev}}, days, stars, streak, badges, focusLog, counters, todayFocus, learned }`
 
-A saved `v:1` state (the original single skill list) migrates to `level: 4, placed: true`, progress untouched. The old
-key `mathlab.v1` is read but never modified or deleted by a migration. Backups of either version restore; export writes v2.
+`rev` is `null` or `{stage, due, miss}` (review schedule, see below). `learned` is `{skillId: 'YYYY-MM-DD'}`: set when the
+Learn it lesson is finished or the first-time offer is skipped. `todayFocus` may carry `auto: true` (the day's automatic
+pick, fixed when the daily page starts). Older saves migrate on load: `v:1` becomes level 4, placed; `v:2` just gains
+`learned: {}` and `rev` (mastered skills start a schedule from their last practice day). `mathlab.v1` and `mathlab.v2` are
+read but never modified or deleted by a migration; the app writes `mathlab.v3`; "Erase all progress" removes all three.
+Backups of v1, v2 and v3 restore; export writes v3.
+
+## Learn it lesson
+
+Every skill has a guided lesson built from what it already has (no per-skill authoring): the idea (`learn`), watch one
+(a step-1 problem, first way revealed one step at a time, then the second way), do one together (hint, then worked steps
+one at a time, wrong answers only open the hint and never count), your turn (two more), done. Story problems with `read`
+get the reading steps first. Lesson answers never touch mastery, stars, streaks or the day log. Entry: the "Learn it" button
+on the skill page, and a one-time offer when a never-practiced skill is first the daily focus. Sequencing is in
+`js/core/lesson.js`; screens in `js/ui/screens/lesson.js`.
+
+## Review schedule and keep going
+
+A mastered skill gets `rev`: next review after 2, then 5, 10, 21, 45 days. A first-try right answer in review moves it up a
+stage; right after help keeps the stage; a miss moves it back one stage; two misses in a row un-master it to step 3. The
+Mix-up phase draws due reviews first (`js/core/mix.js`). Grown-ups shows how many are due. After the timed daily page the
+child can keep going without a timer: focus skill and mix alternate, the focus moves along the level's path when it is
+mastered, and it carries across level-ups. Free practice of one skill offers "Next skill" when it is mastered.
 
 ## How to add a skill
 
@@ -129,6 +159,7 @@ Then run `npm test` and `node tools/build-sw.mjs`.
 | `school` | `true` if it counts toward finishing the level. `false` for added extras. |
 | `learn` | `big` (one sentence idea), `tips` (array of short strings), `words` (optional array of `[term, meaning]`). |
 | `story` | `true` only on a story-problem skill (see Story problems). |
+| `strand` | Optional heading for grouping in the home list and focus picker: `'Numbers'`, `'Adding and subtracting'`, `'Multiplying and dividing'`, `'Fractions and decimals'`, `'Ratios and percents'`, `'Algebra'`, `'Measurement'`, `'Shapes and space'`, `'Data and chance'` or `'Stories'`. Groups show in the order strands first appear in the level's array, which is also the learning path. Skills without one go in a last group with no heading. |
 
 ### Difficulty tiers (L 1-3)
 

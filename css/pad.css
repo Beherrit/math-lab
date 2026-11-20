@@ -179,6 +179,7 @@
 
 .tab {
   flex: none;
+  min-height: 44px;
   border: 1.5px solid var(--line);
   background: var(--card);
   border-radius: 999px;

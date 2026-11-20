@@ -5,6 +5,9 @@ import assert from 'node:assert/strict';
 import { SKILLS, STORY_SOURCES } from '../js/skills/level3/index.js';
 import { check, ANSWER_KINDS } from '../js/util.js';
 import { SEED, appKey, operandsShown, regroups, checkWays, checkHint } from './level3-checks.js';
+import { EXPECT_NEW } from './level3-new-expect.js';
+import { LIMITS_NEW } from './level3-new-limits.js';
+import { checkPicture } from './level3-pictures.js';
 
 const N = 300;
 const add = xs => xs.reduce((a, x) => a + x, 0);
@@ -70,6 +73,7 @@ const EXPECT = {
   fence: t => (t.l + t.w + t.l + t.w) * t.r, laps: t => (t.l + t.w + t.l + t.w) * t.r, floor: t => t.l * t.w * t.r,
   shop: t => (t.bill ? t.bill - (t.q * t.p + t.x) : t.q * t.p + t.x), seats: t => t.r * t.s - t.e, bags: t => (t.wantLeft ? (t.a + t.c) % t.d : Math.floor((t.a + t.c) / t.d)),
   saving: t => t.cost - t.w * t.weeks, trip: t => t.total - t.perDay * t.days, sharing: t => (t.a + t.c) / t.d, compare: t => Math.abs(t.g * t.per - t.other),
+  ...EXPECT_NEW,
 };
 
 function checkAnswer(p, where) {
@@ -108,10 +112,11 @@ const LIMITS = {
   l3dec: t => (t.kind === 'f2d' || t.kind === 'd2f' ? t.d === 10 || t.d === 100 : true),
   l3angles: t => [t.deg, t.total, ...(t.known || []), ...(t.parts || [])].filter(v => v !== undefined).every(v => within(v, 1, 360)),
   l3area: (t, L) => (t.l === undefined ? true : within(t.l, 2, [12, 15, 25][L - 1])) && (t.w === undefined || within(t.w, 2, 15)),
+  ...LIMITS_NEW,
 };
 
 const BAD_TEXT = /undefined|NaN|\bnull\b|\[object|Infinity/;
-const BAD_GLYPH = /[←-⇿☀-➿⬀-⯿•\u{1F000}-\u{1FAFF}]/u;
+const BAD_GLYPH = /[\u2190-\u21ff\u2022\u{2600}-\u{10FFFF}]/u; // arrows, bullets, and everything from U+2600 up (symbols, dingbats, emoji)
 const STRAY_LT = /<(?![a-zA-Z/])/;
 function strings(v, out = []) {
   if (typeof v === 'string') out.push(v);
@@ -150,24 +155,30 @@ function checkShape(p, where) {
 }
 function sample(gen, L) { for (let t = 0; t < 50; t++) { const p = gen(L); if (p) return p; } return null; }
 
-test('level 3 has its 18 skills with unique, prefixed ids', () => {
-  assert.equal(SKILLS.length, 18);
-  assert.equal(new Set(SKILLS.map(s => s.id)).size, 18);
+const STRANDS = ['Numbers', 'Adding and subtracting', 'Multiplying and dividing', 'Fractions and decimals', 'Ratios and percents', 'Algebra', 'Measurement', 'Shapes and space', 'Data and chance', 'Stories'];
+const NEW_IDS = ['l3times', 'l3pattern', 'l3shift', 'l3fparts', 'l3mixadd', 'l3tenhund', 'l3decorder', 'l3convert', 'l3lineplot', 'l3protractor', 'l3lines', 'l3symmetry', 'l3estimate'];
+
+test('level 3 has its 31 skills with unique, prefixed ids, each with a valid strand', () => {
+  assert.equal(SKILLS.length, 31);
+  assert.equal(new Set(SKILLS.map(s => s.id)).size, 31);
+  for (const id of NEW_IDS) assert.ok(SKILLS.some(s => s.id === id), `${id} is missing`);
   for (const s of SKILLS) {
     assert.match(s.id, /^l3[a-z0-9]+$/);
     assert.equal(s.level, 3);
     assert.equal(s.school, true);
     assert.match(s.std, /^4\./);
+    assert.ok(STRANDS.includes(s.strand), `${s.id}: strand ${s.strand}`);
     checkText({ learn: s.learn, title: s.title, sub: s.sub }, s.id);
     assert.ok(s.learn.big.length > 20 && s.learn.tips.length >= 3 && s.learn.words.length >= 2, `${s.id}: learn text`);
   }
   assert.equal(SKILLS.filter(s => s.story).length, 1);
+  assert.equal(SKILLS.at(-1).strand, 'Stories', 'the story skill comes last');
 });
 
 for (const s of SKILLS) {
   for (const L of [1, 2, 3]) {
     test(`${s.id} step ${L}: ${N} problems recomputed and checked`, () => {
-      const keys = new Set();
+      const keys = new Set(), kinds = new Set();
       for (let i = 0; i < N; i++) {
         const p = sample(s.gen, L), where = `${s.id} step ${L} (seed ${SEED})`;
         assert.ok(p, `${where}: no problem`);
@@ -177,9 +188,12 @@ for (const s of SKILLS) {
         operandsShown(p, where);
         checkWays(p, where);
         checkHint(p, where);
+        checkPicture(p, where);
         if (LIMITS[s.id]) assert.ok(LIMITS[s.id](p._t, L, p), `${where}: numbers out of range ${JSON.stringify(p._t)}`);
         keys.add(appKey(p));
+        kinds.add(p._t.kind);
       }
+      assert.ok(!NEW_IDS.includes(s.id) || kinds.size >= 4, `${s.id} step ${L}: only ${kinds.size} question shapes (${[...kinds]})`);
       assert.ok(keys.size >= 30, `${s.id} step ${L}: only ${keys.size} different problems in ${N}`);
     });
   }

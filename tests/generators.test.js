@@ -22,7 +22,7 @@ test('there is at least one skill and ids are unique', () => {
 for (const s of SKILLS) {
   test(`skill ${s.id}: fields`, () => {
     assert.equal(typeof s.id, 'string');
-    assert.ok(Number.isInteger(s.level) && s.level >= 1 && s.level <= 7);
+    assert.ok(Number.isInteger(s.level) && s.level >= 0 && s.level <= 7);
     for (const f of ['std', 'title', 'sub']) assert.equal(typeof s[f], 'string', f);
     assert.equal(typeof s.gen, 'function');
     assert.equal(typeof s.school, 'boolean');

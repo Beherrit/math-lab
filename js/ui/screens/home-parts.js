@@ -4,7 +4,8 @@ import { today, addDays } from '../../core/dates.js';
 import { progress } from '../../core/mastery.js';
 import { fkey } from '../../core/facts.js';
 import { unlockedLevel, hasSkills, levelProgress } from '../../core/progression.js';
-import { LEVELS, levelInfo } from '../../levels.js';
+import { levelInfo, levelName, levelFull } from '../../levels.js';
+import { visibleLevels } from '../../core/entry.js';
 import { I } from '../icons.js';
 export function weekStrip() {
 const t = today(); const dow = (new Date().getDay() + 6) % 7; // Monday first
@@ -33,17 +34,17 @@ return `<button class="skill-row ${st?.mastered ? 'mastered' : ''}" data-act="sk
 // A row of level chips. Locked levels show a lock; the current one is filled.
 export function levelBar() {
 const open = unlockedLevel(S); const cur = levelInfo(S.level);
-const chips = LEVELS.map(l => {
+const chips = visibleLevels(S).map(l => {
 const locked = l.n > open;
-return `<button class="lvl-chip ${l.n === S.level ? 'on' : ''} ${locked ? 'locked' : ''}" ${locked ? 'disabled' : `data-act="setlevel" data-n="${l.n}"`} aria-label="Level ${l.n}: ${l.title}${locked ? ', locked' : ''}" title="${l.title}">${locked ? I.lock : l.n}</button>`;
+return `<button class="lvl-chip ${l.n === 0 ? 'early' : ''} ${l.n === S.level ? 'on' : ''} ${locked ? 'locked' : ''}" ${locked ? 'disabled' : `data-act="setlevel" data-n="${l.n}"`} aria-label="${levelFull(l.n)}${locked ? ', locked' : ''}" title="${l.title}">${locked ? I.lock : l.n === 0 ? 'Early Start' : l.n}</button>`;
 }).join('');
 const p = levelProgress(S, S.level);
-return `<div class="level-bar"><div class="lb-head"><b>Level ${cur.n}</b><span>${cur.title}</span></div>
+return `<div class="level-bar"><div class="lb-head"><b>${levelName(cur.n)}</b>${cur.n === 0 ? '' : `<span>${cur.title}</span>`}</div>
 <div class="lvl-chips" role="group" aria-label="Levels">${chips}</div>
 ${p.total ? `<p class="small muted">${p.done} of ${p.total} skills mastered in this level.</p>` : ''}</div>`;
 }
 // Shown instead of the skill list when the current level has no skills yet.
 export function emptyLevelNote() {
 if (hasSkills(S.level)) return '';
-return `<div class="paper-card empty-level"><p>The skills for Level ${S.level} are on their way. Daily practice uses the nearest level that is ready.</p></div>`;
+return `<div class="paper-card empty-level"><p>The skills for ${levelName(S.level)} are on their way. Daily practice uses the nearest level that is ready.</p></div>`;
 }
