@@ -11,8 +11,11 @@ const good = s.hist.slice(-8).filter(Boolean).length;
 return Math.round((2 + Math.min(good / 7, 1) * 0.95) / 3 * 100);
 }
 // res: 'right' (first try), 'half' (right after help or a retry), 'wrong'. Returns { up, down, mastered }.
-export function recordSkill(S, id, res) {
+// `served` is the step the question was asked at. When that is below the skill's step (a step that needs speech, asked
+// without it), the answer counts as practice only: it cannot move the step or master the skill.
+export function recordSkill(S, id, res, served = null) {
 const s = skillState(S, id); s.n++; s.last = today(); const out = {};
+if (served !== null && served < s.L) { if (res === 'right') s.c++; return out; }
 if (res === 'right') {
 s.c++; s.run++; s.miss = 0;
 if (s.L === 3) s.hist.push(true);

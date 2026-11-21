@@ -13,10 +13,11 @@ export const LEVELS = [
 export const MIN_LEVEL = LEVELS[0].n;
 export const MAX_LEVEL = LEVELS[LEVELS.length - 1].n;
 export const levelInfo = n => LEVELS.find(l => l.n === n) || null;
-// A whole number inside the ladder; anything else becomes 1 (never 0 by accident).
-export function clampLevel(n) {
-const v = Math.round(+n);
-return Number.isFinite(v) ? Math.min(MAX_LEVEL, Math.max(MIN_LEVEL, v)) : 1;
+// A whole number inside the ladder. Only a real number (or digits in a string) counts: null, '', NaN and text give `fallback`,
+// so nothing lands on Early Start by accident.
+export function clampLevel(n, fallback = 1) {
+const v = typeof n === 'number' || (typeof n === 'string' && n.trim() !== '') ? Math.round(+n) : NaN;
+return Number.isFinite(v) ? Math.min(MAX_LEVEL, Math.max(MIN_LEVEL, v)) : fallback;
 }
 export const levelTitle = n => levelInfo(n)?.title ?? '';
 // The level after n, or null at the top of the ladder (or for something that is not a level).

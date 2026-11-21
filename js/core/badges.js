@@ -1,7 +1,8 @@
 // Stickers.
 import { solidCount } from './facts.js';
+import { masteredCount } from './progression.js';
 const days = S => Object.values(S.days);
-const mastered = S => Object.values(S.skills).filter(s => s.mastered).length;
+const mastered = masteredCount;
 export const BADGES = [
 { id: 'first', name: 'First page', desc: 'Finished a daily 10 minutes', test: S => days(S).some(d => d.done) },
 { id: 'streak3', name: '3-day streak', desc: '3 days in a row', test: S => S.streak.n >= 3 },

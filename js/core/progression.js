@@ -1,5 +1,5 @@
 // Levels: which skills count, when a level is complete, which levels are open, what feeds the daily mix.
-import { skillsOf } from '../skills/registry.js';
+import { SKILL, skillsOf } from '../skills/registry.js';
 import { MAX_LEVEL, MIN_LEVEL, nextLevel } from '../levels.js';
 export const enabledIn = (S, n) => skillsOf(n).filter(s => !S.settings.off[s.id]);
 // The skills that must be mastered to finish a level: enabled school skills only.
@@ -10,7 +10,10 @@ const req = requiredIn(S, n);
 return { done: req.filter(s => isMastered(S, s.id)).length, total: req.length };
 }
 export function levelComplete(S, n) { const p = levelProgress(S, n); return p.total > 0 && p.done === p.total; }
-export const unlockedLevel = S => Math.min(MAX_LEVEL, Math.max(S.level, ...S.levelsDone.map(n => n + 1)));
+// Times tables belong to the daily page from Level 2 up. Levels 0 and 1 meet them only when the child opens them.
+export const factsAllowed = S => S.level >= 2;
+// Known mastered skills (ids saved by another version of the app are not counted).
+export const masteredCount = S => Object.entries(S.skills).filter(([id, sk]) => SKILL[id] && sk.mastered).length;
 export const hasSkills = n => skillsOf(n).length > 0;
 // Early Start counts as a lower level only for learners who started there; everyone else stops at Level 1.
 export const lowestLevel = S => (S.early || S.level === MIN_LEVEL ? MIN_LEVEL : 1);
@@ -27,13 +30,17 @@ for (let n = workingLevel(S); n >= lowestLevel(S); n--)
 for (const s of enabledIn(S, n)) if (!s.story && S.skills[s.id]?.n && s.id !== exceptId) out.push(s);
 return out;
 }
-// Call after a skill is mastered or switched on/off. Returns { done, next } when the current level was just completed.
+// Call after a skill is mastered or switched on/off. Records every level that is now complete, whichever level the learner
+// calls their own, and returns the new ones as [{ done, next, own }]. Completing the learner's own level also moves them up
+// to `next` (null at the top); other levels are only recorded.
 export function checkLevelUp(S) {
-const n = S.level;
-if (S.levelsDone.includes(n) || !levelComplete(S, n)) return null;
+const out = [];
+for (let n = MIN_LEVEL; n <= MAX_LEVEL; n++) {
+if (S.levelsDone.includes(n) || !levelComplete(S, n)) continue;
 S.levelsDone.push(n);
-const next = nextLevel(n);
-if (next === null) return { done: n, next: null };
-S.level = next;
-return { done: n, next };
+const own = n === S.level; const next = own ? nextLevel(n) : null;
+if (next !== null) S.level = next;
+out.push({ done: n, next, own });
+}
+return out;
 }
