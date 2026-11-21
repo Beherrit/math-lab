@@ -152,6 +152,8 @@
   margin: 8px 0;
 }
 
+.sheet-ans + .btn { margin: 8px 0 12px; }
+
 .sheet-head {
   display: flex;
   justify-content: space-between;

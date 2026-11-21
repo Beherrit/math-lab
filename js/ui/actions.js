@@ -29,6 +29,7 @@ import { homeSay } from '../core/browse.js';
 import { pickGame, nextGameRound, hearGame } from '../session/game-run.js';
 import { playChallenge, chooseChallenge, checkChallenge, nextChallengeItem, hearChallenge, typeChallenge, focusChallenge } from '../session/challenge-run.js';
 import { syncChallenge, challengeStreak, streakLabel } from '../core/challenge.js';
+import { startRefresh, tryRefresh, endRefresh } from '../session/refresh.js';
 function setLevel(n, after) {
 setCurrentLevel(S, n); save(); after();
 }
@@ -39,6 +40,7 @@ $$('.way', wrap).forEach(w => w.classList.toggle('on', w.dataset.i === el.datase
 }
 function quit() {
 if (!sess) return;
+if (sess.mode === 'refresh') return endRefresh();
 if (sess.mode === 'place') return abortPlacement();
 if (sess.mode === 'free' || sess.mode === 'extra' || !$('.sheet')) return finish();
 return pauseOverlay('quit');
@@ -74,6 +76,9 @@ submit: () => submit(),
 next: () => advance(),
 how: () => openWays(false),
 why: () => openWhy(),
+refresh: el => startRefresh(el.dataset.id),
+refreshtry: () => tryRefresh(),
+refreshback: () => endRefresh(),
 read: () => toggleRead(),
 plan: el => { el.hidden = true; el.nextElementSibling.hidden = false; },
 closesheet: () => closeSheet(),

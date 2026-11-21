@@ -2,13 +2,14 @@
 import { sess } from './state.js';
 import { SKILL, isEarlyProblem } from '../skills/registry.js';
 import { I } from '../ui/icons.js';
-import { mount, fmtTime } from '../ui/dom.js';
+import { mount, fmtTime, esc } from '../ui/dom.js';
 import { problemHTML } from '../ui/fragments.js';
 import { hearHTML } from '../ui/hear.js';
 import { sayQuestion } from './aloud.js';
 import { renderInput, wirePlane } from './pad.js';
 const open = () => sess.mode === 'free' || sess.mode === 'extra'; // untimed practice
 function header() {
+if (sess.mode === 'refresh') return `<header class="pbar"><button class="iconbtn" data-act="refreshback" aria-label="Back">${I.back}</button><div class="pb-mid"><b>A short refresher</b><span class="small muted">${esc(SKILL[sess.refreshOf].title)}</span></div></header>`;
 const ph = sess.phases[sess.pi];
 if (sess.mode === 'place') return `<header class="pbar"><button class="iconbtn" data-act="quit" aria-label="Stop">${I.x}</button><div class="pb-mid"><b>${ph.label}</b></div></header>`;
 if (open()) return `<header class="pbar"><button class="iconbtn" data-act="quit" aria-label="Finish">${I.x}</button><div class="pb-mid"><b>${ph.label}</b><span class="small muted">Question ${sess.n} · ${I.star} ${sess.stats.stars}</span></div><button class="btn sm" data-act="quit">Finish</button></header>`;

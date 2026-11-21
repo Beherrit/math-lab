@@ -7,6 +7,7 @@ import { genUnitConv } from './unitconv.js';
 import { genRatioGraph } from './ratiograph.js';
 import { genWhatPct } from './whatpct.js';
 import { genCross, genSwap } from './methods.js';
+import { genFdp } from './convert.js';
 
 const skill = skillIn('Ratios and percents');
 
@@ -35,6 +36,9 @@ export const SKILLS = [
   skill('l5whatpct', '6.RP.3c', 'What percent is it?', 'Part and whole as a percent', genWhatPct, 'A percent compares a part with the whole as if the whole were 100. If you know the part and the whole, you can find the percent.',
     ['Write the part over the whole as a fraction, then change it to out of 100.', 'If the whole does not go into 100, find what 1 is worth: 100% divided by the whole.', 'When the new amount is bigger than the old one, the percent is over 100%.', 'When the part is tiny next to the whole, the percent is less than 1%.'],
     [['percent', 'out of 100'], ['part', 'a piece of the whole'], ['whole', 'the full amount, 100%']]),
+  skill('l5fdp', '6.RP.3c', 'Fractions, decimals, percents', 'Three names for one number', genFdp, 'A fraction, a decimal and a percent can all name the same amount. Changing between them never changes the size.',
+    ['Fraction to decimal: divide the top by the bottom.', 'Decimal to percent: multiply by 100. Percent to decimal: divide by 100.', 'Percent to fraction: write it over 100, then simplify.', 'To compare numbers in different forms, change them all to the same form first.'],
+    [['percent', 'a number out of 100'], ['equivalent', 'the same value written a different way']]),
   skill('l5xtable', '6.RP.3a', 'Cross multiplication', 'The missing cell of a ratio table', genCross, 'Equivalent rows of a ratio table grow by the same factor, so the diagonal products are equal. That is cross multiplication.',
     ['Find the multiplier from the column you can see in both rows.', 'Multiply the other cell by that same factor.', 'Or multiply diagonally: the two diagonal products match.', 'Adding across a row changes the mix, so it does not find the missing cell.'],
     [['ratio table', 'rows of matching amounts'], ['cross multiply', 'set the diagonal products equal'], ['multiplier', 'the factor that takes one row to the next']],

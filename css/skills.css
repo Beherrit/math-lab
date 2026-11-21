@@ -207,6 +207,10 @@
   gap: 6px;
 }
 
+.builds h2 { font-size: 18px; margin: 0 0 6px; }
+.builds ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.builds .link { justify-content: flex-start; }
+
 .tip h2 {
   display: flex;
   align-items: center;

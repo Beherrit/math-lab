@@ -7,6 +7,7 @@ import { waysHTML } from '../ui/fragments.js';
 import { SKILL } from '../skills/registry.js';
 import { fb } from './feedback.js';
 import { stop as stopSpeech } from '../core/speech.js';
+import { refreshOffer } from './refresh.js';
 const showSheet = sh => { sh.hidden = false; requestAnimationFrame(() => sh.classList.add('in')); };
 export function closeSheet() { const sh = $('.sheet'); if (sh && !sh.hidden) { sh.classList.remove('in'); sh.hidden = true; } }
 export function openWays(afterMiss) {
@@ -15,7 +16,7 @@ if (!afterMiss && !sess.answered) sess.assisted = true;
 const next = afterMiss || sess.answered;
 sh.innerHTML = `<div class="sheet-card" role="dialog" aria-label="How to solve it">
 <div class="sheet-head"><h2>${afterMiss ? 'Let’s see how it works' : 'Here’s how to think about it'}</h2><button class="iconbtn" data-act="closesheet" aria-label="Close">${I.x}</button></div>
-${afterMiss ? `<p class="sheet-ans">Answer: <b>${answerHTML(q.answer)}</b></p>` : ''}
+${afterMiss ? `<p class="sheet-ans">Answer: <b>${answerHTML(q.answer)}</b></p>${refreshOffer(q.skill)}` : ''}
 <p class="small muted">${q.ways.length > 1 ? 'There’s more than one way! Tap the tabs to compare.' : ''}</p>
 ${waysHTML(q.ways)}
 <button class="btn primary big" data-act="${next ? 'next' : 'closesheet'}">${next ? 'Next question' : 'Back to the problem'}</button>

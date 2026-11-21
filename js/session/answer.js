@@ -24,6 +24,7 @@ import { advance } from './flow.js';
 import { recordPlacement } from './placement-run.js';
 import { stop as stopSpeech } from '../core/speech.js';
 import { sayResult, aloudOn } from './aloud.js';
+import { refreshAnswer } from './refresh.js';
 export function submit() {
 if (!sess || sess.answered || sess.locked) return;
 stopSpeech(); // the child answered: stop reading
@@ -31,6 +32,7 @@ const r = check(sess.q.answer, currentInput());
 if (r.empty) { fb(r.msg, 'warn'); return; }
 if (sess.mode === 'lesson') return lessonAnswer(r.ok);
 if (sess.mode === 'place') return r.ok ? placeRight() : placeWrong();
+if (sess.mode === 'refresh') return refreshAnswer(r.ok);
 if (r.ok) onRight(r.note); else onWrong();
 }
 function nextButton(label = 'Next') { $('.pad').innerHTML = `<button class="btn primary big" data-act="next">${label}</button>`; }

@@ -35,7 +35,11 @@ if (sess.mode === 'extra') bankTime();
 const type = sess.mode === 'place' ? 'place' : mix ? mix.id : ph.type;
 if (type === 'place') { q = placementQuestion(); if (!q) return; }
 else if (type === 'facts') q = makeFactProblem(ph.table);
-else { const id = type === 'skill' ? ph.skill : type; q = id ? generate(id, speechCap(id, skillState(S, id).L, speechUsable(S)), sess.avoid) : null; }
+else {
+const id = type === 'skill' ? ph.skill : type;
+const step = id && sess.mode !== 'refresh' ? speechCap(id, skillState(S, id).L, speechUsable(S)) : 1;
+q = id ? generate(id, step, sess.avoid) : null;
+}
 if (!q) q = makeFactProblem();
 if (mix?.review && q.skill === mix.id) q.review = true;
 sess.avoid.add(q.key || q.expr); if (sess.avoid.size > 40) sess.avoid = new Set([...sess.avoid].slice(-30));
