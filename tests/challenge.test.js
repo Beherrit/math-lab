@@ -3,13 +3,25 @@ import assert from 'node:assert/strict';
 import { freshState, newSkillState } from '../js/core/state.js';
 import { applySetup, setGrade } from '../js/core/learner.js';
 import { SKILL } from '../js/skills/registry.js';
-import { makeRound } from '../js/games/catalog.js';
+import { gameList, makeRound } from '../js/games/catalog.js';
+import { puzzlesFor } from '../js/core/browse.js';
 import { becauseText } from '../js/core/say.js';
 import {
   buildChallenge, seededProblem, syncChallenge, noteAnswer, completeChallenge, challengeStreak, monthCells,
 } from '../js/core/challenge.js';
 
 const on = (name, grade) => applySetup(freshState(name, '2026-11-01'), { name, grade });
+
+function assertPuzzle(set) {
+  const puzzle = set.items.find(it => it.kind === 'puzzle');
+  assert.ok(puzzlesFor(set.level).some(g => g.id === puzzle.game));
+  const meta = gameList().find(g => g.id === puzzle.game);
+  const levels = meta.levels || [SKILL[meta.skill].level];
+  assert.ok(levels.includes(set.level), `${puzzle.game} is not for level ${set.level}`);
+  const round = makeRound(puzzle.game, puzzle.seed, set.level);
+  assert.equal(round.answer, makeRound(puzzle.game, puzzle.seed, set.level).answer);
+  assert.ok(round.why.length > 20);
+}
 
 test('the same date and progress always build the same challenge', () => {
   const a = buildChallenge(on('Ada', 'K'), '2026-11-21');
@@ -22,7 +34,7 @@ test('the same date and progress always build the same challenge', () => {
   assert.equal(a.items.filter(it => it.kind === 'puzzle').length, 1);
   for (const it of a.items) {
     if (it.skill) assert.equal(SKILL[it.skill].level, 0, it.skill);
-    if (it.game) assert.equal(SKILL[makeRound(it.game, it.seed).skill].level, 0);
+    if (it.game) assert.ok((gameList().find(g => g.id === it.game).levels || [0]).includes(0));
   }
   const other = buildChallenge(on('Ada', 'K'), '2026-11-22');
   assert.notDeepEqual(a.items.map(it => it.seed), other.items.map(it => it.seed));
@@ -37,8 +49,8 @@ test('a skill item and its puzzle rebuild the same question and a reason', () =>
   const p2 = seededProblem(S, skill);
   assert.equal(p1.key, p2.key);
   assert.ok(becauseText(p1).length > 0);
-  const r1 = makeRound(puzzle.game, puzzle.seed);
-  const r2 = makeRound(puzzle.game, puzzle.seed);
+  const r1 = makeRound(puzzle.game, puzzle.seed, set.level);
+  const r2 = makeRound(puzzle.game, puzzle.seed, set.level);
   assert.equal(r1.answer, r2.answer);
   assert.ok(r1.why.length > 0);
 });
@@ -47,44 +59,33 @@ test('grades 1 and 2 get a level 1 puzzle in the daily challenge', () => {
   for (const grade of ['1', '2']) {
     const set = buildChallenge(on('Ada', grade), '2026-11-21');
     assert.equal(set.level, 1);
-    const puzzle = set.items.find(it => it.kind === 'puzzle');
-    assert.ok(['g1jump', 'g1clock', 'g1shape'].includes(puzzle.game));
-    assert.equal(SKILL[makeRound(puzzle.game, puzzle.seed).skill].level, 1);
+    assertPuzzle(set);
     const stretch = set.items.find(it => it.kind === 'stretch');
     assert.equal(SKILL[stretch.skill].level, 1);
   }
 });
 
-test('grades 3, 4 and 5 each get the puzzle for that level', () => {
-  const expect = { 3: 'g3split', 4: 'g4bars', 5: 'g5order' };
+test('grades 3, 4 and 5 each get a puzzle for that level', () => {
   for (const grade of ['3', '4', '5']) {
     const set = buildChallenge(on('Ada', grade), '2026-11-21');
     assert.equal(set.level, Number(grade) - 1);
-    const puzzle = set.items.find(it => it.kind === 'puzzle');
-    assert.equal(puzzle.game, expect[grade]);
-    assert.equal(SKILL[makeRound(puzzle.game, puzzle.seed).skill].level, set.level);
+    assertPuzzle(set);
   }
 });
 
 test('grades 6, 7 and 8 each get a puzzle for that level', () => {
-  const expect = { 6: ['g6mix', 'g6balance'], 7: ['g7signs'], 8: ['g8squares'] };
   for (const grade of ['6', '7', '8']) {
     const set = buildChallenge(on('Ada', grade), '2026-11-21');
     assert.equal(set.level, Number(grade) - 1);
-    const puzzle = set.items.find(it => it.kind === 'puzzle');
-    assert.ok(expect[grade].includes(puzzle.game));
-    assert.equal(SKILL[makeRound(puzzle.game, puzzle.seed).skill].level, set.level);
+    assertPuzzle(set);
   }
 });
 
 test('grades 9 to 12 share one band and one of its puzzles', () => {
-  const expect = ['g9cross', 'g9corner', 'g9growth', 'g9secant'];
   for (const grade of ['9', '10', '11', '12']) {
     const set = buildChallenge(on('Ada', grade), '2026-11-21');
     assert.equal(set.level, 8);
-    const puzzle = set.items.find(it => it.kind === 'puzzle');
-    assert.ok(expect.includes(puzzle.game));
-    assert.equal(SKILL[makeRound(puzzle.game, puzzle.seed).skill].level, 8);
+    assertPuzzle(set);
   }
 });
 
@@ -99,7 +100,7 @@ test('the set matches the grade: review can be earlier, stretch stays on the gra
   assert.ok(reviews.every(it => SKILL[it.skill].level <= 2));
   const stretch = set.items.find(it => it.kind === 'stretch');
   assert.equal(SKILL[stretch.skill].level, 2);
-  assert.equal(set.items.find(it => it.kind === 'puzzle').game, 'g3split');
+  assertPuzzle(set);
   S.settings.off.l0count = true;
   const hidden = buildChallenge(S, '2026-11-21');
   assert.ok(!hidden.items.some(it => it.skill === 'l0count'));

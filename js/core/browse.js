@@ -41,7 +41,9 @@ export const skillsIn = (skills, name) => skills.filter(s => (s.strand || 'More'
 export function puzzlesFor(level, strand, off = {}) {
   return gameList().filter(g => {
     const skill = SKILL[g.skill];
-    if (!skill || skill.level !== level || off[g.skill]) return false;
+    if (!skill || off[g.skill]) return false;
+    const levels = g.levels || [skill.level];
+    if (!levels.includes(level)) return false;
     return !strand || (skill.strand || 'More') === strand;
   });
 }

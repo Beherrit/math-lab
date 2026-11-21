@@ -53,6 +53,17 @@
   margin: 8px 0 4px;
 }
 
+.gvisual > svg {
+  width: 100%;
+  height: auto;
+  max-width: 320px;
+}
+
+.game-choice .gtile {
+  width: 72px;
+  height: 72px;
+}
+
 .game-choices {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
