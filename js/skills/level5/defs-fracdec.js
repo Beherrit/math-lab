@@ -1,7 +1,7 @@
-// Fractions and decimals: decimal arithmetic, dividing fractions, three names for one number.
+// Fractions and decimals: decimal arithmetic and dividing fractions.
+// The three names for one number (fractions, decimals, percents) sit with percents, after percent is taught.
 import { skillIn } from './skill.js';
 import { genDecOps } from './decimals.js';
-import { genFdp } from './convert.js';
 import { genFracDiv } from './fracdiv.js';
 
 const skill = skillIn('Fractions and decimals');
@@ -13,7 +13,4 @@ export const SKILLS = [
   skill('l5fracdiv', '6.NS.1', 'Divide fractions', 'How many fit, and why we flip', genFracDiv, 'Dividing by a fraction asks “how many of these pieces fit?” That is why the answer can be bigger than the number you started with.',
     ['Give both fractions the same bottom number. Then just divide the tops.', 'Or multiply by the divisor turned upside down. It works because cutting into smaller pieces makes more of them.', 'Change mixed numbers into fractions first.', 'Check: your answer times the divisor should give the first number back.'],
     [['divisor', 'the number you divide by'], ['reciprocal', 'a fraction turned upside down'], ['quotient', 'the answer to a division']]),
-  skill('l5fdp', '6.RP.3c', 'Fractions, decimals, percents', 'Three names for one number', genFdp, 'A fraction, a decimal and a percent can all name the same amount. Changing between them never changes the size.',
-    ['Fraction to decimal: divide the top by the bottom.', 'Decimal to percent: multiply by 100. Percent to decimal: divide by 100.', 'Percent to fraction: write it over 100, then simplify.', 'To compare numbers in different forms, change them all to the same form first.'],
-    [['percent', 'a number out of 100'], ['equivalent', 'the same value written a different way']]),
 ];
