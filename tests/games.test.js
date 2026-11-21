@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { gameList, makeRound, checkRound } from '../js/games/catalog.js';
 
-const IDS = ['kpattern', 'kfit', 'kten', 'g1jump', 'g1clock', 'g1shape', 'g3split', 'g4bars', 'g5order'];
+const IDS = ['kpattern', 'kfit', 'kten', 'g1jump', 'g1clock', 'g1shape', 'g3split', 'g4bars', 'g5order', 'g6mix', 'g6balance', 'g7signs', 'g8squares'];
 
 function truth(round) {
   const f = round.facts;
@@ -14,6 +14,10 @@ function truth(round) {
   if (round.game === 'g3split') return `${f.h} × ${f.s} + ${f.h} × ${f.t}`;
   if (round.game === 'g4bars') return (f.n1 / f.d1 > f.n2 / f.d2 ? `${f.n1}/${f.d1}` : `${f.n2}/${f.d2}`);
   if (round.game === 'g5order') return String(f.a + f.b * f.c);
+  if (round.game === 'g6mix') return `${f.a * f.m}:${f.b * f.m}`;
+  if (round.game === 'g6balance') return String(f.c - f.a);
+  if (round.game === 'g7signs') return String(f.a * f.c);
+  if (round.game === 'g8squares') return String(f.a * f.a + f.c * f.c);
   return String(10 - f.filled);
 }
 
