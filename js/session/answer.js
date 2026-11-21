@@ -3,6 +3,7 @@ import { S, save } from '../core/store.js';
 import * as FX from '../core/facts.js';
 import { recordSkill } from '../core/mastery.js';
 import { recordReview } from '../core/review.js';
+import { applyQuietReview } from '../core/home-review.js';
 import { today } from '../core/dates.js';
 import { dayLog } from '../core/daily.js';
 import { checkLevelUp } from '../core/progression.js';
@@ -49,9 +50,18 @@ const q = sess.q; sess.answered = true; recordPlacement(false); chimeResult(S, f
 fb(`The answer is <b>${answerHTML(q.answer)}</b>. That one comes later.`, 'soft keep'); nextButton();
 }
 export function skipQuestion() { if (!sess || sess.answered) return; sess.answered = true; recordPlacement(false); advance(); }
+function quietRight(q, first) {
+  sess.answered = true; chimeResult(S, true);
+  if (q.review && q.skill) applyQuietReview(S, q.skill, first ? 'right' : 'half', today());
+  save(); markCorrect(q); sayResult('right', q);
+  fb(`${I.check} ${pick(RIGHT)}`, 'good');
+  nextButton();
+  if (!q.story) setTimeout(() => { if (sess?.q === q && !$('.sheet:not([hidden])')) advance(); }, aloudOn() ? 2400 : 1300);
+}
 function onRight(note) {
 const q = sess.q; const ms = performance.now() - sess.qStart;
 const first = sess.tries === 0 && !sess.assisted;
+if (q.quiet) return quietRight(q, first);
 sess.answered = true; sess.stats.q++; const dl = dayLog(S); dl.q++; chimeResult(S, true);
 if (first) { sess.stats.c++; sess.stats.stars++; S.stars++; dl.c++; }
 if (q.fact) {
@@ -89,7 +99,14 @@ $('.ans')?.classList.add('no'); sayResult('retry', q);
 fb(`Not quite. Try again!<br><span class="small">${I.bulb} ${q.hint}</span>`, 'bad');
 resetAttempt(q); renderInput(); return;
 }
-sess.answered = true; sess.stats.q++; dayLog(S).q++;
+sess.answered = true;
+if (q.quiet) {
+  if (q.review && q.skill) applyQuietReview(S, q.skill, 'wrong', today());
+  save(); sayResult('reveal', q);
+  fb(`The answer is <b>${answerHTML(q.answer)}</b>.`, 'bad keep');
+  nextButton(); return;
+}
+sess.stats.q++; dayLog(S).q++;
 sayResult('reveal', q);
 levelNews(recordSkill(S, q.skill, 'wrong'), q.skill);
 if (q.review) recordReview(S.skills[q.skill], 'wrong', today());

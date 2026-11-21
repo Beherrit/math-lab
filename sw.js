@@ -34,6 +34,7 @@ const PRECACHE = [
   './js/core/facts.js',
   './js/core/focus.js',
   './js/core/foundations.js',
+  './js/core/home-review.js',
   './js/core/learned.js',
   './js/core/learner.js',
   './js/core/lesson.js',

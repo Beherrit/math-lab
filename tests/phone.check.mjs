@@ -212,6 +212,26 @@ async function puzzleShots(page) {
   }
 }
 
+async function reviewShot(page) {
+  await page.evaluate(() => {
+    const s = JSON.parse(localStorage.getItem('mathlab.v3'));
+    s.stars = 4;
+    s.skills.l0shapes = { L: 3, run: 0, miss: 0, hist: [], n: 8, c: 8, last: '2026-11-01', mastered: true, rev: { stage: 0, due: '2026-11-01', miss: 0 } };
+    localStorage.setItem('mathlab.v3', JSON.stringify(s));
+  });
+  await page.reload();
+  await page.getByRole('heading', { name: "Today's review", exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Review', exact: true }).click();
+  await page.locator('.pbar b', { hasText: 'Review' }).waitFor();
+  await shot(page, 'phone-review');
+  const choice = page.locator('.choice').first();
+  if (await choice.count()) await choice.click();
+  else await page.getByRole('button', { name: 'Check', exact: true }).click();
+  await page.locator('.fb').waitFor();
+  const stars = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')).stars);
+  if (stars !== 4) throw new Error(`review changed stars to ${stars}`);
+}
+
 async function lookShots(page) {
   await page.getByRole('heading', { name: 'Hi, Ada!' }).waitFor();
   await page.getByRole('heading', { name: "Today's challenge", exact: true }).waitFor();
@@ -652,6 +672,7 @@ try {
 
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
   await lookShots(page);
+  await reviewShot(page);
 
   const still = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
   if (still.grade !== 'K' || still.name !== 'Ada') throw new Error('progress was not kept');

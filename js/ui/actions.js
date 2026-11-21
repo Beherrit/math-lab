@@ -15,7 +15,7 @@ import { renderInput } from '../session/pad.js';
 import { openWays, closeSheet, toggleRead, onPre, pauseOverlay, openWhy } from '../session/sheet.js';
 import { submit, skipQuestion } from '../session/answer.js';
 import { advance, playPhase } from '../session/flow.js';
-import { startDaily, startFree, startPlacementCheck } from '../session/start.js';
+import { startDaily, startFree, startPlacementCheck, startReviewRound } from '../session/start.js';
 import { finish } from '../session/summary.js';
 import { keepGoing, nextSkill } from '../session/extra-run.js';
 import { abortPlacement } from '../session/placement-run.js';
@@ -42,7 +42,7 @@ function quit() {
 if (!sess) return;
 if (sess.mode === 'refresh') return endRefresh();
 if (sess.mode === 'place') return abortPlacement();
-if (sess.mode === 'free' || sess.mode === 'extra' || !$('.sheet')) return finish();
+if (sess.mode === 'free' || sess.mode === 'extra' || sess.mode === 'review' || !$('.sheet')) return finish();
 return pauseOverlay('quit');
 }
 function presolve() {
@@ -52,6 +52,7 @@ renderInput();
 }
 export const ACTIONS = {
 start: () => startDaily(),
+review: () => startReviewRound(),
 facts: () => startFree('facts'),
 sprint: () => startFree('sprint'),
 tablepractice: el => startFree('table', el.dataset.t),
