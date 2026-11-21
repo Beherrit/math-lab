@@ -2,7 +2,7 @@
 import { S, setState, save, clearSaved, exportJSON, parseBackup } from '../core/store.js';
 import { today } from '../core/dates.js';
 import { checkLevelUp } from '../core/progression.js';
-import { levelName, levelFull } from '../levels.js';
+import { moveLine } from '../core/browse.js';
 import { setGrade } from '../core/learner.js';
 import { stop as stopSpeech } from '../core/speech.js';
 import { render } from './router.js';
@@ -29,7 +29,7 @@ setState(d); save(); toast('Progress restored'); renderParent();
 function toggleSkill(el) {
 if (el.checked) delete S.settings.off[el.dataset.id]; else S.settings.off[el.dataset.id] = true;
 const up = checkLevelUp(S);
-if (up) toast(`${levelName(up.done)} complete!${up.next ? ` Now on ${levelFull(up.next)}` : ''}`);
+if (up) toast(moveLine(up.done, up.next));
 }
 const SETTERS = {
 toggleskill: toggleSkill,
