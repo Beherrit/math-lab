@@ -27,6 +27,8 @@ import { readAloudOn } from '../core/say.js';
 import { setGrade } from '../core/learner.js';
 import { homeSay } from '../core/browse.js';
 import { pickGame, nextGameRound, hearGame } from '../session/game-run.js';
+import { playChallenge, chooseChallenge, checkChallenge, nextChallengeItem, hearChallenge, typeChallenge, focusChallenge } from '../session/challenge-run.js';
+import { syncChallenge, challengeStreak, streakLabel } from '../core/challenge.js';
 function setLevel(n, after) {
 setCurrentLevel(S, n); save(); after();
 }
@@ -89,11 +91,24 @@ pickgrade: el => {
   form.grade.value = was ? '' : el.dataset.grade;
 },
 setgrade: el => { setGrade(S, el.dataset.grade); save(); go('home'); },
-hearhome: () => { if (readAloudOn(S)) speak(homeSay(S, enabledIn(S, S.level))); },
+hearhome: () => {
+  if (!readAloudOn(S)) return;
+  const set = syncChallenge(S, today());
+  const left = set.items.filter(it => !it.status).length;
+  const bit = left ? `Today's challenge has ${left} to go. ${streakLabel(challengeStreak(S, today()))}` : `Today's challenge is done. ${streakLabel(challengeStreak(S, today()))}`;
+  speak(`${homeSay(S, enabledIn(S, S.level))} ${bit}`);
+},
 hearsay: el => { if (readAloudOn(S) && el.dataset.say) speak(el.dataset.say); },
 gamepick: el => pickGame(el.dataset.id),
 gamenext: () => nextGameRound(),
 heargame: () => hearGame(),
+chstart: () => playChallenge(),
+chchoice: el => chooseChallenge(el),
+chcheck: () => checkChallenge(),
+chnext: () => nextChallengeItem(),
+chhear: () => hearChallenge(),
+chkey: el => typeChallenge(el.dataset.k),
+chfield: el => focusChallenge(el.dataset.f),
 ...adultActions,
 ...lessonActions,
 ...aloudActions,
