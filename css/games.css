@@ -59,6 +59,10 @@
   margin-top: 14px;
 }
 
+.game-choices.stack {
+  grid-template-columns: 1fr;
+}
+
 .game-choice {
   min-height: 104px;
   display: grid;
@@ -72,12 +76,22 @@
   max-width: 100%;
 }
 
-.game-choice .gnum.word {
+.game-choice .gnum.word,
+.game-choice .gnum.expr {
   font-family: inherit;
   font-size: 22px;
   line-height: 1.15;
   text-align: center;
   padding: 0 6px;
+}
+
+.game-choices.stack .game-choice {
+  min-height: 64px;
+}
+
+.game-choices.stack .gnum.expr {
+  font-family: var(--font-num);
+  font-size: 28px;
 }
 
 .why-card {

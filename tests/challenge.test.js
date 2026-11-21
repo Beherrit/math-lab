@@ -55,7 +55,18 @@ test('grades 1 and 2 get a level 1 puzzle in the daily challenge', () => {
   }
 });
 
-test('the set matches the grade: review can be earlier, stretch stays on the grade, no puzzle yet above Number sense', () => {
+test('grades 3, 4 and 5 each get the puzzle for that level', () => {
+  const expect = { 3: 'g3split', 4: 'g4bars', 5: 'g5order' };
+  for (const grade of ['3', '4', '5']) {
+    const set = buildChallenge(on('Ada', grade), '2026-11-21');
+    assert.equal(set.level, Number(grade) - 1);
+    const puzzle = set.items.find(it => it.kind === 'puzzle');
+    assert.equal(puzzle.game, expect[grade]);
+    assert.equal(SKILL[makeRound(puzzle.game, puzzle.seed).skill].level, set.level);
+  }
+});
+
+test('the set matches the grade: review can be earlier, stretch stays on the grade, and Grade 3 has its puzzle', () => {
   const S = on('Bo', '3');
   S.skills.l0count = { ...newSkillState(), mastered: true, n: 8, c: 8, L: 3, rev: { stage: 0, due: '2026-11-21', miss: 0 } };
   const set = buildChallenge(S, '2026-11-21');
@@ -66,7 +77,7 @@ test('the set matches the grade: review can be earlier, stretch stays on the gra
   assert.ok(reviews.every(it => SKILL[it.skill].level <= 2));
   const stretch = set.items.find(it => it.kind === 'stretch');
   assert.equal(SKILL[stretch.skill].level, 2);
-  assert.equal(set.items.find(it => it.kind === 'puzzle'), undefined);
+  assert.equal(set.items.find(it => it.kind === 'puzzle').game, 'g3split');
   S.settings.off.l0count = true;
   const hidden = buildChallenge(S, '2026-11-21');
   assert.ok(!hidden.items.some(it => it.skill === 'l0count'));

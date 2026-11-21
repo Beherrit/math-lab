@@ -6,6 +6,9 @@ import { tenMeta, makeTen } from './ten.js';
 import { jumpMeta, makeJump } from './jump.js';
 import { clockMeta, makeClock } from './clock.js';
 import { shapeMeta, makeCompose } from './compose.js';
+import { splitMeta, makeSplit } from './split.js';
+import { barsMeta, makeBars } from './bars.js';
+import { orderMeta, makeOrder } from './order.js';
 
 const GAMES = [
   { ...patternMeta, make: makePattern },
@@ -14,6 +17,9 @@ const GAMES = [
   { ...jumpMeta, make: makeJump },
   { ...clockMeta, make: makeClock },
   { ...shapeMeta, make: makeCompose },
+  { ...splitMeta, make: makeSplit },
+  { ...barsMeta, make: makeBars },
+  { ...orderMeta, make: makeOrder },
 ];
 
 export const gameList = () => GAMES.map(({ id, title, blurb, skill }) => ({ id, title, blurb, skill }));
