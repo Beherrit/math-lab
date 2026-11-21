@@ -26,6 +26,28 @@ async function ready() {
 async function shot(page, name) {
   await page.screenshot({ path: `${out}/${name}.png` });
 }
+async function methodShot(page, grade, subject, title, file) {
+  await page.getByRole('button', { name: grade, exact: true }).click();
+  await page.getByRole('heading', { name: grade, exact: true }).waitFor();
+  await page.getByRole('button', { name: subject, exact: true }).click();
+  await page.getByRole('heading', { name: subject, exact: true }).waitFor();
+  const card = page.locator('article.path-card', { has: page.getByRole('heading', { name: title, exact: true }) });
+  await card.scrollIntoViewIfNeeded();
+  await card.getByRole('button', { name: 'Peek' }).click();
+  await page.getByRole('heading', { name: 'Why it works', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Why it works', exact: true }).evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, `${file}-card`);
+  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await page.locator('.qcard .viz').waitFor();
+  await page.locator('.qcard .viz').evaluate(el => el.scrollIntoView({ block: 'center' }));
+  await shot(page, `${file}-question`);
+  await page.getByRole('button', { name: 'Why it works', exact: true }).click();
+  await page.getByRole('dialog', { name: 'Why it works' }).waitFor();
+  await shot(page, `${file}-why`);
+  await page.getByRole('button', { name: 'Close', exact: true }).click();
+  await page.locator('.pbar .btn', { hasText: 'Finish' }).click();
+  await page.getByRole('button', { name: 'Back home', exact: true }).click();
+}
 
 const server = serve();
 let browser;
@@ -407,6 +429,12 @@ try {
   await page.getByRole('button', { name: 'Algebra', exact: true }).waitFor();
   await page.getByRole('heading', { name: 'Grade 12', exact: true }).evaluate(el => el.scrollIntoView({ block: 'start' }));
   await shot(page, 'phone-grade12-home');
+
+  await methodShot(page, 'Grade 1', 'Adding', 'Number bonds', 'phone-bonds');
+  await methodShot(page, 'Grade 3', 'Adding', 'Equal additions', 'phone-equal');
+  await methodShot(page, 'Grade 3', 'Multiplying', 'Line multiplication', 'phone-lines');
+  await methodShot(page, 'Grade 3', 'Multiplying', 'Lattice multiplication', 'phone-lattice');
+
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
 
   const still = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
