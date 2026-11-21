@@ -20,12 +20,12 @@ const seeded = (name, fn) => test(name, () => {
   try { fn(); } catch (e) { e.message = `[seed ${SEED}] ${e.message}`; throw e; } finally { Math.random = realRandom; }
 });
 
-const ORDER = ['l0count', 'l0count20', 'l0numrec', 'l0next', 'l0tens', 'l0more', 'l0order', 'l0add', 'l0sub', 'l0pairs', 'l0shapes', 'l0solids', 'l0size', 'l0where',
+const ORDER = ['l0count', 'l0five', 'l0count20', 'l0numrec', 'l0next', 'l0tens', 'l0more', 'l0order', 'l0add', 'l0on', 'l0sub', 'l0pairs', 'l0shapes', 'l0solids', 'l0size', 'l0where',
   'l0pattern', 'l0sort', 'l0colours', 'l0upper', 'l0lower', 'l0match', 'l0abc', 'l0sound'];
 const STRANDS = ['Numbers', 'Adding and subtracting', 'Shapes and space', 'Colors', 'Letters'];
 const LETTER_F = Object.keys(LETTER_CHECKS);
 
-seeded('level 0: 22 skills in path order, complete, level 0, known strands', () => {
+seeded('level 0: 24 skills in path order, complete, level 0, known strands', () => {
   assert.deepEqual(SKILLS.map(s => s.id), ORDER);
   assert.deepEqual(STORY_SOURCES, []);
   for (const s of SKILLS) {

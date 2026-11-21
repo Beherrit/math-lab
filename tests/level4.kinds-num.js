@@ -12,7 +12,12 @@ const WORD_VALUE = { 0: t => t.c * (t.a + t.b) - t.d, 1: t => (t.a - t.c) / t.b,
   S0: t => t.A - (t.p * t.q + t.r * t.s), S1: t => (t.p * t.q + t.r) / t.s, S2: t => (t.p * t.q - t.r) / t.s };
 const moneyCents = (x, d = 100) => x / d;
 
+const placeShift = t => (t.mult ? (t.n * t.pow) / t.den : t.n / t.pow);
+const placeShow = t => (t.mult ? [t.n / t.den, t.pow] : [t.n, t.pow]);
+
 export const NUM_KINDS = {
+  dmul: { rec: placeShift, show: placeShow }, ddiv: { rec: placeShift, show: placeShow },
+  dten: { rec: placeShift, show: placeShow }, dhund: { rec: placeShift, show: placeShow },
   pval: { rec: t => 10 ** t.e, show: t => [t.e] },
   pexp: { rec: t => t.e, show: t => [10 ** t.e] },
   pmul: { rec: t => t.x * 10 ** t.e, show: t => [t.x, t.e], range: (t, L) => (L === 1 ? Number.isInteger(t.x) && t.x <= 99 && t.e <= 3 : t.e <= 4) },

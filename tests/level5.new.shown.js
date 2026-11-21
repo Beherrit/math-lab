@@ -6,6 +6,8 @@ import { doubleRead, gridRead, lineValue, dotsOn } from './level5.new.read.js';
 const L = (...xs) => xs;
 const fmt0 = v => String(v).replace('-', '−');
 export const SHOWN_NEW = {
+  xtable: t => L(t.a, t.b, t.a * t.m),
+  pctswap: t => L(t.p, t.n),
   ldQuot: t => L(t.n, t.d), ldRem: t => L(t.n, t.d), ldDown: t => L(t.n, t.d), ldUp: t => L(t.n, t.d), ldFirst: t => L(t.n, t.d), ldEstimate: t => L(t.n, t.d), ldZero: t => L(t.n, t.d),
   ucTable: t => L(t.f, t.x), ucDouble: t => (t.toSmall ? L(t.f, 3) : L(t.f, 3 * t.f)), ucMul: t => L(t.n), ucDiv: t => L(t.n), ucWhich: t => L(t.n, t.f), ucSpeed: t => L(t.r), ucPrice: t => L(t.p, t.n), ucChain: t => L(t.n),
   ucBest: t => L(t.n1, t.p1, t.n2, t.p2),

@@ -101,7 +101,7 @@ words: [['in all / total', 'usually add or multiply'], ['left / how many more', 
 ];
 // The learning path: whole numbers first, then decimals and fractions, shapes, patterns and expressions, measurement, data, and stories last.
 // Ids never change (they are keys in saved progress); only this order does.
-const ORDER = ['pv', 'l4pow', 'dec', 'l4thou', 'rnd', 'mul', 'div', 'l4ldiv', 'das', 'dmul', 'ddiv', 'l4money', 'fas', 'l4mixas', 'l4fest', 'fmul', 'l4fmix', 'scale', 'fdiv', 'l4fshare',
+const ORDER = ['pv', 'l4pow', 'l4dshift', 'dec', 'l4thou', 'rnd', 'mul', 'div', 'l4ldiv', 'das', 'dmul', 'ddiv', 'l4money', 'fas', 'l4mixas', 'l4fest', 'fmul', 'l4fmix', 'scale', 'fdiv', 'l4fshare',
   'coord', 'shapes', 'l4family', 'oa', 'l4groups', 'pat', 'l4rules', 'conv', 'vol', 'l4vol2', 'lplot', 'story'];
 const BY_ID = Object.fromEntries([...ORIGINAL, ...NEW_SKILLS].map(s => [s.id, s]));
 export const SKILLS = ORDER.map(id => BY_ID[id]);

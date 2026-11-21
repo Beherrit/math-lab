@@ -18,6 +18,7 @@ import { makeStory } from './story.js';
 import { skill } from './skill-def.js';
 import { BASE } from './skills-base.js';
 import { NEW } from './skills-new.js';
+import { l3partial, l3fsplit } from './methods.js';
 
 // Story problems for this level: each source is (L) => a story problem. More than half need more than one step.
 export const STORY_SOURCES = [...MULTI, areaWord, areaWord, addsubWord, mul1Word, mul2Word, divStory, fracWord, fmulWord, mixedWord, compareWord, angleWord, timesWord, timesWord, mixAddWord, moneyWord, convertWord, convertWord];
@@ -32,12 +33,12 @@ const STORY = skill('l3story', 'Stories', '4.OA.3', 'Story problems', 'More than
 // The learning path: easier ideas first, a strand's skills together where the path allows, the story skill last.
 const ORDER = ['l3pv', 'l3shift', 'l3round',
   'l3addsub',
-  'l3times', 'l3mul1', 'l3mul2', 'l3div', 'l3estimate', 'l3factors', 'l3prime',
+  'l3times', 'l3mul1', 'l3mul2', 'l3div', 'l3partial', 'l3estimate', 'l3factors', 'l3prime',
   'l3pattern',
-  'l3equiv', 'l3simplify', 'l3compare', 'l3fparts', 'l3fadd', 'l3mixed', 'l3mixadd', 'l3fmul', 'l3dec', 'l3tenhund', 'l3decorder',
+  'l3equiv', 'l3simplify', 'l3compare', 'l3fparts', 'l3fadd', 'l3fsplit', 'l3mixed', 'l3mixadd', 'l3fmul', 'l3dec', 'l3tenhund', 'l3decorder',
   'l3area', 'l3convert',
   'l3lineplot',
   'l3angles', 'l3protractor', 'l3lines', 'l3symmetry',
   'l3story'];
-const BY_ID = Object.fromEntries([...BASE, ...NEW, STORY].map(s => [s.id, s]));
+const BY_ID = Object.fromEntries([...BASE, ...NEW, l3partial, l3fsplit, STORY].map(s => [s.id, s]));
 export const SKILLS = ORDER.map(id => BY_ID[id]);

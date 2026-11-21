@@ -12,14 +12,22 @@ import { genVolume2 } from './cvolume.js';
 import { genFamily } from './family.js';
 import { genMoney } from './money.js';
 import { genGroups } from './groups.js';
+import { genShift } from './shift.js';
 
-const skill = (id, strand, std, title, sub, gen, big, tips, words) => ({ id, level: 4, strand, std, title, sub, gen, school: true, learn: { big, tips, words } });
+const skill = (id, strand, std, title, sub, gen, big, tips, words, card) => ({
+  id, level: 4, strand, std, title, sub, gen, school: true, learn: { big, tips, words, ...(card ? { card } : {}) },
+});
+const SHIFT_CARD = { title: 'Why the digits slide', why: 'Each place is worth ten times the place on its right, so multiplying or dividing by a power of ten slides every digit, and the decimal point only looks like it moved.' };
 
 export const NEW_SKILLS = [
   skill('l4pow', 'Numbers', '5.NBT.2', 'Powers of 10', 'Exponents and sliding the digits', genPowers,
     `A power of 10 is 10 multiplied by itself. ${pow(10, 3)} means 10 × 10 × 10 = 1,000. Multiplying or dividing by a power of 10 slides every digit to a new place.`,
     [`The exponent counts the tens that are multiplied. It is also the number of zeros after the 1.`, `Multiplying by ${pow(10, 3)} slides every digit 3 places to the left. Dividing slides them 3 places to the right.`, 'The digits slide because each place is worth 10 times the place on its right.', 'Empty places fill up with zeros, so 4.7 × 1,000 = 4,700.'],
-    [['exponent', 'the small raised number, how many tens are multiplied'], ['power of 10', `10, 100, 1,000 and so on, written like ${pow(10, 3)}`], ['base', 'the number that is multiplied, here 10']]),
+    [['exponent', 'the small raised number, how many tens are multiplied'], ['power of 10', `10, 100, 1,000 and so on, written like ${pow(10, 3)}`], ['base', 'the number that is multiplied, here 10']], SHIFT_CARD),
+  skill('l4dshift', 'Numbers', '5.NBT.2', 'Decimal shifts', 'Move a decimal by powers of ten', genShift,
+    'Multiplying by 10, 100 or 1,000 slides every digit to a larger place. Dividing slides them the other way. The digits stay in the same order.',
+    ['Count the zeros to see how many places to slide.', 'Empty places fill with zeros, so 3.4 × 100 = 340.', 'Dividing by 10 moves each digit one place smaller.', 'The decimal point does not hop on its own. The digits move, and the point stays between the ones and the tenths.'],
+    [['decimal point', 'the dot that marks where the ones place ends'], ['place', 'how much a digit is worth'], ['power of ten', '10, 100 or 1,000']], SHIFT_CARD),
   skill('l4thou', 'Numbers', '5.NBT.3', 'Thousandths and expanded form', 'Read, write and compare to three places', genThousandths,
     'Every place to the right of the decimal point is 10 times smaller: tenths, hundredths, thousandths. You can write a decimal as the sum of its places, and compare two decimals place by place.',
     [`4.205 = 4 × 1 + 2 × ${F(1, 10)} + 5 × ${F(1, 1000)}. The 0 in the hundredths place means that part is missing.`, 'To compare, give both numbers the same number of places. 0.5 = 0.500, so 0.5 is more than 0.499.', 'The first place where two decimals differ decides which one is bigger.', 'A longer decimal is not always the bigger one.'],

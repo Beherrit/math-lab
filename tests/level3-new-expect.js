@@ -30,6 +30,8 @@ const sumParts = html => { let total = 0; const rest = String(html).replace(FR, 
 const validBreak = (o, n, d) => { const fs = fracsIn(o); return fs.length >= 2 && fs.every(f => f[1] === d) && add(fs.map(f => f[0])) === n; };
 
 export const EXPECT_NEW = {
+  pquot: t => t.n / t.d,
+  fsplit: t => t.n - t.a,
   timesBig: t => t.s * t.t, timesSmall: t => t.big / t.t, timesHow: t => t.prod / t.s, timesDiff: t => t.t * t.s - (t.s + t.m), timesTogether: t => t.s + t.s * t.t, timesChain: t => t.s * t.t * t.u,
   timesTell: t => o => { const x = /(\d[\d,]*) times as many/.exec(plain(o)), m = /(\d[\d,]*) more/.exec(plain(o)); return x ? Number(x[1].replace(',', '')) * t.s === t.prod : m ? t.s + Number(m[1].replace(',', '')) === t.prod : false; },
   patnext: t => { const ts = t.terms, [p, l] = [ts.at(-2), ts.at(-1)]; return t.op === '×' ? l * (l / p) : l + (l - p); }, patmiss: t => (t.op === '×' ? t.start * t.step ** t.at : t.start + t.at * t.step),

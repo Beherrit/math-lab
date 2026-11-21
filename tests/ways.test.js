@@ -3,8 +3,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SKILL, generate } from '../js/skills/registry.js';
 
-const IDS = ['l1bonds', 'l1break', 'l1bar', 'l2equal', 'l2sticks', 'l2eleven', 'l2five', 'l2lattice', 'l2peasant', 'l2short'];
-const CARDS = ['l1add20', 'l1jump', 'l2area2', 'l2tricks', ...IDS];
+const IDS = ['l0five', 'l0on', 'l1bonds', 'l1break', 'l1bar', 'l1comp', 'l1open', 'l2equal', 'l2sticks', 'l2eleven', 'l2five', 'l2lattice', 'l2peasant', 'l2short',
+  'l3partial', 'l3fsplit', 'l4dshift', 'l5xtable', 'l5pctswap', 'l8ac', 'l8diff'];
+const CARDS = ['l1add20', 'l1jump', 'l2area2', 'l2tricks', 'l4pow', 'l6intadd', 'l8factor', ...IDS];
 
 test('method skills explain why, and each way can show a picture', () => {
   for (const id of CARDS) {

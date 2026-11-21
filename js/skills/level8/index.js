@@ -2,6 +2,7 @@
 import { makeStory } from '../level4/story.js';
 import { genLine, genSystem } from './lines.js';
 import { genFactor, genVertex } from './curves.js';
+import { genAc, genDiff } from './factor-ways.js';
 import { genPoly, genGrow, genRadical } from './powers.js';
 import { genShift } from './move.js';
 import { genSecant, genArea } from './change.js';
@@ -11,9 +12,10 @@ import { saveStory, scaleStory, doubleStory } from './stories.js';
 
 export const STORY_SOURCES = [saveStory, scaleStory, doubleStory];
 const genStory = L => makeStory(STORY_SOURCES, L);
-const skill = (id, strand, std, title, sub, gen, big, tips, extra = {}) => ({
-  id, level: 8, strand, std, title, sub, gen, school: true, learn: { big, tips }, ...extra,
-});
+const skill = (id, strand, std, title, sub, gen, big, tips, extra = {}) => {
+  const { card, ...rest } = extra;
+  return { id, level: 8, strand, std, title, sub, gen, school: true, learn: { big, tips, ...(card ? { card } : {}) }, ...rest };
+};
 
 export const SKILLS = [
   skill('l8line', 'Algebra', 'HSF-IF.6', 'Straight lines', 'Slope, intercept and a point on the graph', genLine,
@@ -24,7 +26,16 @@ export const SKILLS = [
     ['The crossing is not an intercept unless the lines meet on an axis.', 'After you find x, either rule gives the same y.']),
   skill('l8factor', 'Algebra', 'HSA-SSE.3', 'Factor with a rectangle', 'The corner is a product and the strips add', genFactor,
     'A product (x + a)(x + b) is a rectangle. The corner is a times b, and the two x strips add.',
-    ['The corner multiplies the side numbers.', 'Adding those numbers builds the middle term, not the corner.']),
+    ['The corner multiplies the side numbers.', 'Adding those numbers builds the middle term, not the corner.'],
+    { card: { title: 'Why the box works', why: 'The rectangle is the product, so the corner is the two side numbers multiplied and the strips are those numbers times x, and adding the strips makes the middle term.' } }),
+  skill('l8ac', 'Algebra', 'HSA-SSE.3', 'The AC method', 'Two numbers for the corner, then the sides', genAc,
+    'To factor ax squared plus bx plus c, find two numbers that multiply to a times c and add to b, then split the middle term.',
+    ['The product a times c is the corner of a bigger rectangle.', 'The two numbers add to the middle term.', 'For a equal to 1, those two numbers are the sides.'],
+    { card: { title: 'Why the AC method works', why: 'The product a times c is the corner of a bigger rectangle, so the two numbers that multiply to that corner and add to the middle are the sides you need.' } }),
+  skill('l8diff', 'Algebra', 'HSA-SSE.3', 'Difference of squares', 'A square with a smaller square removed', genDiff,
+    'A square minus a smaller square is a rectangle. One side is the sum of the two sides, and the other is their difference.',
+    ['x squared minus 9 is (x minus 3) times (x plus 3).', 'The middle terms cancel, which is why the square of a difference is a different expression.', 'The side of the removed square is the number that multiplies to the amount cut out.'],
+    { card: { title: 'Why the picture works', why: 'Cutting out the small square and sliding the leftover strip makes a rectangle, so the area is the sum of the sides times the difference of the sides.' } }),
   skill('l8vertex', 'Algebra', 'HSF-IF.7', 'The turning point', 'Read (h, k), and fill the missing corner', genVertex,
     'The turning point of y = (x − h)² + k is (h, k). Completing the square fills the missing corner h times h.',
     ['The number inside the parentheses moves the curve sideways.', 'The missing corner is a square, not double the side.']),

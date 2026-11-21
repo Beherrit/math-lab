@@ -30,16 +30,20 @@ async function methodShot(page, grade, subject, title, file) {
   await page.getByRole('button', { name: grade, exact: true }).click();
   await page.getByRole('heading', { name: grade, exact: true }).waitFor();
   await page.getByRole('button', { name: subject, exact: true }).click();
-  await page.getByRole('heading', { name: subject, exact: true }).waitFor();
+  await page.getByRole('heading', { name: subject, exact: true, level: 1 }).waitFor();
   const card = page.locator('article.path-card', { has: page.getByRole('heading', { name: title, exact: true }) });
   await card.scrollIntoViewIfNeeded();
-  await card.getByRole('button', { name: 'Peek' }).click();
-  await page.getByRole('heading', { name: 'Why it works', exact: true }).waitFor();
-  await page.getByRole('heading', { name: 'Why it works', exact: true }).evaluate(el => el.scrollIntoView({ block: 'start' }));
-  await shot(page, `${file}-card`);
-  await page.getByRole('button', { name: 'Practice', exact: true }).click();
-  await page.locator('.qcard .viz').waitFor();
-  await page.locator('.qcard .viz').evaluate(el => el.scrollIntoView({ block: 'center' }));
+  const peek = card.getByRole('button', { name: 'Peek' });
+  if (await peek.count()) {
+    await peek.click();
+    await page.getByRole('heading', { name: 'Why it works', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'Why it works', exact: true }).evaluate(el => el.scrollIntoView({ block: 'start' }));
+    await shot(page, `${file}-card`);
+    await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  } else await card.getByRole('button', { name: 'Practice', exact: true }).click();
+  const pic = page.locator('.qcard .visual svg').first();
+  await pic.waitFor();
+  await pic.evaluate(el => el.scrollIntoView({ block: 'center' }));
   await shot(page, `${file}-question`);
   await page.getByRole('button', { name: 'Why it works', exact: true }).click();
   await page.getByRole('dialog', { name: 'Why it works' }).waitFor();
@@ -434,6 +438,17 @@ try {
   await methodShot(page, 'Grade 3', 'Adding', 'Equal additions', 'phone-equal');
   await methodShot(page, 'Grade 3', 'Multiplying', 'Line multiplication', 'phone-lines');
   await methodShot(page, 'Grade 3', 'Multiplying', 'Lattice multiplication', 'phone-lattice');
+  await methodShot(page, 'Kindergarten', 'Numbers', 'Five frames', 'phone-five');
+  await methodShot(page, 'Kindergarten', 'Adding', 'Counting on', 'phone-counton');
+  await methodShot(page, 'Grade 2', 'Adding', 'Compensation', 'phone-comp');
+  await methodShot(page, 'Grade 2', 'Adding', 'Open number line', 'phone-open');
+  await methodShot(page, 'Grade 4', 'Multiplying', 'Partial quotients', 'phone-partial');
+  await methodShot(page, 'Grade 4', 'Fractions', 'Splitting fractions', 'phone-split');
+  await methodShot(page, 'Grade 5', 'Numbers', 'Decimal shifts', 'phone-shift');
+  await methodShot(page, 'Grade 6', 'Ratios', 'Cross multiplication', 'phone-cross');
+  await methodShot(page, 'Grade 6', 'Ratios', 'The percent swap', 'phone-pct');
+  await methodShot(page, 'Grade 9', 'Algebra', 'The AC method', 'phone-ac');
+  await methodShot(page, 'Grade 9', 'Algebra', 'Difference of squares', 'phone-diff');
 
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
 

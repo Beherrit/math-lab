@@ -22,7 +22,8 @@ export const CORE = [
   skill('l6intadd', '7.NS.1', 'Adding integers', 'Number line moves and zero pairs', genIntAdd, {
     big: 'Adding a positive number moves you right on the number line. Adding a negative number moves you left. A +1 and a −1 together make zero.',
     tips: ['Same signs: add the sizes and keep the sign.', 'Different signs: the smaller pile cancels part of the bigger pile. The bigger pile decides the sign.', 'Check by picturing where you start and which way you move.'],
-    words: [['integer', 'a whole number, its opposite, or zero: … −2, −1, 0, 1, 2 …'], ['zero pair', 'a +1 and a −1, which cancel to 0'], ['opposite', 'the same distance from zero on the other side, like 5 and −5']] }),
+    words: [['integer', 'a whole number, its opposite, or zero: … −2, −1, 0, 1, 2 …'], ['zero pair', 'a +1 and a −1, which cancel to 0'], ['opposite', 'the same distance from zero on the other side, like 5 and −5']],
+    card: { title: 'Why the chips work', why: 'A plus chip and a minus chip are a zero pair, so they cancel, and the chips left over are the sum.' } }),
   skill('l6intsub', '7.NS.1c', 'Subtracting integers', 'Add the opposite', genIntSub, {
     big: 'Subtracting a number does exactly the same as adding its opposite. Taking away a debt makes you better off.',
     tips: ['Rewrite first: 3 − 7 is 3 + (−7), and 3 − (−7) is 3 + 7.', 'Only the second number flips. The first number stays as it is.', 'The gap between two numbers is the higher one minus the lower one.'],
