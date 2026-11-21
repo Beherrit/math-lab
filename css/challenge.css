@@ -1,0 +1,81 @@
+/* Today's challenge: a compact home card, a month calendar, and the item list. */
+.ch-card h2,
+.challenge h1,
+.challenge-play h1 {
+  font-family: var(--font-num);
+}
+
+.ch-card {
+  margin-bottom: 14px;
+}
+
+.ch-streak {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 4px 0 12px;
+}
+
+.cal {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.cal i {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--ink-2);
+  padding: 4px 0;
+}
+
+.cal b {
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.cal b.today {
+  outline: 2px solid var(--grape);
+}
+
+.cal b.on {
+  background: var(--grape);
+  color: #fff;
+}
+
+.ch-items {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0;
+  display: grid;
+  gap: 8px;
+}
+
+.ch-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  min-height: 56px;
+  padding: 10px 14px;
+  border-radius: var(--r-lg);
+  border: 2px solid var(--line);
+  background: var(--card);
+}
+
+.ch-items li.right {
+  border-color: var(--good);
+}
+
+.ch-items li.wrong {
+  border-color: var(--bad);
+}
+
+.challenge .btn.primary,
+.challenge-play .why-card .btn {
+  width: 100%;
+  margin-top: 8px;
+}

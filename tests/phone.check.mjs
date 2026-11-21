@@ -55,6 +55,38 @@ try {
     throw new Error(`saved learner was ${JSON.stringify({ name: saved.name, grade: saved.grade, level: saved.level })}`);
   }
 
+  await page.getByRole('button', { name: "Play today's challenge", exact: true }).click();
+  await page.getByRole('heading', { name: "Today's challenge", exact: true }).waitFor();
+  await page.getByRole('grid', { name: /November/ }).waitFor();
+  await shot(page, 'phone-challenge');
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
+  for (let i = 0; i < 4; i++) {
+    const done = await page.getByText('Done for today').count();
+    if (done) break;
+    const choice = page.locator('.choice').first();
+    if (await choice.count()) await choice.click();
+    else {
+      await page.getByRole('button', { name: '1', exact: true }).click();
+      await page.getByRole('button', { name: 'Check', exact: true }).click();
+    }
+    await page.locator('.why-card').waitFor();
+    if (i === 0) {
+      await page.locator('.why-card').scrollIntoViewIfNeeded();
+      await shot(page, 'phone-challenge-why');
+    }
+    const why = await page.locator('.why-card p').innerText();
+    if (!why.trim()) throw new Error('challenge item had no explanation');
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
+  }
+  await page.getByText('1 day in a row.').waitFor();
+  await shot(page, 'phone-challenge-done');
+  const chal = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')).challenge);
+  if (chal.streak.n !== 1 || !Object.values(chal.done).includes(true)) {
+    throw new Error(`challenge was not saved: ${JSON.stringify(chal.streak)} ${JSON.stringify(chal.done)}`);
+  }
+  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('heading', { name: 'Hi, Ada!' }).waitFor();
+
   await page.getByRole('button', { name: 'Numbers', exact: true }).click();
   await page.getByRole('heading', { name: 'Numbers', exact: true }).waitFor();
   await page.locator('[data-act="learn"][data-id="l0count"]').waitFor();
