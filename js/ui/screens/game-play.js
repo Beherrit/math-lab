@@ -13,6 +13,7 @@ function choiceBtn(c, result, answer) {
 
 export function gameScreen(meta, round, result) {
   const choices = round.choices.map(c => choiceBtn(c, result, round.answer)).join('');
+  const stack = round.choices.some(c => String(c.html).includes('gnum expr') || String(c.label || '').length > 12);
   const hear = S && readAloudOn(S) ? '<button class="btn sm hear-btn" data-act="heargame">Hear it</button>' : '';
   const why = result ? `<div class="why-card paper-card ${result.ok ? 'yes' : 'no'}" role="status">
     <h2>${result.ok ? 'Yes' : 'Not yet'}</h2>
@@ -24,7 +25,7 @@ export function gameScreen(meta, round, result) {
     : '<p class="small muted center">Tap the one that fits.</p>';
   return `<div class="page game-play"><header class="top"><button class="iconbtn" data-go="games" aria-label="Back">${I.back}</button><h1>${esc(meta.title)}</h1></header>
   <div class="paper-card gq"><p class="ask">${esc(round.prompt)}</p>${hear}<div class="gvisual">${round.visual}</div></div>
-  <div class="choices game-choices">${choices}</div>
+  <div class="choices game-choices${stack ? ' stack' : ''}">${choices}</div>
   ${why}
   <footer class="pad lbar">${bar}</footer></div>`;
 }

@@ -231,6 +231,51 @@ try {
   await shot(page, 'phone-grade1-shape-why');
   await page.getByRole('button', { name: 'Back', exact: true }).click();
   await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Grade 3', exact: true }).click();
+  await page.getByRole('heading', { name: 'Grade 3', exact: true }).waitFor();
+  await shot(page, 'phone-grade3-home');
+  await page.getByRole('button', { name: 'Multiplying', exact: true }).click();
+  await page.getByRole('button', { name: 'Split the rectangle', exact: true }).click();
+  await page.locator('.gvisual').waitFor();
+  await shot(page, 'phone-grade3-split');
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const splitWhy = await page.locator('.why-card p').innerText();
+  if (!/multipl/i.test(splitWhy)) throw new Error(`split explanation was: ${splitWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade3-split-why');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Grade 4', exact: true }).click();
+  await page.getByRole('heading', { name: 'Grade 4', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Fractions', exact: true }).click();
+  await page.getByRole('button', { name: 'Which is greater', exact: true }).click();
+  await page.locator('.gvisual').waitFor();
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const barWhy = await page.locator('.why-card p').innerText();
+  if (!/piece/i.test(barWhy)) throw new Error(`fraction explanation was: ${barWhy}`);
+  await page.locator('.gvisual').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade4-bars');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Grade 5', exact: true }).click();
+  await page.getByRole('heading', { name: 'Grade 5', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Algebra', exact: true }).click();
+  await page.getByRole('button', { name: 'What comes first', exact: true }).click();
+  await page.locator('.gvisual').waitFor();
+  await shot(page, 'phone-grade5-order');
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const orderWhy = await page.locator('.why-card p').innerText();
+  if (!/multiply/i.test(orderWhy)) throw new Error(`order explanation was: ${orderWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade5-order-why');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
 
   const still = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
