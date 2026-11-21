@@ -2,12 +2,14 @@
 import { S } from '../../core/store.js';
 import { SKILL, generate } from '../../skills/registry.js';
 import { answerHTML } from '../../util.js';
-import { mount } from '../dom.js';
+import { mount, esc } from '../dom.js';
 import { backBtn, problemHTML, waysHTML } from '../fragments.js';
+import { I } from '../icons.js';
 export function renderSkill(id) {
 const s = SKILL[id]; const st = S.skills[s.id]; const L = st?.L || 1;
 const ex = generate(s.id, Math.min(L, 2)) || generate(s.id, 1);
-mount(`<div class="page has-bar"><header class="top">${backBtn()}<div><h1>${s.title}</h1><p class="small muted">${s.sub}</p></div></header>
+const back = s.strand ? `<button class="iconbtn" data-go="subject" data-arg="${esc(s.strand)}" aria-label="Back">${I.back}</button>` : backBtn();
+mount(`<div class="page has-bar"><header class="top">${back}<div><h1>${s.title}</h1><p class="small muted">${s.sub}</p></div></header>
 <div class="paper-card learn">
 <p class="big-idea">${s.learn.big}</p>
 <ul class="tips">${s.learn.tips.map(t => `<li>${t}</li>`).join('')}</ul>

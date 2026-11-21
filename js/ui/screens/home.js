@@ -1,65 +1,35 @@
-// Home screen.
+// Home screen: today's practice, then subjects and grades to browse.
 import { S } from '../../core/store.js';
 import { today, longDate } from '../../core/dates.js';
 import { getFocus } from '../../core/focus.js';
 import { streakNow, phaseSplit } from '../../core/daily.js';
-import { solidCount } from '../../core/facts.js';
-import { enabledIn } from '../../core/progression.js';
-import { BADGES } from '../../core/badges.js';
-import { SKILL } from '../../skills/registry.js';
 import { helloName } from '../../core/learner.js';
 import { readAloudOn } from '../../core/say.js';
 import { fmt } from '../../util.js';
 import { I } from '../icons.js';
 import { mount, esc } from '../dom.js';
 import { sticker } from '../fragments.js';
-import { weekStrip, miniGrid, skillRow, levelBar, emptyLevelNote, puzzlesCard } from './home-parts.js';
-import { strandList } from './strand-list.js';
+import { weekStrip } from './home-parts.js';
+import { browseBlocks } from './home-browse.js';
+import { BADGES } from '../../core/badges.js';
+import { SKILL } from '../../skills/registry.js';
 function todayCard(focus) {
-const done = S.days[today()]?.done; const mins = S.settings.minutes; const sp = phaseSplit(S);
-if (done) return `<h2 class="done-title">Today’s page is done ${I.check}</h2><p class="muted">Great work. Come back tomorrow to keep your streak going, or practice anything below.</p>
-<button class="btn ghost" data-act="start">Do another round</button>`;
-return `<h2>Today’s ${mins} minutes</h2>
-<ol class="plan">
-${sp.facts ? `<li><b>Times tables warm-up</b><span>${Math.round(mins * sp.facts)} min</span></li>` : ''}
-<li><b>Focus: ${focus ? SKILL[focus].title : 'Times tables'}</b><span>${Math.round(mins * sp.focus)} min</span><button class="link" data-go="pick">change</button></li>
-<li><b>Mix-up</b><span>${Math.max(1, Math.round(mins * sp.mix))} min</span></li>
-</ol>
-<button class="btn primary big" data-act="start">Start</button>`;
+  const done = S.days[today()]?.done;
+  const mins = S.settings.minutes;
+  const sp = phaseSplit(S);
+  if (done) return `<h2 class="done-title">Today’s page is done ${I.check}</h2><p class="muted">Great work. Come back tomorrow, or pick a subject below.</p><button class="btn ghost" data-act="start">Do another round</button>`;
+  if (S.level === 0) return `<h2>Today’s practice</h2><p class="muted">Tap Start. Then pick a subject when you want more.</p><button class="btn primary big" data-act="start">Start</button>`;
+  const facts = sp.facts ? `<li><b>Times tables warm-up</b><span>${Math.round(mins * sp.facts)} min</span></li>` : '';
+  const name = focus ? SKILL[focus].title : 'Times tables';
+  return `<h2>Today’s ${mins} minutes</h2><ol class="plan">${facts}<li><b>Focus: ${name}</b><span>${Math.round(mins * sp.focus)} min</span><button class="link" data-go="pick">change</button></li><li><b>Mix-up</b><span>${Math.max(1, Math.round(mins * sp.mix))} min</span></li></ol><button class="btn primary big" data-act="start">Start</button>`;
 }
-// The times tables card is hidden at Early Start.
-const timesCard = solid => `<section class="block">
-<div class="block-head"><h2>Times tables</h2><button class="link" data-go="lab">Fact lab</button></div>
-<button class="tt-card" data-go="lab">${miniGrid()}<span class="tt-text"><b>${solid}</b> of 78 facts are solid<br><span class="muted">Tap to see tricks for each table</span></span></button>
-<div class="row2"><button class="btn" data-act="facts">Practice facts</button><button class="btn" data-act="sprint">1-minute sprint</button></div>
-</section>`;
 export function renderHome() {
-const focus = getFocus(S); const solid = solidCount(S);
-const skills = enabledIn(S, S.level);
-const who = helloName(S);
-const hear = readAloudOn(S) ? '<button class="btn sm hear-btn" data-act="hearhome">Hear it</button>' : '';
-mount(`<div class="page home">
-<header class="hello">
-<div><p class="date">${longDate()}</p><h1>${who ? `Hi, ${esc(who)}!` : 'Hi!'}</h1>${hear}</div>
-<div class="chips"><span class="chip flame" title="Day streak">${I.flame}<b>${streakNow(S)}</b></span><span class="chip starc" title="Stars">${I.star}<b>${fmt(S.stars)}</b></span></div>
-</header>
-<section class="today paper-card">
-${weekStrip()}
-${todayCard(focus)}
-</section>
-${S.level === 0 ? '<p class="lead-in">Tap Start to practice, or Puzzles to play.</p>' : ''}
-${puzzlesCard()}
-${S.level === 0 ? '' : timesCard(solid)}
-<section class="block">
-${levelBar()}
-<div class="block-head"><h2>Skills</h2><span class="muted small">Tap one to learn or practice</span></div>
-${emptyLevelNote()}
-${strandList(S, skills, skillRow, focus)}
-</section>
-<section class="block">
-<div class="block-head"><h2>Stickers</h2><button class="link" data-go="badges">See all</button></div>
-<div class="stickers">${S.badges.length ? S.badges.slice(-6).map(id => sticker(BADGES.find(b2 => b2.id === id))).join('') : '<p class="muted small">Finish today’s 10 minutes to earn your first sticker.</p>'}</div>
-</section>
-<footer class="foot"><button class="link" data-go="parent">${I.gear} Grown-ups</button></footer>
-</div>`);
+  const who = helloName(S);
+  const hear = readAloudOn(S) ? '<button class="btn sm hear-btn" data-act="hearhome">Hear it</button>' : '';
+  const stickers = S.badges.length ? S.badges.slice(-6).map(id => sticker(BADGES.find(b => b.id === id))).join('') : '<p class="muted small">Finish today’s practice to earn your first sticker.</p>';
+  mount(`<div class="page home"><header class="hello"><div><p class="date">${longDate()}</p><h1>${who ? `Hi, ${esc(who)}!` : 'Hi!'}</h1>${hear}</div><div class="chips"><span class="chip flame" title="Day streak">${I.flame}<b>${streakNow(S)}</b></span><span class="chip starc" title="Stars">${I.star}<b>${fmt(S.stars)}</b></span></div></header>
+  <section class="today paper-card">${weekStrip()}${todayCard(getFocus(S))}</section>
+  ${browseBlocks()}
+  <section class="block"><div class="block-head"><h2>Stickers</h2><button class="link" data-go="badges">See all</button></div><div class="stickers">${stickers}</div></section>
+  <footer class="foot"><button class="link" data-go="parent">${I.gear} Grown-ups</button></footer></div>`);
 }
