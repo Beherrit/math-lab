@@ -39,8 +39,8 @@
   font-size: 22px;
   font-family: var(--font-num);
   background: var(--grape-soft);
-  border-color: var(--grape);
-  color: var(--grape);
+  border-color: var(--link);
+  color: var(--link);
 }
 
 .year-btn.on {
@@ -73,7 +73,7 @@
 
 .puzzle-card.big {
   min-height: 96px;
-  border-color: var(--grape);
+  border-color: var(--link);
   background: var(--grape-soft);
 }
 

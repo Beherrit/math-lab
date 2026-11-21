@@ -7,6 +7,7 @@ import { syncChallenge, seededProblem, noteAnswer } from '../core/challenge.js';
 import { skillState, recordSkill } from '../core/mastery.js';
 import { recordReview } from '../core/review.js';
 import { makeRound, checkRound } from '../games/catalog.js';
+import { chimeResult } from '../core/sound.js';
 import { check } from '../util.js';
 import { mount } from '../ui/dom.js';
 import { challengePlayHTML } from '../ui/screens/challenge-play.js';
@@ -55,6 +56,7 @@ export function playChallenge() {
 
 function showAnswer(ok, pick) {
   run.answered = { ok, pick };
+  chimeResult(S, ok);
   draw();
   const why = run.round ? run.round.why : becauseText(run.problem);
   const lead = run.problem ? resultText(ok ? 'right' : 'reveal', run.problem) : (ok ? 'Yes, that is right.' : 'Not yet.');

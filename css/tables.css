@@ -51,7 +51,7 @@ table.area th,table.area td {
 
 table.area th {
   background: var(--grape-soft);
-  color: var(--grape);
+  color: var(--link);
 }
 
 table.area td {

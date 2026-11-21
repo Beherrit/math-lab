@@ -85,7 +85,7 @@
 
 .lway {
   font-weight: 600;
-  color: var(--grape);
+  color: var(--link);
   margin: 0 0 6px;
 }
 
@@ -193,8 +193,8 @@
   flex: none;
   width: 8px;
   height: 8px;
-  border-right: 2.5px solid var(--grape);
-  border-bottom: 2.5px solid var(--grape);
+  border-right: 2.5px solid var(--link);
+  border-bottom: 2.5px solid var(--link);
   transform: rotate(-45deg);
   transition: transform .15s;
 }

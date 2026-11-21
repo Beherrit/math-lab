@@ -38,7 +38,7 @@
 }
 
 .cal b.today {
-  outline: 2px solid var(--grape);
+  outline: 2px solid var(--link);
 }
 
 .cal b.on {

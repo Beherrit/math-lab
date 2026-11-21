@@ -40,7 +40,7 @@
 
 .path-node.now .path-dot {
   background: var(--grape);
-  border-color: var(--grape);
+  border-color: var(--link);
 }
 
 .path-node.mastered .path-dot,
@@ -57,7 +57,7 @@
   margin: 0 0 2px;
   font-size: 14px;
   font-weight: 700;
-  color: var(--grape);
+  color: var(--link);
 }
 
 .path-node.mastered .path-state,

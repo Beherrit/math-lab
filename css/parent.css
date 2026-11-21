@@ -71,7 +71,7 @@
 .bar span {
   width: 100%;
   background: var(--grape-soft);
-  border: 1.5px solid var(--grape);
+  border: 1.5px solid var(--link);
   border-radius: 4px 4px 0 0;
 }
 
@@ -110,8 +110,8 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 46px;
-  height: 28px;
+  width: 64px;
+  height: 44px;
   flex: none;
 }
 
@@ -139,10 +139,10 @@
 .switch span::after {
   content: '';
   position: absolute;
-  width: 22px;
-  height: 22px;
-  left: 3px;
-  top: 3px;
+  width: 34px;
+  height: 34px;
+  left: 5px;
+  top: 5px;
   background: #fff;
   border-radius: 50%;
   transition: .2s;
@@ -154,11 +154,11 @@
 }
 
 .switch input:checked + span::after {
-  left: 21px;
+  left: 25px;
 }
 
 .switch input:focus-visible + span {
-  outline: 3px solid var(--grape);
+  outline: 3px solid var(--link);
   outline-offset: 2px;
 }
 

@@ -25,6 +25,7 @@ return o;
 }
 function fillDefaults(s) {
 s.settings ||= {}; s.settings.minutes ??= 10; s.settings.gradual ??= true; s.settings.off ||= {}; s.settings.focus ??= 'auto';
+s.settings.sound ??= false; s.settings.letters ??= false; s.settings.theme ??= 'system';
 s.facts ||= {}; s.unlocked ||= [...START]; s.skills ||= {}; s.days ||= {}; s.stars ||= 0;
 s.streak ||= { n: 0, last: null }; s.badges ||= []; s.focusLog ||= []; s.counters ||= { story: 0, sprintBest: 0 };
 s.learned = s.learned && typeof s.learned === 'object' ? s.learned : {};

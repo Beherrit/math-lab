@@ -25,6 +25,7 @@ import { recordPlacement } from './placement-run.js';
 import { stop as stopSpeech } from '../core/speech.js';
 import { sayResult, aloudOn } from './aloud.js';
 import { refreshAnswer } from './refresh.js';
+import { chimeResult } from '../core/sound.js';
 export function submit() {
 if (!sess || sess.answered || sess.locked) return;
 stopSpeech(); // the child answered: stop reading
@@ -39,19 +40,19 @@ function nextButton(label = 'Next') { $('.pad').innerHTML = `<button class="btn 
 function offerNext() { $('.pad').innerHTML = '<button class="btn big" data-act="stop">Finish</button><button class="btn primary big" data-act="nextskill">Next skill</button>'; }
 // Placement answers never touch stars, mastery or the day log.
 function placeRight() {
-const q = sess.q; sess.answered = true; recordPlacement(true);
+const q = sess.q; sess.answered = true; recordPlacement(true); chimeResult(S, true);
 markCorrect(q); fb(`${I.check} Thanks!`, 'good'); nextButton();
 setTimeout(() => { if (sess?.q === q) advance(); }, 1000);
 }
 function placeWrong() {
-const q = sess.q; sess.answered = true; recordPlacement(false);
+const q = sess.q; sess.answered = true; recordPlacement(false); chimeResult(S, false);
 fb(`The answer is <b>${answerHTML(q.answer)}</b>. That one comes later.`, 'soft keep'); nextButton();
 }
 export function skipQuestion() { if (!sess || sess.answered) return; sess.answered = true; recordPlacement(false); advance(); }
 function onRight(note) {
 const q = sess.q; const ms = performance.now() - sess.qStart;
 const first = sess.tries === 0 && !sess.assisted;
-sess.answered = true; sess.stats.q++; const dl = dayLog(S); dl.q++;
+sess.answered = true; sess.stats.q++; const dl = dayLog(S); dl.q++; chimeResult(S, true);
 if (first) { sess.stats.c++; sess.stats.stars++; S.stars++; dl.c++; }
 if (q.fact) {
 sess.stats.facts++;
@@ -80,7 +81,7 @@ fb(`<div class="reveal"><span class="big-ans">${q.missing ? `${q.a} × <b>${q.c}
 nextButton('Got it');
 }
 function onWrong() {
-const q = sess.q; sess.tries++;
+const q = sess.q; sess.tries++; chimeResult(S, false);
 const qc = $('.qcard'); qc?.classList.remove('shake'); void qc?.offsetWidth; qc?.classList.add('shake');
 if (q.fact) return factWrong(q);
 if (sess.tries === 1) {

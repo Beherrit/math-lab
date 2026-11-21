@@ -63,6 +63,10 @@ return `<section class="block settings"><h2>Settings</h2>
 <label class="set"><span>Daily focus skill</span><select data-act="focus"><option value="auto">Automatic (recommended)</option>${SKILLS.map(s => `<option value="${s.id}" ${S.settings.focus === s.id ? 'selected' : ''}>${bandName(s.level)}: ${s.title}</option>`).join('')}</select></label>
 <label class="set"><span>Unlock times tables gradually</span><span class="switch"><input type="checkbox" data-act="gradual" ${S.settings.gradual ? 'checked' : ''}><span></span></span></label>
 <label class="set"><span>Read questions aloud</span>${available() ? `<span class="switch"><input type="checkbox" data-act="speak" ${readAloudOn(S) ? 'checked' : ''}><span></span></span>` : '<span class="small muted">Not available on this device</span>'}</label>
+<label class="set"><span>Appearance</span><select data-act="theme">${[['system', 'Match this phone'], ['light', 'Light'], ['dark', 'Dark']].map(([id, label]) => `<option value="${id}" ${(S.settings.theme || 'system') === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>
+<label class="set"><span>Easier letters</span><span class="switch"><input type="checkbox" data-act="letters" ${S.settings.letters ? 'checked' : ''}><span></span></span></label>
+<p class="small muted">Bigger type and wider spacing, for easier reading.</p>
+<label class="set"><span>Sound effects</span><span class="switch"><input type="checkbox" data-act="sound" ${S.settings.sound ? 'checked' : ''}><span></span></span></label>
 <label class="set"><span>Name</span><input data-act="rename" value="${esc(S.name)}" maxlength="20" placeholder="Name"></label>
 <label class="set"><span>Grade</span><select data-act="grade"><option value="" ${S.grade ? '' : 'selected'}>Not set</option>${GRADES.map(g => `<option value="${g.id}" ${S.grade === g.id ? 'selected' : ''}>${g.label}</option>`).join('')}</select></label>
 <div class="set"><span>Backup</span><span class="row-btns"><button class="btn sm" data-act="export">Download backup</button><label class="btn sm">Restore<input type="file" accept="application/json" data-act="import" hidden></label></span></div>

@@ -1,0 +1,182 @@
+/* Stage 12: grade color is painted on the root, picture tiles for Kindergarten, and quiet motion. */
+.subject-tile {
+  background: var(--grape-soft);
+  border-color: var(--link);
+  color: var(--ink);
+}
+
+.subject-tile.pic {
+  min-height: 156px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.subject-tile.pic .subject-art {
+  min-height: 72px;
+}
+
+.subject-tile.pic .subject-art svg {
+  width: 72px;
+  height: 72px;
+}
+
+.subject-tile.pic .letter-art {
+  width: 72px;
+  height: 72px;
+  font-size: 64px;
+  display: grid;
+  place-items: center;
+}
+
+.subject-tile.pic b {
+  font-size: 26px;
+}
+
+.subject-tile.tone-blue { background: #e5efff; border-color: #1d4ed8; }
+.subject-tile.tone-green { background: #e4f6ec; border-color: #0f6b3c; }
+.subject-tile.tone-gold { background: #fff4d4; border-color: #8a5800; }
+.subject-tile.tone-rose { background: #fde7ef; border-color: #9f1239; }
+.subject-tile.tone-grape { background: #efe9ff; border-color: #6d28d9; }
+
+.path-map {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.pip {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: var(--card);
+}
+
+.pip.done {
+  background: var(--good);
+  border-color: var(--good);
+}
+
+.pip.now {
+  background: var(--grape);
+  border-color: var(--link);
+}
+
+.fb.good,
+.fb.bad {
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.fb.good {
+  background: var(--good-hi);
+  color: var(--good);
+}
+
+.fb.bad {
+  background: var(--bad-hi);
+  color: var(--bad);
+}
+
+.plan li .link {
+  min-height: 44px;
+  padding: 8px 6px;
+}
+
+html[data-letters="easy"] body {
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  word-spacing: 0.12em;
+  line-height: 1.65;
+}
+
+html[data-letters="easy"] .btn,
+html[data-letters="easy"] .subject-tile b,
+html[data-letters="easy"] .game-title {
+  letter-spacing: 0.02em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .subject-tile.tone-blue { background: #1c2c52; }
+  :root:not([data-theme="light"]) .subject-tile.tone-green { background: #163528; }
+  :root:not([data-theme="light"]) .subject-tile.tone-gold { background: #3a3018; }
+  :root:not([data-theme="light"]) .subject-tile.tone-rose { background: #3f1828; }
+  :root:not([data-theme="light"]) .subject-tile.tone-grape { background: #2a2150; }
+}
+
+:root[data-theme="dark"] .subject-tile.tone-blue { background: #1c2c52; }
+:root[data-theme="dark"] .subject-tile.tone-green { background: #163528; }
+:root[data-theme="dark"] .subject-tile.tone-gold { background: #3a3018; }
+:root[data-theme="dark"] .subject-tile.tone-rose { background: #3f1828; }
+:root[data-theme="dark"] .subject-tile.tone-grape { background: #2a2150; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .page {
+    animation: ml-rise .28s ease;
+  }
+  .fb.good,
+  .choice.ok,
+  .pip.now {
+    animation: ml-pop .35s ease;
+  }
+  .fb.bad {
+    animation: ml-nod .35s ease;
+  }
+}
+
+@keyframes ml-rise {
+  from { transform: translateY(6px); }
+  to { transform: none; }
+}
+
+@keyframes ml-nod {
+  0%, 100% { transform: none; }
+  30% { transform: translateX(-3px); }
+  70% { transform: translateX(3px); }
+}
+
+/* Text and outlines. Fills stay on --grape so white labels keep their contrast. */
+:root[data-band="0"] { --link: #9a3412; }
+:root[data-band="1"] { --link: #8a5800; }
+:root[data-band="2"] { --link: #0f6b3c; }
+:root[data-band="3"] { --link: #0f5f6b; }
+:root[data-band="4"] { --link: #1e40af; }
+:root[data-band="5"] { --link: #3730a3; }
+:root[data-band="6"] { --link: #6d28d9; }
+:root[data-band="7"] { --link: #7e22ce; }
+:root[data-band="8"] { --link: #9f1239; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"])[data-band="0"] { --link: #ffc7ad; }
+  :root:not([data-theme="light"])[data-band="1"] { --link: #ffd591; }
+  :root:not([data-theme="light"])[data-band="2"] { --link: #9be7c0; }
+  :root:not([data-theme="light"])[data-band="3"] { --link: #9adbe6; }
+  :root:not([data-theme="light"])[data-band="4"] { --link: #c5d6ff; }
+  :root:not([data-theme="light"])[data-band="5"] { --link: #d0cdff; }
+  :root:not([data-theme="light"])[data-band="6"] { --link: #e4d0ff; }
+  :root:not([data-theme="light"])[data-band="7"] { --link: #f3d0ff; }
+  :root:not([data-theme="light"])[data-band="8"] { --link: #ffc2d4; }
+}
+
+:root[data-theme="dark"][data-band="0"] { --link: #ffc7ad; }
+:root[data-theme="dark"][data-band="1"] { --link: #ffd591; }
+:root[data-theme="dark"][data-band="2"] { --link: #9be7c0; }
+:root[data-theme="dark"][data-band="3"] { --link: #9adbe6; }
+:root[data-theme="dark"][data-band="4"] { --link: #c5d6ff; }
+:root[data-theme="dark"][data-band="5"] { --link: #d0cdff; }
+:root[data-theme="dark"][data-band="6"] { --link: #e4d0ff; }
+:root[data-theme="dark"][data-band="7"] { --link: #f3d0ff; }
+:root[data-theme="dark"][data-band="8"] { --link: #ffc2d4; }
+
+:root[data-theme="light"][data-band="0"] { --link: #9a3412; }
+:root[data-theme="light"][data-band="1"] { --link: #8a5800; }
+:root[data-theme="light"][data-band="2"] { --link: #0f6b3c; }
+:root[data-theme="light"][data-band="3"] { --link: #0f5f6b; }
+:root[data-theme="light"][data-band="4"] { --link: #1e40af; }
+:root[data-theme="light"][data-band="5"] { --link: #3730a3; }
+:root[data-theme="light"][data-band="6"] { --link: #6d28d9; }
+:root[data-theme="light"][data-band="7"] { --link: #7e22ce; }
+:root[data-theme="light"][data-band="8"] { --link: #9f1239; }

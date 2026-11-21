@@ -2,8 +2,10 @@
 import { setState, loadSaved } from './core/store.js';
 import { render } from './ui/router.js';
 import { wireEvents } from './ui/events.js';
+import { watchLook } from './ui/look.js';
 import { installDebug } from './debug.js';
 setState(loadSaved());
+watchLook();
 wireEvents();
 render();
 if (/[?&]debug\b/.test(location.search)) installDebug();
