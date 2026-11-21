@@ -208,6 +208,44 @@ async function puzzleShots(page) {
   }
 }
 
+async function lookShots(page) {
+  await page.getByRole('heading', { name: 'Hi, Ada!' }).waitFor();
+  await page.getByRole('heading', { name: "Today's challenge", exact: true }).waitFor();
+  await page.getByRole('heading', { name: /Today.s practice|Continue|Today.s page is done/ }).waitFor();
+  await page.getByRole('heading', { name: 'Games', exact: true }).waitFor();
+  await page.getByRole('button', { name: /^(Start|Keep going|Do another round)$/ }).waitFor();
+  await page.locator('.path-map').waitFor();
+  const small = await page.evaluate(() => [...document.querySelectorAll('button, a, select')].filter(el => {
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0 && (r.width < 44 || r.height < 44);
+  }).map(el => (el.getAttribute('aria-label') || el.innerText || el.tagName).trim().slice(0, 40)));
+  if (small.length) throw new Error(`targets under 44px: ${small.join(' | ')}`);
+  await page.locator('.subject-grid').evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'after-home');
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.locator('.subject-grid').evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'after-home-dark');
+  await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+  const motion = await page.locator('.page').evaluate(el => getComputedStyle(el).animationName);
+  if (motion !== 'none') throw new Error(`reduced motion still animates: ${motion}`);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.getByRole('button', { name: 'Shapes', exact: true }).click();
+  await page.getByRole('heading', { name: 'Shapes', exact: true, level: 1 }).waitFor();
+  await shot(page, 'after-shapes');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('heading', { name: 'Hi, Ada!' }).waitFor();
+  await page.evaluate(() => {
+    const s = JSON.parse(localStorage.getItem('mathlab.v3'));
+    s.settings.letters = true;
+    localStorage.setItem('mathlab.v3', JSON.stringify(s));
+  });
+  await page.reload();
+  await page.getByRole('heading', { name: 'Hi, Ada!' }).waitFor();
+  await shot(page, 'after-letters');
+  const sound = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')).settings.sound);
+  if (sound) throw new Error('sound should start off');
+}
+
 const server = serve();
 let browser;
 try {
@@ -216,6 +254,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
   await page.goto(base);
   await page.getByRole('heading', { name: 'Math Lab' }).waitFor();
+  await shot(page, 'after-welcome');
   await page.locator('#nm').fill('Ada');
   await page.getByRole('button', { name: 'Year 12', exact: true }).scrollIntoViewIfNeeded();
   await shot(page, 'phone-welcome-years');
@@ -608,6 +647,7 @@ try {
   await puzzleShots(page);
 
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
+  await lookShots(page);
 
   const still = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
   if (still.grade !== 'K' || still.name !== 'Ada') throw new Error('progress was not kept');
