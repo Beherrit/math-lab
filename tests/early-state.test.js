@@ -46,9 +46,9 @@ test('an adult setting Early Start marks the learner early; setting another leve
 });
 test('the Early Start chip is shown only to learners with early true', () => {
   const S = freshState('A', '2026-11-19'); S.placed = true; S.level = 1;
-  assert.deepEqual(visibleLevels(S).map(l => l.n), [1, 2, 3, 4, 5, 6, 7]); assert.equal(canOpenLevel(S, 0), false);
+  assert.deepEqual(visibleLevels(S).map(l => l.n), [1, 2, 3, 4, 5, 6, 7, 8]); assert.equal(canOpenLevel(S, 0), false);
   S.early = true;
-  assert.deepEqual(visibleLevels(S).map(l => l.n), [0, 1, 2, 3, 4, 5, 6, 7]); assert.equal(canOpenLevel(S, 0), true);
+  assert.deepEqual(visibleLevels(S).map(l => l.n), [0, 1, 2, 3, 4, 5, 6, 7, 8]); assert.equal(canOpenLevel(S, 0), true);
 });
 test('home browse names Kindergarten and never says Early Start or Level 0', async () => {
   const { browseBlocks } = await import('../js/ui/screens/home-browse.js');

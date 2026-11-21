@@ -4,7 +4,7 @@ import { SKILLS, SKILL, skillsOf, storySources, storySkillOf } from '../js/skill
 import { LEVELS } from '../js/levels.js';
 import { withEmptyLevels, withoutSkills } from './fixtures/without-skills.js';
 test('Early Start then seven levels in order, each with a title and a grade range', () => {
-  assert.equal(LEVELS.length, 8);
+  assert.equal(LEVELS.length, 9);
   LEVELS.forEach((l, i) => {
     assert.equal(l.n, i);
     assert.ok(l.id && l.title && l.blurb && l.grades);

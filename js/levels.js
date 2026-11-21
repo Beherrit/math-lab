@@ -9,6 +9,7 @@ export const LEVELS = [
 { n: 5, id: 'ratios-percents', title: 'Ratios, percents and negatives', blurb: 'Ratios, percents and numbers below zero', grades: '6' },
 { n: 6, id: 'proportions-equations', title: 'Proportions and equations', blurb: 'Proportions and solving equations', grades: '7' },
 { n: 7, id: 'powers-lines-triangles', title: 'Powers, lines and triangles', blurb: 'Powers, straight lines and triangles', grades: '8' },
+{ n: 8, id: 'functions-curves', title: 'Functions and curves', blurb: 'Lines, curves, chance and change', grades: '9-12' },
 ];
 export const MIN_LEVEL = LEVELS[0].n;
 export const MAX_LEVEL = LEVELS[LEVELS.length - 1].n;

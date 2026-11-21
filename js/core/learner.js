@@ -14,6 +14,10 @@ export const GRADES = [
   { id: '6', label: 'Grade 6', kid: 'Year 6', level: 5 },
   { id: '7', label: 'Grade 7', kid: 'Year 7', level: 6 },
   { id: '8', label: 'Grade 8', kid: 'Year 8', level: 7 },
+  { id: '9', label: 'Grade 9', kid: 'Year 9', level: 8 },
+  { id: '10', label: 'Grade 10', kid: 'Year 10', level: 8 },
+  { id: '11', label: 'Grade 11', kid: 'Year 11', level: 8 },
+  { id: '12', label: 'Grade 12', kid: 'Year 12', level: 8 },
 ];
 
 export const gradeById = id => GRADES.find(g => g.id === id) || null;

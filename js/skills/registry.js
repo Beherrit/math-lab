@@ -7,7 +7,8 @@ import * as L4 from './level4/index.js';
 import * as L5 from './level5/index.js';
 import * as L6 from './level6/index.js';
 import * as L7 from './level7/index.js';
-const MODULES = [L0, L1, L2, L3, L4, L5, L6, L7]; // indexed by level number, 0 first
+import * as L8 from './level8/index.js';
+const MODULES = [L0, L1, L2, L3, L4, L5, L6, L7, L8]; // indexed by level number, 0 first
 export const SKILLS = MODULES.flatMap(m => m.SKILLS);
 export const SKILL = Object.fromEntries(SKILLS.map(s => [s.id, s]));
 export const skillsOf = level => SKILLS.filter(s => s.level === level);
