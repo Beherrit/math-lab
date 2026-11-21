@@ -32,9 +32,10 @@ export function errorQ({ a, c, op, wrong, slip, ways, hint }) {
 }
 
 // "True or false?" about a number sentence. `left` and `right` are plain arithmetic; `why` are the worked lines.
-export function tfQ({ left, right, ok, why, hint }) {
+// `alt` is an optional second worked way (a way object) that replaces the plain "compare the two sides".
+export function tfQ({ left, right, ok, why, hint, alt }) {
   return { ask: 'True or false?', expr: `${left} = ${right}`, answer: choice(ok ? 'True' : 'False', [], { all: ['True', 'False'] }), choiceBig: true, hint, _t: { f: 'tf', ok },
-    ways: [way('Work out each side', why), way('Compare the two sides', [ok ? 'Both sides come to the same number, so the sentence is true.' : 'The two sides come to different numbers, so the sentence is false.'])] };
+    ways: [way('Work out each side', why), alt || way('Compare the two sides', [ok ? 'Both sides come to the same number, so the sentence is true.' : 'The two sides come to different numbers, so the sentence is false.'])] };
 }
 
 const near10 = n => Math.round(n / 10) * 10;

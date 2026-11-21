@@ -1,0 +1,129 @@
+/* Early Start: large pictures and letters, a digits-only pad, the "Hear it" buttons, and the two welcome choices. */
+.choose .btn {
+  min-height: 84px;
+}
+
+.choose .btn + .btn {
+  margin-top: 14px;
+}
+
+.lvl-chip.early {
+  padding: 0 16px;
+  font-size: 16px;
+}
+
+.hear {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0 4px;
+}
+
+.hear-btn {
+  min-width: 112px;
+  min-height: 48px;
+  font-size: 17px;
+  color: var(--link);
+  border-color: var(--link);
+}
+
+.choice.hearing {
+  background: var(--hi-soft);
+  box-shadow: 0 3px 0 var(--link),inset 0 0 0 3px var(--link);
+}
+
+.key-gap {
+  min-height: 56px;
+}
+
+.play.early .ask {
+  font-size: clamp(24px,7.5vw,32px);
+  line-height: 1.3;
+  text-align: center;
+  margin: 6px 0 12px;
+}
+
+.play.early .expr {
+  font-size: clamp(44px,14vw,64px);
+}
+
+.play.early .visual {
+  margin: 12px 0;
+}
+
+.play.early .choices {
+  gap: 12px;
+}
+
+.play.early .choices.two,.play.early .choices.big {
+  grid-template-columns: 1fr 1fr;
+}
+
+.play.early .choices.one {
+  grid-template-columns: 1fr;
+}
+
+.play.early .choice {
+  min-height: 88px;
+  padding: 10px;
+  font-size: 26px;
+  display: grid;
+  place-items: center;
+}
+
+.play.early .choices.big .choice {
+  font-size: 44px;
+  min-height: 88px;
+}
+
+.play.early .choices.pics .choice svg,.play.early .choices.pics .choice img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 96px;
+}
+
+.play.early .choices > .choice:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc(50% - 6px);
+}
+
+.play.early .keypad .key {
+  min-height: 60px;
+}
+
+.play.early .ans.num {
+  font-size: 48px;
+}
+
+@media (max-width: 340px) {
+  .play.early .choices {
+    gap: 10px;
+  }
+  .play.early .choice {
+    padding: 6px;
+  }
+}
+
+/* The hundred chart uses the whole card width and a larger number size so it stays readable on small phones. */
+.visual svg[aria-label^="a chart"] {
+  max-width: none !important;
+  width: 100%;
+}
+
+.visual svg[aria-label^="a chart"] text {
+  font-size: 16px;
+}
+
+.play.early .qcard:has(svg[aria-label^="a chart"]) {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.play.early .qarea:has(svg[aria-label^="a chart"]) {
+  padding-left: 6px;
+  padding-right: 6px;
+}

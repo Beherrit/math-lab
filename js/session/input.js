@@ -1,13 +1,14 @@
 // What the learner has typed: which kind of answer is on screen, key handling, and the value handed to check().
 import { sess, inp } from './state.js';
 import { clearFb } from './feedback.js';
+import { isEarlyProblem } from '../skills/registry.js';
 export const inputKind = () => (sess.preDone ? sess.q.answer.kind : 'pre');
 const MAX_DIGITS = 9;
 function pressNum(k) {
 const neg = inp.val.startsWith('-'); let body = neg ? inp.val.slice(1) : inp.val;
 if (k === 'del') { inp.val = inp.val.slice(0, -1); return; }
 if (k === 'sign') { if (sess.q.answer.signed) inp.val = neg ? body : '-' + body; return; }
-if (k === '.') { if (!body.includes('.') && body.length < 10) body = (body || '0') + '.'; }
+if (k === '.') { if (!isEarlyProblem(sess.q) && !body.includes('.') && body.length < 10) body = (body || '0') + '.'; }
 else if (/\d/.test(k) && body.replace('.', '').length < MAX_DIGITS) body = body === '0' ? k : body + k;
 inp.val = (neg ? '-' : '') + body;
 }

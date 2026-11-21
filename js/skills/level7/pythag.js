@@ -1,7 +1,7 @@
 // The Pythagorean theorem: hypotenuse, leg, checking for a right angle, and distance on the grid.
 import { rnd, pick, chance, b, way, pow, fmt, num, choice } from '../../util.js';
 import { sqrt, pt, par, yesNo } from './h.js';
-import { rightTri } from './shapes.js';
+import { rightTri, sideSquares } from './shapes.js';
 import { grid, quad } from './draw.js';
 
 const BASE = [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [20, 21, 29]];
@@ -19,7 +19,9 @@ function familyWay(t, find) {
 }
 function hypotenuse(set) {
   const t = pick(set), [a, c, h] = t;
-  return { ask: `The legs of a right triangle are ${a} and ${c}. Find the length of the longest side (the hypotenuse).`, visual: draw(t, a, c, '?'), answer: num(h), hint: 'Square each leg, then add the two squares.', _t: { k: 'pyth', find: 'hyp', a, c },
+  return { ask: `The legs of a right triangle are ${a} and ${c}. Find the length of the longest side (the hypotenuse).`, visual: draw(t, a, c, '?') + sideSquares(`${a}²`, `${c}²`), answer: num(h),
+    why: `Add the squares on the legs, not the legs themselves. ${a} + ${c} is the path around the corner, and that path is longer than the straight side.`,
+    hint: 'Square each leg, then add the two squares.', _t: { k: 'pyth', find: 'hyp', a, c },
     ways: [way('Squares on the sides', ['In a right triangle, the squares on the two legs together have the same area as the square on the longest side.', `${pow(a, 2)} + ${pow(c, 2)} = ${fmt(sq(a))} + ${fmt(sq(c))} = ${fmt(sq(h))}`, `The longest side is the side of a square with area ${fmt(sq(h))}: ${sqrt(fmt(sq(h)))} = ${b(h)}.`]), familyWay(t, 2)] };
 }
 function squareAreas(set) {
@@ -31,7 +33,9 @@ function squareAreas(set) {
 // Step 1 idea builder: any two legs, no square root needed yet.
 function bigSquare() {
   const a = rnd(1, 9), c = rnd(a, 10), sum = sq(a) + sq(c);
-  return { ask: `The legs of a right triangle are ${a} and ${c}. What is the area of the square drawn on its longest side?`, visual: draw([a, c], a, c, ''), answer: num(sum), suffix: 'square units', hint: 'Find the area of the square on each leg, then add them.', _t: { k: 'pyth', find: 'sqsum', a, c },
+  return { ask: `The legs of a right triangle are ${a} and ${c}. What is the area of the square drawn on its longest side?`, visual: draw([a, c], a, c, '') + sideSquares(`${a}²`, `${c}²`), answer: num(sum), suffix: 'square units',
+    why: `The two smaller squares fill the big one. Adding the legs, ${a} + ${c}, measures a path, not an area.`,
+    hint: 'Find the area of the square on each leg, then add them.', _t: { k: 'pyth', find: 'sqsum', a, c },
     ways: [way('Add the two smaller squares', [`Square on the first leg: ${a} × ${a} = ${sq(a)}. Square on the second leg: ${c} × ${c} = ${sq(c)}.`, `In a right triangle these two together have the same area as the square on the longest side: ${sq(a)} + ${sq(c)} = ${b(sum)}`]),
       way('Write it with exponents', [`${pow(a, 2)} + ${pow(c, 2)} = ${pow('c', 2)}, where c is the longest side.`, `${sq(a)} + ${sq(c)} = ${b(sum)}. That is the area of the big square. (Its side would be ${sqrt(sum)}.)`])] };
 }

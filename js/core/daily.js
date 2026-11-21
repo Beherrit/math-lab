@@ -10,6 +10,8 @@ if (S.level < 2) return { facts: 0, focus: 0.8, mix: 0.2 };
 const strong = solidCount(S) / ALL_KEYS.length >= 0.9;
 return strong ? { facts: 0.15, focus: 0.65, mix: 0.2 } : { facts: 0.4, focus: 0.4, mix: 0.2 };
 }
+// Adds practice time to today's log (extra practice after the page is done counts too). Never touches the streak.
+export function addTime(S, ms, cap = 60 * 60000) { dayLog(S).ms += Math.max(0, Math.min(ms, cap)); }
 // Marks today's page done and moves the streak. Returns true when the streak went up.
 export function completeDay(S) {
 const dl = dayLog(S); if (dl.done) return false;

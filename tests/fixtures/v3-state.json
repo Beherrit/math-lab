@@ -1,0 +1,23 @@
+{
+  "v": 3,
+  "name": "Rio",
+  "created": "2026-11-01",
+  "level": 3,
+  "placed": true,
+  "early": false,
+  "levelsDone": [1, 2],
+  "settings": { "minutes": 10, "gradual": true, "off": {}, "focus": "auto" },
+  "facts": {},
+  "unlocked": [1, 2, 5, 10],
+  "skills": {
+    "oa": { "L": 2, "run": 1, "miss": 0, "hist": [], "n": 12, "c": 10, "last": "2026-11-15", "mastered": false, "rev": null }
+  },
+  "days": { "2026-11-15": { "ms": 300000, "q": 12, "c": 10, "done": true } },
+  "stars": 40,
+  "streak": { "n": 2, "last": "2026-11-15" },
+  "badges": ["first"],
+  "focusLog": [],
+  "counters": { "story": 0, "sprintBest": 0 },
+  "todayFocus": null,
+  "learned": { "oa": "2026-11-02" }
+}

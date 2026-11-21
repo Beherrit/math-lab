@@ -14,7 +14,7 @@
 .lb-head b {
   font-family: var(--font-num);
   font-size: 22px;
-  color: var(--grape);
+  color: var(--link);
 }
 
 .lb-head span {
@@ -22,10 +22,11 @@
   font-weight: 500;
 }
 
+/* wraps so every chip is visible, including Early Start for those who have it */
 .lvl-chips {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  overflow-x: auto;
   padding: 2px 0 6px;
 }
 
@@ -47,7 +48,7 @@
 
 .lvl-chip.on {
   background: var(--grape);
-  border-color: var(--grape);
+  border-color: var(--link);
   color: #fff;
 }
 
@@ -97,7 +98,7 @@ sup {
 }
 
 .sline .dot.mine {
-  fill: var(--grape);
+  fill: var(--link);
 }
 
 /* placement feedback: neutral, never red */
@@ -107,7 +108,7 @@ sup {
 
 /* Grown-ups */
 .lrow.cur {
-  border-color: var(--grape);
+  border-color: var(--link);
 }
 
 .parent .grp {

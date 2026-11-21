@@ -31,4 +31,6 @@ export function oneOf(makers, L) {
 // The app's repeat key is expr + story + ask and leaves the picture out, so a question that differs only in its picture
 // gets an invisible HTML comment with its numbers added to the question text.
 export const tagged = (p, t) => ({ ...p, ask: `${p.ask}<!--${Object.values(t).join(' ')}-->` });
+// A short fingerprint of a picture, for the marker of a question that is nothing but a picture.
+export const sig = svg => [...String(svg)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
 export const estimateWay = (text, shown) => way('Estimate to check', [text, `The exact answer ${shown} is close to that, so it makes sense.`]);

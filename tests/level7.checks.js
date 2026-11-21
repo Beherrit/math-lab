@@ -4,15 +4,17 @@ import assert from 'node:assert/strict';
 
 import { text, ans } from './level7.text.js';
 import { FACTS } from './level7.facts.js';
+import { LINES } from './level7.lines.js';
+import { GRAPHS } from './level7.graphs.js';
+import { SYSTEMS } from './level7.systems.js';
+import { GEO } from './level7.geo.js';
+import { IRR, TWOWAY, FITL, EQF, SCIU } from './level7.nums.js';
+import { eqText } from './level7.eq.js';
 export { text, ans };
 const near = (x, y, msg) => assert.ok(Math.abs(x - y) <= 1e-9 * Math.max(1, Math.abs(y)), `${msg || ''} got ${x}, expected ${y}`);
 const same = (x, y, msg) => assert.deepEqual(x, y, msg);
 const sciParts = v => { const [c, e] = v.toExponential(10).split('e'); return [Number(c), Number(e)]; };
 const sciText = s => { const m = /^(-?[\d.]+) × 10\^(-?\d+)$/.exec(s); assert.ok(m, `not scientific notation: ${s}`); return [Number(m[1]), Number(m[2])]; };
-const eqText = s => { // "y = -1/2x + 3" -> [slope, intercept]
-  const m = /^y = (-?)(\d+(?:\.\d+)?)?(?:\/(\d+))?x(?: ([+-]) (\d+))?$/.exec(s); assert.ok(m, `not y = mx + b: ${s}`);
-  return [(m[1] ? -1 : 1) * Number(m[2] ?? 1) / Number(m[3] ?? 1), m[4] ? (m[4] === '-' ? -1 : 1) * Number(m[5]) : 0];
-};
 const expand = side => side.reduce(([A, B], [k, a, c]) => [A + k * a, B + k * c], [0, 0]);
 const solve2 = ([a1, b1, c1], [a2, b2, c2]) => { const det = a1 * b2 - a2 * b1; return det === 0 ? null : [(c1 * b2 - c2 * b1) / det, (a1 * c2 - a2 * c1) / det]; };
 const slopeOf = (p, q) => (q[1] - p[1]) / (q[0] - p[0]);
@@ -47,6 +49,15 @@ const kindOf = (L, R) => { const [A, B] = expand(L), [C, D] = expand(R); return 
 const WRONG_LAW = { prod: t => t.m * t.n, pow: t => t.m + t.n, quot: t => t.m / t.n, pp: t => t.m * t.n - t.p, pw: t => t.m + t.n + t.p, pq: t => t.m + t.n - t.p };
 export const CHECKS = {
   ...FACTS,
+  ...LINES,
+  ...GRAPHS,
+  ...SYSTEMS,
+  ...GEO,
+  ...IRR,
+  ...TWOWAY,
+  ...FITL,
+  ...EQF,
+  ...SCIU,
   exp(t, p, L) {
     const v = EXP[t.op](t), e = v.toString(2).length - 1;
     assert.notEqual(WRONG_LAW[t.op](t), e, `the wrong law gives the same exponent ${e}: ${text(p.expr)}`);

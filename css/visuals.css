@@ -22,7 +22,7 @@
 }
 
 .viz .lbl.strong {
-  fill: var(--grape);
+  fill: var(--link);
   font-size: 15px;
   font-weight: 700;
 }
@@ -62,7 +62,7 @@
 
 .lplot .xm {
   font-size: 15px;
-  fill: var(--grape);
+  fill: var(--link);
   font-weight: 700;
 }
 
@@ -116,7 +116,7 @@
 }
 
 .plane .pt {
-  fill: var(--grape);
+  fill: var(--link);
 }
 
 .plane .pt.given {
@@ -126,11 +126,11 @@
 .plane .ptl {
   font-size: 13px;
   font-weight: 700;
-  fill: var(--grape);
+  fill: var(--link);
 }
 
 .plane .path {
-  stroke: var(--grape);
+  stroke: var(--link);
   stroke-width: 3;
   stroke-dasharray: 6 5;
   fill: none;
@@ -142,14 +142,14 @@
 }
 
 .plane .guide {
-  stroke: var(--grape);
+  stroke: var(--link);
   stroke-dasharray: 4 4;
   stroke-width: 1.5;
 }
 
 .plane .mine {
   fill: var(--hi);
-  stroke: var(--grape);
+  stroke: var(--link);
   stroke-width: 3;
 }
 
@@ -191,3 +191,15 @@
   stroke-width: 2.2;
   fill: none;
 }
+
+.hs .curve { fill: none; stroke: var(--link); stroke-width: 3; }
+.hs .sec { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 5 4; }
+.hs .ax { stroke: var(--ink); stroke-width: 2; }
+.hs .gl { stroke: var(--line); stroke-width: 1.5; }
+.hs .tk { font-size: 12px; fill: var(--ink-2); }
+.hs .pt { fill: var(--link); }
+.hs .box { fill: #e6e0ff; stroke: var(--ink); stroke-width: 2; }
+.hs .box2 { fill: #ffe9a3; stroke: var(--ink); stroke-width: 2; }
+.hs .band { fill: #e6e0ff; stroke: var(--ink); stroke-width: 1.5; }
+.hs .onshape { fill: #1b2645; font-size: 14px; font-weight: 700; }
+.hs .lab { font-size: 16px; font-weight: 700; fill: var(--ink); }

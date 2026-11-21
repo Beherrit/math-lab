@@ -2,7 +2,9 @@
 import { S, setState, save, clearSaved, exportJSON, parseBackup } from '../core/store.js';
 import { today } from '../core/dates.js';
 import { checkLevelUp } from '../core/progression.js';
-import { levelInfo } from '../levels.js';
+import { moveLine } from '../core/browse.js';
+import { setGrade } from '../core/learner.js';
+import { stop as stopSpeech } from '../core/speech.js';
 import { render } from './router.js';
 import { renderParent, parentState } from './screens/parent.js';
 import { toast } from '../session/feedback.js';
@@ -27,14 +29,19 @@ setState(d); save(); toast('Progress restored'); renderParent();
 function toggleSkill(el) {
 if (el.checked) delete S.settings.off[el.dataset.id]; else S.settings.off[el.dataset.id] = true;
 const up = checkLevelUp(S);
-if (up) toast(`Level ${up.done} complete!${up.next ? ` Now on Level ${up.next}: ${levelInfo(up.next).title}` : ''}`);
+if (up) toast(moveLine(up.done, up.next));
 }
 const SETTERS = {
 toggleskill: toggleSkill,
 minutes: el => { S.settings.minutes = +el.value; },
 focus: el => { S.settings.focus = el.value; },
 gradual: el => { S.settings.gradual = el.checked; },
-rename: el => { S.name = el.value.trim() || S.name; },
+speak: el => { S.settings.speak = el.checked; if (!el.checked) stopSpeech(); },
+theme: el => { S.settings.theme = el.value; },
+letters: el => { S.settings.letters = el.checked; },
+sound: el => { S.settings.sound = el.checked; },
+rename: el => { S.name = el.value.trim().slice(0, 20); },
+grade: el => { setGrade(S, el.value); },
 };
 export function onChange(e) {
 const el = e.target; const a = el.dataset.act; if (!a) return;

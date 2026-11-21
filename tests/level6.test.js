@@ -5,16 +5,11 @@ import assert from 'node:assert/strict';
 import { SKILLS, STORY_SOURCES } from '../js/skills/level6/index.js';
 import { check, ANSWER_KINDS, fmt } from '../js/util.js';
 import { plural } from '../js/skills/level6/helpers.js';
-import { seeded, plain, storyMatchesOperands, countNamesEveryChoice, hintKeepsTheAnswer, firstWayEndsOnAnswer, noPluralOfOne, FACTS } from './level6.checks.js';
+import { sum, prod, sorted, median, mean, holds, toNum, near } from './level6.maths.js';
+import { RULES, LIMITS, NEW_IDS, STRANDS } from './level6.rules.js';
+import { seeded, plain, storyMatchesOperands, countNamesEveryChoice, hintKeepsTheAnswer, firstWayEndsOnAnswer, noPluralOfOne, noOddTerms, FACTS } from './level6.checks.js';
 
 const N = 300;
-const sum = xs => xs.reduce((s, v) => s + v, 0), prod = xs => xs.reduce((s, v) => s * v, 1);
-const sorted = xs => xs.slice().sort((a, b) => a - b);
-const median = xs => { const s = sorted(xs), h = s.length >> 1; return s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2; };
-const mean = xs => sum(xs) / xs.length;
-const holds = (l, op, r) => ({ '<': l < r, '>': l > r, '≤': l <= r, '≥': l >= r })[op];
-const toNum = s => Number(String(s).replace(/−/g, '-').replace(/,/g, ''));
-const near = (a, b) => Math.abs(a - b) < 1e-9;
 // Evaluate a linear expression such as "−2(x − 4) + 3x" at a value of x.
 function evalExpr(src, x) {
   const e = src.replace(/−/g, '-').replace(/\s+/g, '').replace(/(\d|\))(?=[x(])/g, '$1*');
@@ -30,6 +25,7 @@ const grid = Array.from({ length: 121 }, (_, i) => -30 + i / 2);
 
 // Each entry returns { num }, { frac: [n, d] }, { label } or { ok }.
 const RE = {
+  ...RULES,
   fixed: (t, p) => ({ ok: FACTS[plain(p.ask)] === p.answer.options[p.answer.correct] }),
   sum: t => ({ num: sum(t.xs) }), diff: t => ({ num: t.a - t.c }), missadd: t => ({ num: t.c - t.a }),
   prod: t => ({ num: prod(t.xs) }), quot: t => ({ num: t.a / t.c }), prodquot: t => ({ num: t.a * t.c / t.d }),
@@ -78,7 +74,7 @@ const RE = {
   needmean: t => ({ num: t.m * (t.xs.length + 1) - sum(t.xs) }),
 };
 // The largest size any operand or answer may have at each step.
-const LIMIT = { l6intadd: [20, 60, 120], l6intsub: [20, 60, 120], l6intmul: [81, 144, 225], l6rat: [12, 25, 50], l6prop: [150, 60, 1200], l6solveprop: [60, 70, 70], l6pct: [200, 150, 600],
+const LIMIT = { ...LIMITS, l6intadd: [20, 60, 120], l6intsub: [20, 60, 120], l6intmul: [81, 144, 225], l6rat: [12, 25, 50], l6prop: [150, 60, 1200], l6solveprop: [60, 70, 70], l6pct: [200, 150, 600],
   l6pctchg: [300, 900, 1000], l6interest: [1000, 10000, 16000], l6expr: [100, 100, 100], l6eq2: [70, 100, 250], l6ineq: [70, 95, 190], l6scale: [240, 400, 5400], l6circle: [320, 1300, 22000],
   l6angles: [180, 360, 180], l6solids: [140, 700, 1000], l6prob: [20, 200, 2000], l6compound: [50, 12, 300], l6data: [30, 30, 1000], l6story: [22000, 22000, 22000] };
 const walk = (v, f) => { if (typeof v === 'number') f(v); else if (v && typeof v === 'object') Object.values(v).forEach(x => walk(x, f)); };
@@ -86,7 +82,7 @@ const right = a => (a.kind === 'num' ? String(a.value) : a.kind === 'frac' ? { w
 const wrong = a => (a.kind === 'num' ? String(a.value + 1) : a.kind === 'frac' ? { w: '', n: String(Math.abs(a.n) + 1), d: String(a.d), neg: a.n < 0 } : (a.correct + 1) % a.options.length);
 const GLYPHS = /[←-⇿⌀-⏿①-✔✖-➿⬀-⯿\u{1F000}-\u{1FAFF}]/u;
 
-function sanity(p, where) {
+function sanity(p, where, strict = false) {
   assert.ok(p, `${where}: no problem`);
   assert.ok(p.ask || p.expr, `${where}: needs ask or expr`);
   const { _t, ...shown } = p, text = JSON.stringify(shown);
@@ -107,7 +103,8 @@ function sanity(p, where) {
   assert.ok(_t && RE[_t.kind], `${where}: no recompute rule for ${_t?.kind}`);
   if (_t.kind === 'fixed') assert.ok(plain(p.ask) in FACTS, `${where}: no independent fact for "${p.ask}"`);
   hintKeepsTheAnswer(p, _t, where); firstWayEndsOnAnswer(p, where); noPluralOfOne(p, where);
-  if (p.story) storyMatchesOperands(p, _t, where);
+  if (p.story || strict) storyMatchesOperands(p, _t, where);
+  if (strict) noOddTerms(p, where);
   if (_t.kind === 'count') countNamesEveryChoice(p, _t, where);
   return _t;
 }
@@ -120,7 +117,7 @@ function recheck(p, t, where) {
 }
 
 test('level 6 skill list: unique prefixed ids, level 6, complete fields', () => {
-  assert.equal(SKILLS.length, 20);
+  assert.equal(SKILLS.length, 34);
   assert.equal(new Set(SKILLS.map(s => s.id)).size, SKILLS.length);
   for (const s of SKILLS) {
     assert.match(s.id, /^l6[a-z0-9]+$/);
@@ -130,23 +127,25 @@ test('level 6 skill list: unique prefixed ids, level 6, complete fields', () => 
     assert.doesNotMatch(JSON.stringify([s.title, s.sub, s.learn]), /\bgrade\b|undefined/i);
     assert.doesNotMatch(JSON.stringify(s), GLYPHS);
     assert.ok(LIMIT[s.id], `no range limit for ${s.id}`);
+    assert.ok(STRANDS.includes(s.strand), `${s.id}: strand "${s.strand}" is not one of the ten`);
   }
   assert.equal(SKILLS.filter(s => s.story).length, 1);
 });
 for (const s of SKILLS) for (const L of [1, 2, 3]) {
   test(`${s.id} step ${L}: ${N} problems recompute, stay in range and vary`, seeded(`${s.id}${L}`, () => {
-    const keys = new Set(), kinds = new Set();
+    const keys = new Set(), kinds = new Set(), shapes = new Set();
     for (let i = 0; i < N; i++) {
-      const p = s.gen(L), where = `${s.id} step ${L}`, t = sanity(p, where);
+      const p = s.gen(L), where = `${s.id} step ${L}`, t = sanity(p, where, NEW_IDS.has(s.id));
       recheck(p, t, where);
       const cap = LIMIT[s.id][L - 1], a = p.answer;
       walk(t, v => assert.ok(Math.abs(v) <= cap, `${where}: operand ${v} over ${cap} in ${JSON.stringify(t)}`));
       if (a.kind === 'num') assert.ok(Math.abs(a.value) <= cap && Number.isInteger(Math.round(a.value * 1000) / 10), `${where}: answer ${a.value} not clean or over ${cap}`);
       if (a.kind === 'frac') assert.ok(a.d > 0 && a.d <= 100 && Math.abs(a.n / a.d) <= cap, `${where}: fraction ${a.n}/${a.d}`);
       if (s.story) assert.ok(p.story && p.read.find && p.read.know.length && p.read.clue && p.read.plan && p.pre, `${where}: story fields`);
-      keys.add((p.expr || '') + (p.story || '') + (p.ask || '')); kinds.add(t.kind);
+      keys.add((p.expr || '') + (p.story || '') + (p.ask || '')); kinds.add(t.kind); shapes.add(t.shape);
     }
     assert.ok(keys.size >= 40, `${s.id} step ${L}: only ${keys.size} different questions in ${N}`);
+    if (NEW_IDS.has(s.id)) assert.ok(shapes.size >= 4, `${s.id} step ${L}: only ${shapes.size} question shapes: ${[...shapes]}`);
   }));
 }
 test('every story source gives a readable story problem at each step', seeded('sources', () => {

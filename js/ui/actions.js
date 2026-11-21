@@ -1,9 +1,9 @@
 // Click actions (data-act="name"). Each takes the clicked element.
 import { S, save } from '../core/store.js';
 import { today } from '../core/dates.js';
-import { unlockedLevel } from '../core/progression.js';
+import { unlockedLevel, enabledIn } from '../core/progression.js';
+import { setCurrentLevel, canOpenLevel, startFromBeginning } from '../core/entry.js';
 import { SKILL } from '../skills/registry.js';
-import { clampLevel } from '../levels.js';
 import { $, $$ } from './dom.js';
 import { go, currentView } from './router.js';
 import { renderSkill } from './screens/skill.js';
@@ -12,15 +12,26 @@ import { sess, inp } from '../session/state.js';
 import { toast, clearFb } from '../session/feedback.js';
 import { pressKey } from '../session/input.js';
 import { renderInput } from '../session/pad.js';
-import { openWays, closeSheet, toggleRead, onPre, pauseOverlay } from '../session/sheet.js';
+import { openWays, closeSheet, toggleRead, onPre, pauseOverlay, openWhy } from '../session/sheet.js';
 import { submit, skipQuestion } from '../session/answer.js';
 import { advance, playPhase } from '../session/flow.js';
 import { startDaily, startFree, startPlacementCheck } from '../session/start.js';
 import { finish } from '../session/summary.js';
+import { keepGoing, nextSkill } from '../session/extra-run.js';
 import { abortPlacement } from '../session/placement-run.js';
 import { adultActions } from './parent-actions.js';
+import { lessonActions } from '../session/lesson-run.js';
+import { aloudActions } from '../session/aloud.js';
+import { speak } from '../core/speech.js';
+import { readAloudOn } from '../core/say.js';
+import { setGrade } from '../core/learner.js';
+import { homeSay } from '../core/browse.js';
+import { pickGame, nextGameRound, hearGame } from '../session/game-run.js';
+import { playChallenge, chooseChallenge, checkChallenge, nextChallengeItem, hearChallenge, typeChallenge, focusChallenge } from '../session/challenge-run.js';
+import { syncChallenge, challengeStreak, streakLabel } from '../core/challenge.js';
+import { startRefresh, tryRefresh, endRefresh } from '../session/refresh.js';
 function setLevel(n, after) {
-S.level = clampLevel(n); S.todayFocus = null; save(); after();
+setCurrentLevel(S, n); save(); after();
 }
 function selectTab(el) {
 const wrap = el.closest('.ways');
@@ -29,8 +40,9 @@ $$('.way', wrap).forEach(w => w.classList.toggle('on', w.dataset.i === el.datase
 }
 function quit() {
 if (!sess) return;
+if (sess.mode === 'refresh') return endRefresh();
 if (sess.mode === 'place') return abortPlacement();
-if (sess.mode === 'free' || !$('.sheet')) return finish(false);
+if (sess.mode === 'free' || sess.mode === 'extra' || !$('.sheet')) return finish();
 return pauseOverlay('quit');
 }
 function presolve() {
@@ -47,10 +59,11 @@ practice: el => startFree('skill', el.dataset.id),
 skill: el => go('skill', el.dataset.id),
 setfocus: el => { S.todayFocus = { d: today(), id: el.dataset.id }; save(); toast(`Today’s focus: ${SKILL[el.dataset.id].title}`); go('home'); },
 newex: () => renderSkill(currentView().arg),
-setlevel: el => { if (+el.dataset.n <= unlockedLevel(S)) setLevel(el.dataset.n, () => go('home')); },
+setlevel: el => { if (canOpenLevel(S, +el.dataset.n) && +el.dataset.n <= unlockedLevel(S)) setLevel(el.dataset.n, () => go('home')); },
 parentlevel: el => setLevel(el.dataset.n, renderParent),
 replace: () => go('place'),
 placestart: () => startPlacementCheck(),
+beginearly: () => { startFromBeginning(S); save(); go('home'); },
 skipq: () => skipQuestion(),
 tab: selectTab,
 phasego: () => playPhase(),
@@ -62,13 +75,47 @@ presolve,
 submit: () => submit(),
 next: () => advance(),
 how: () => openWays(false),
+why: () => openWhy(),
+refresh: el => startRefresh(el.dataset.id),
+refreshtry: () => tryRefresh(),
+refreshback: () => endRefresh(),
 read: () => toggleRead(),
 plan: el => { el.hidden = true; el.nextElementSibling.hidden = false; },
 closesheet: () => closeSheet(),
 pause: () => pauseOverlay('pause'),
 quit,
 resume: () => { sess.paused = false; sess.last = performance.now(); closeSheet(); },
-stop: () => finish(false),
+stop: () => finish(),
+keepgoing: () => keepGoing(),
+nextskill: () => nextSkill(),
 closeparent: () => { parentState.open = false; go('home'); },
+pickgrade: el => {
+  const form = el.closest('form'); if (!form?.grade) return;
+  const was = el.classList.contains('on');
+  form.querySelectorAll('[data-act="pickgrade"]').forEach(b => { b.classList.remove('on'); b.setAttribute('aria-pressed', 'false'); });
+  if (!was) { el.classList.add('on'); el.setAttribute('aria-pressed', 'true'); }
+  form.grade.value = was ? '' : el.dataset.grade;
+},
+setgrade: el => { setGrade(S, el.dataset.grade); save(); go('home'); },
+hearhome: () => {
+  if (!readAloudOn(S)) return;
+  const set = syncChallenge(S, today());
+  const left = set.items.filter(it => !it.status).length;
+  const bit = left ? `Today's challenge has ${left} to go. ${streakLabel(challengeStreak(S, today()))}` : `Today's challenge is done. ${streakLabel(challengeStreak(S, today()))}`;
+  speak(`${homeSay(S, enabledIn(S, S.level))} ${bit}`);
+},
+hearsay: el => { if (readAloudOn(S) && el.dataset.say) speak(el.dataset.say); },
+gamepick: el => pickGame(el.dataset.id),
+gamenext: () => nextGameRound(),
+heargame: () => hearGame(),
+chstart: () => playChallenge(),
+chchoice: el => chooseChallenge(el),
+chcheck: () => checkChallenge(),
+chnext: () => nextChallengeItem(),
+chhear: () => hearChallenge(),
+chkey: el => typeChallenge(el.dataset.k),
+chfield: el => focusChallenge(el.dataset.f),
 ...adultActions,
+...lessonActions,
+...aloudActions,
 };

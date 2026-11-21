@@ -1,6 +1,7 @@
 // Multiplying and dividing integers: where the sign rules come from, then using them.
 import { rnd, pick, chance, fmt, b, k, way } from '../../util.js';
 import { par, size, signName, snum, tag, plural } from './helpers.js';
+import { signPattern } from './visuals-lines.js';
 
 const neg = v => (chance(0.5) ? -v : v);
 // Two factors with sizes from lo to hi, at least one negative.
@@ -35,7 +36,11 @@ function divWays(t, d) {
 }
 function mulProblem(lo, hi) {
   const [a, c] = factors(lo, hi);
-  return tag({ ask: 'Multiply.', expr: `${par(a)} × ${par(c)}`, answer: snum(a * c), ways: mulWays(a, c),
+  const both = a < 0 && c < 0 && Math.abs(a) >= 3 && Math.abs(c) >= 3;
+  const why = a < 0 && c < 0
+    ? `Same signs give a positive product. Counting down with ${par(c)} makes each product rise, so past zero the products are positive. Treating two negatives as still negative flips the sign.`
+    : `Different signs give a negative product. The size is ${size(a)} times ${size(c)}. Keeping that size positive forgets that one negative flips the sign.`;
+  return tag({ ask: 'Multiply.', expr: `${par(a)} × ${par(c)}`, visual: both ? signPattern(c) : undefined, answer: snum(a * c), ways: mulWays(a, c), why,
     hint: 'Multiply the sizes first. Then decide: same signs or different signs?' }, { kind: 'prod', xs: [a, c] });
 }
 function divProblem(lo, hi) {

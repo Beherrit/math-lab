@@ -21,7 +21,8 @@ function ratioAsk(L) {
   const second = g > 1
     ? way('See it in groups', [`Sort everything into ${g} equal groups. Each group has ${a} ${c.a} and ${bb} ${c.b}.`, tape([{ n: a, label: short(c.a), on: true }, { n: bb, label: short(c.b) }]), `One group already shows the comparison: ${nx} to ${ny} is ${b(ratio(sx, sy))}.`])
     : way('Check the order', [tape([{ n: a, label: short(c.a), on: true }, { n: bb, label: short(c.b) }]), `${ratio(sy, sx)} would be ${ny} to ${nx}. Same numbers, different comparison.`, `The question says ${nx} first, so ${b(ratio(sx, sy))}.`]);
-  return T({ story: c.s(k(A), k(B)), ask: `What is the ratio of ${b(nx)} to ${b(ny)}${g > 1 ? ', in simplest form' : ''}?`, answer: choice(ratio(sx, sy), others.map(o => ratio(...o))),
+  return T({ story: c.s(k(A), k(B)), ask: `What is the ratio of ${b(nx)} to ${b(ny)}${g > 1 ? ', in simplest form' : ''}?`, visual: tape([{ n: A, label: short(c.a) }, { n: B, label: short(c.b) }]),
+    why: `The words name ${nx} first, so that amount comes first. Swapping the numbers compares ${ny} to ${nx} instead.`, answer: choice(ratio(sx, sy), others.map(o => ratio(...o))),
     ways: [way('Read it in order', steps), second], hint: `Which amount do the words name first: ${nx} or ${ny}?` }, 'ratio', { A, B, want });
 }
 // Part from a total, with a tape diagram.

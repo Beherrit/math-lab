@@ -3,8 +3,8 @@ import { rnd, pick, chance, fmt, b, way, num, choice } from '../../util.js';
 import { T, sum } from './helpers.js';
 import { dotPlot, histogram } from './visuals.js';
 
-const DOTS = [['Goals in each match', 0], ['Hours of sleep', 5], ['Pets in each home', 0], ['Books read this month', 0], ['Free throws made out of 10', 3], ['Songs learned this term', 1]];
-const expand = (lo, counts) => counts.flatMap((c, i) => Array(c).fill(lo + i));
+export const DOTS = [['Goals in each match', 0], ['Hours of sleep', 5], ['Pets in each home', 0], ['Books read this month', 0], ['Free throws made out of 10', 3], ['Songs learned this term', 1]];
+export const expand = (lo, counts) => counts.flatMap((c, i) => Array(c).fill(lo + i));
 function makeDots(L, want) {
   for (;;) {
     const counts = Array.from({ length: 7 }, () => (chance(0.2) ? 0 : rnd(1, L === 1 ? 4 : 5))), total = sum(counts), top = Math.max(...counts);

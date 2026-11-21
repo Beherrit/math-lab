@@ -15,6 +15,13 @@ export function rightTri(v, h, hyp, { vr = 3, hr = 4 } = {}) {
   s += txt(x0 - 10, y0 - t / 2 + 5, v, 'end') + txt(x0 + w / 2, y0 + 20, h) + txt(x0 + w / 2 + 14, y0 - t / 2 - 6, hyp, 'start');
   return s + txt(150, y0 + 40, NOTE, 'middle', 'lbl dim') + '</svg>';
 }
+// The squares on the two legs, and the square they fill on the longest side.
+export function sideSquares(legA, legC, big = '?') {
+  const cell = (x, label) => `<rect x="${x}" y="16" width="78" height="78" class="body"/>` + txt(x + 39, 60, label);
+  let s = open(320, 128, `squares of area ${legA} and ${legC} fill a square of area ${big}`);
+  s += cell(8, legA) + txt(98, 60, '+') + cell(114, legC) + txt(204, 60, '=') + cell(220, big);
+  return s + txt(160, 116, 'The two smaller squares fill the big one', 'middle', 'lbl dim') + '</svg>';
+}
 // Label spots around a crossing at (x, y): upper left, upper right, lower left, lower right.
 const SPOTS = [[-20, -9], [24, -9], [-28, 20], [14, 20]];
 // Two parallel lines cut by a transversal. Angles 1-4 sit at the top crossing, 5-8 at the bottom one.

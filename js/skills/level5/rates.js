@@ -1,6 +1,7 @@
 // Unit rates and best-buy comparisons.
 import { R, rnd, pick, chance, lcm, fmt, money, b, k, way, num, choice, table } from '../../util.js';
 import { T } from './helpers.js';
+import { doubleLine } from './draw.js';
 
 // [things, one of them, cheapest, dearest price for one, in cents]: every price stays believable for the item.
 const GOODS = [['bottles of water', 'bottle', 100, 300], ['notebooks', 'notebook', 150, 500], ['guitar picks', 'pick', 50, 150], ['game tokens', 'token', 25, 100], ['bus tickets', 'ticket', 150, 400], ['tennis balls', 'ball', 100, 350], ['cans of cat food', 'can', 75, 200], ['muffins', 'muffin', 150, 400]];
@@ -20,6 +21,8 @@ const WHY = '“Per” means “for each 1”. Sharing the total equally over ev
 function steadyRate(L) {
   const c = pick(L === 1 ? STEADY.filter(x => x.lo <= 12) : STEADY), u = rnd(c.lo, L === 1 ? Math.min(c.hi, 15) : c.hi), n = rnd(2, Math.min(c.top ?? 9, L === 1 ? 6 : 9)), t = u * n;
   return T({ story: c.s(fmt(t), n), ask: `How many ${c.unit} is that per ${c.per}?`, answer: num(u), suffix: `${c.unit} per ${c.per}`,
+    visual: doubleLine(['0', '?', fmt(t)], ['0', '1', String(n)], c.unit, c.pers),
+    why: `Per ${c.per} means for 1 ${c.per}. Share ${fmt(t)} equally over the ${n} ${c.pers}. Multiplying the total by ${n} makes a bigger amount, which is not the amount for one.`,
     ways: [way('Share it out equally', [WHY, `${fmt(t)} ${c.unit} spread over ${n} ${c.pers}: ${fmt(t)} ÷ ${n} = ${b(u)}`, `Check: ${u} × ${n} = ${fmt(t)}`]),
       way('Ratio table', [rateTable(c.unit, c.pers, [[fmt(t), n], [b(u), 1]]), `Divide both columns by ${n} to get down to 1 ${c.per}.`])],
     hint: `Per ${c.per} means for 1 ${c.per}. What do you divide by to get from ${n} ${c.pers} to 1?` }, 'rate', { total: t, n });
@@ -29,6 +32,7 @@ function priceRate(L) {
   const cents = L === 1 ? rnd(Math.ceil(lo / 100), Math.floor(hi / 100)) * 100 : rnd(lo / 5, hi / 5) * 5, u = cents / 100, t = R(u * n);
   if (L > 1 && cents % 100 === 0) return priceRate(L);
   return T({ story: `${k(n + ' ' + things)} cost ${k(money(t))} in total.`, ask: `What is the price of 1 ${one}, in dollars?`, answer: num(u),
+    why: `The cost is shared equally, so divide by ${n}. Multiplying the price by ${n} rebuilds the total, which is not the price of one.`,
     ways: [way('Share the cost equally', [WHY, `${money(t)} ÷ ${n} = ${b(money(u))}`, `Check: ${n} × ${money(u)} = ${money(t)}`]),
       way('Work in cents', [`${money(t)} is ${fmt(R(t * 100))} cents.`, `${fmt(R(t * 100))} ÷ ${n} = ${fmt(cents)} cents for one.`, `${fmt(cents)} cents = ${b(money(u))}`])],
     hint: `The cost is shared equally over ${n} ${things}.` }, 'rate', { total: t, n });

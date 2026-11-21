@@ -17,7 +17,7 @@
 }
 
 .skill-row.sel {
-  border: 2px solid var(--grape);
+  border: 2px solid var(--link);
 }
 
 .skill-row.mastered .meter span {
@@ -56,7 +56,7 @@
 }
 
 .pick-on {
-  color: var(--grape);
+  color: var(--link);
 }
 
 .stickers {
@@ -151,7 +151,7 @@
 .grid12 .gh {
   border: 0;
   background: var(--grape-soft);
-  color: var(--grape);
+  color: var(--link);
   font-family: var(--font-num);
   font-weight: 700;
   font-size: 14px;
@@ -207,12 +207,16 @@
   gap: 6px;
 }
 
+.builds h2 { font-size: 18px; margin: 0 0 6px; }
+.builds ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.builds .link { justify-content: flex-start; }
+
 .tip h2 {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 6px;
-  color: var(--grape);
+  color: var(--link);
 }
 
 .tip p {

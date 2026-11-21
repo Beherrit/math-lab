@@ -2,7 +2,7 @@
 import { mount } from '../dom.js';
 import { I } from '../icons.js';
 import { backBtn } from '../fragments.js';
-import { statsSection, levelsSection, factsSection, skillsSection, settingsSection } from './parent-parts.js';
+import { statsSection, reviewSection, levelsSection, factsSection, skillsSection, settingsSection } from './parent-parts.js';
 export const parentState = { open: false };
 export function renderParent() {
 if (!parentState.open) {
@@ -11,6 +11,6 @@ mount(`<div class="page"><header class="top">${backBtn()}<h1>Grown-ups</h1></hea
 return;
 }
 mount(`<div class="page parent"><header class="top"><button class="iconbtn" data-act="closeparent" aria-label="Back">${I.back}</button><h1>Grown-ups</h1></header>
-${statsSection()}${levelsSection()}${factsSection()}${skillsSection()}${settingsSection()}
+${statsSection()}${reviewSection()}${levelsSection()}${factsSection()}${skillsSection()}${settingsSection()}
 </div>`);
 }

@@ -2,19 +2,20 @@
 import { S, save } from '../core/store.js';
 import { hasSkills } from '../core/progression.js';
 import { skillsOf, generate } from '../skills/registry.js';
-import { LEVELS, clampLevel } from '../levels.js';
+import { LEVELS } from '../levels.js';
+import { applyPlacement } from '../core/entry.js';
 import { startPlacement, answerPlacement, nextPlacementProblem, isDone } from '../placement.js';
 import { renderPlaceResult } from '../ui/screens/welcome.js';
 import { render } from '../ui/router.js';
 import { sess, setSess, newSess } from './state.js';
 export function beginPlacement() {
-const available = LEVELS.map(l => l.n).filter(hasSkills);
+const available = LEVELS.map(l => l.n).filter(n => n >= 1 && hasSkills(n));
 const s = newSess('place', [{ type: 'place', ms: Infinity, label: 'Finding your starting point' }]);
 s.place = startPlacement(available);
 setSess(s);
 }
 export function finishPlacement() {
-S.level = clampLevel(sess.place.result); S.placed = true; save();
+applyPlacement(S, sess.place.result); save();
 setSess(null);
 renderPlaceResult();
 }

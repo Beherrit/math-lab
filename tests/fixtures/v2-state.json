@@ -1,0 +1,23 @@
+{
+  "v": 2,
+  "name": "Noor",
+  "created": "2026-10-20",
+  "level": 5,
+  "placed": true,
+  "levelsDone": [4],
+  "settings": { "minutes": 10, "gradual": false, "off": { "shapes": true }, "focus": "auto" },
+  "facts": { "6x7": { "b": 5, "n": 12, "c": 12, "t": 1500 } },
+  "unlocked": [1, 2, 5, 10, 3, 4],
+  "skills": {
+    "oa": { "L": 3, "run": 0, "miss": 0, "hist": [true, true, true, true, true, true, true, true], "n": 52, "c": 47, "last": "2026-11-12", "mastered": true },
+    "pv": { "L": 2, "run": 1, "miss": 1, "hist": [], "n": 20, "c": 15, "last": "2026-11-15", "mastered": false },
+    "old": { "L": 3, "run": 0, "miss": 0, "hist": [], "n": 5, "c": 5, "last": null, "mastered": true }
+  },
+  "days": { "2026-11-15": { "ms": 540000, "q": 33, "c": 25, "done": true } },
+  "stars": 210,
+  "streak": { "n": 6, "last": "2026-11-15" },
+  "badges": ["first", "streak3", "stars100"],
+  "focusLog": [{ "d": "2026-11-15", "id": "pv" }],
+  "counters": { "story": 9, "sprintBest": 21 },
+  "todayFocus": { "d": "2026-11-15", "id": "pv" }
+}

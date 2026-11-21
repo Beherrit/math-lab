@@ -4,6 +4,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SKILLS, STORY_SOURCES } from '../js/skills/level2/index.js';
 import { check, answerHTML, ANSWER_KINDS, F, NAMES } from '../js/util.js';
+import { CALC_NEW, LIMIT_NEW, STRANDS, NEW_IDS, TWO_STEP } from './level2.calc.js';
+import { SPECIAL_NEW, newChecks, varietyCheck, strandChecks } from './level2.checks.js';
 
 const N = 300;
 const strip = s => String(s ?? '').replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, '');
@@ -31,8 +33,11 @@ const CALC = {
 };
 // The largest number a learner should meet at each step (operands and answer).
 const LIMIT = { l2groups: [36, 54, 90], l2order: [36, 99, 150], l2tricks: [96, 108, 144], l2div: [36, 90, 108], l2family: [45, 81, 108], l2tens: [400, 1200, 9900], l2area2: [130, 891, 891],
-  l2rem: [24, 89, 116], l2area: [36, 144, 144], l2frac: [10, 10, 30], l2fraccmp: [10, 10, 10], l2which: [45, 90, 90], l2story: [36, 132, 384] };
+  l2rem: [24, 89, 116], l2area: [36, 144, 144], l2frac: [10, 10, 30], l2fraccmp: [10, 10, 10], l2which: [45, 90, 90], l2story: [36, 1000, 5000],
+  l2equal: [40, 120, 500], l2sticks: [30, 100, 600], l2eleven: [99, 900, 1100], l2five: [1300, 4300, 9100],
+  l2lattice: [80, 200, 900], l2peasant: [100, 300, 600], l2short: [100, 200, 700] };
 
+Object.assign(CALC, CALC_NEW); Object.assign(LIMIT, LIMIT_NEW);
 const numbersIn = v => (typeof v === 'number' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(numbersIn) : []);
 function right(a) { return a.kind === 'num' ? String(a.value) : a.kind === 'choice' ? a.correct : { w: '', n: String(a.n), d: String(a.d) }; }
 function wrong(a) { return a.kind === 'num' ? String(a.value + 1) : a.kind === 'choice' ? (a.correct + 1) % a.options.length : { w: '', n: String(a.n + 1), d: String(a.d) }; }
@@ -71,6 +76,7 @@ function truth(p, where) {
   assert.equal(says, really, `${where}: the answer says ${says} but the sentence is ${really}`);
 }
 const SPECIAL = {
+  ...SPECIAL_NEW,
   tf: truth,
   ftf: (p, where) => {
     const [[n1, d1], [n2, d2]] = p._t.fs, real = n1 * d2 < n2 * d1 ? '&lt;' : n1 * d2 > n2 * d1 ? '&gt;' : '=';
@@ -127,7 +133,7 @@ function preQuestion(p, where) {
   assert.equal(new Set(o).size, o.length, `${where}: pre-question options repeat`);
   if (p.op === 'perim') assert.equal(p.pre.correct, 'Perimeter');
   if (p.op === 'area') assert.equal(p.pre.correct, 'Area');
-  if (p.op === 'multi') assert.ok(['mulsub', 'muladd', 'subdiv'].includes(p._t.f), `${where}: a "more than one step" story must really have two steps, not ${p._t.f}`);
+  if (p.op === 'multi') assert.ok(TWO_STEP.includes(p._t.f), `${where}: a "more than one step" story must really have two steps, not ${p._t.f}`);
 }
 const NAME_RE = new RegExp(`\\b(${NAMES.join('|')})\\b`, 'g');
 const shapeOf = p => strip([p.story, p.ask, p.expr].join(' ')).replace(NAME_RE, 'N').replace(/[\d?]+/g, '#').replace(/#(?:[,.]?\s*#)+/g, '#');
@@ -167,6 +173,7 @@ test('level 2: ids are unique, prefixed, and every skill is complete', () => {
     assert.ok(s.std && s.title && s.sub && s.learn.big && s.learn.tips.length >= 2 && s.learn.words.length >= 1);
     assert.doesNotMatch(JSON.stringify([s.title, s.sub, s.learn]), /\bgrade\b/i);
   }
+  strandChecks(SKILLS);
   assert.ok(Object.keys(LIMIT).every(id => SKILLS.some(s => s.id === id)) && SKILLS.every(s => LIMIT[s.id]));
 });
 
@@ -176,10 +183,12 @@ for (const s of SKILLS) for (const L of [1, 2, 3]) {
     for (let i = 0; i < N; i++) {
       const p = s.gen(L), where = `${s.id} L${L} "${strip(p?.story)} ${strip(p?.ask)} ${strip(p?.expr)}"`;
       sane(p, where); recompute(p, where); inRange(p, s.id, L, where); oneCorrect(p, where); storyNumbers(p, where); endsOnAnswer(p, where); hintKeepsQuiet(p, where);
+      if (NEW_IDS.has(s.id)) newChecks(p, where);
       seen.push(p);
     }
     const shapes = new Set(seen.map(shapeOf));
     assert.ok(shapes.size >= 4, `${s.id} L${L}: only ${shapes.size} question shapes in ${N}: ${[...shapes].join(' || ')}`);
+    if (NEW_IDS.has(s.id)) varietyCheck(seen, s.id, L);
     if (s.story) for (const p of seen) {
       assert.ok(p.story && p.read?.find && p.read.know.length && p.read.clue && p.read.plan && p.pre, 'story problems carry the reading help');
       assert.ok(['mul', 'div', 'multi', 'area', 'perim'].includes(p.op));

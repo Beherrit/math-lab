@@ -1,6 +1,7 @@
 // Wires the page: clicks, form submit, press-and-hold gate, keyboard.
 import { S, setState, save } from '../core/store.js';
 import { freshState } from '../core/state.js';
+import { applySetup } from '../core/learner.js';
 import { today } from '../core/dates.js';
 import { $ } from './dom.js';
 import { go } from './router.js';
@@ -13,6 +14,7 @@ import { renderInput } from '../session/pad.js';
 import { closeSheet } from '../session/sheet.js';
 import { submit } from '../session/answer.js';
 import { advance } from '../session/flow.js';
+import { stop as stopSpeech } from '../core/speech.js';
 function onClick(e) {
 const el = e.target.closest('[data-act],[data-go]'); if (!el) return;
 if (el.dataset.go) {
@@ -24,8 +26,9 @@ ACTIONS[el.dataset.act]?.(el);
 function onSubmit(e) {
 e.preventDefault(); const f = e.target;
 if (f.dataset.form !== 'name') return;
-const n = f.nm.value.trim(); if (!n) return;
-setState(freshState(n, today())); save(); go('home');
+const s = freshState('', today());
+applySetup(s, { name: f.nm.value, grade: f.grade?.value || '' });
+setState(s); save(); go('home');
 }
 function wireHold(app) {
 let holdT = null;
@@ -53,5 +56,5 @@ app.addEventListener('change', onChange);
 app.addEventListener('submit', onSubmit);
 wireHold(app);
 document.addEventListener('keydown', onKey);
-document.addEventListener('visibilitychange', () => { if (sess) sess.last = performance.now(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopSpeech(); if (sess) sess.last = performance.now(); });
 }

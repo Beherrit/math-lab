@@ -4,7 +4,10 @@ import { answerHTML } from '../util.js';
 import { I } from '../ui/icons.js';
 import { $, $$ } from '../ui/dom.js';
 import { waysHTML } from '../ui/fragments.js';
+import { SKILL } from '../skills/registry.js';
 import { fb } from './feedback.js';
+import { stop as stopSpeech } from '../core/speech.js';
+import { refreshOffer } from './refresh.js';
 const showSheet = sh => { sh.hidden = false; requestAnimationFrame(() => sh.classList.add('in')); };
 export function closeSheet() { const sh = $('.sheet'); if (sh && !sh.hidden) { sh.classList.remove('in'); sh.hidden = true; } }
 export function openWays(afterMiss) {
@@ -13,12 +16,23 @@ if (!afterMiss && !sess.answered) sess.assisted = true;
 const next = afterMiss || sess.answered;
 sh.innerHTML = `<div class="sheet-card" role="dialog" aria-label="How to solve it">
 <div class="sheet-head"><h2>${afterMiss ? 'Let’s see how it works' : 'Here’s how to think about it'}</h2><button class="iconbtn" data-act="closesheet" aria-label="Close">${I.x}</button></div>
-${afterMiss ? `<p class="sheet-ans">Answer: <b>${answerHTML(q.answer)}</b></p>` : ''}
+${afterMiss ? `<p class="sheet-ans">Answer: <b>${answerHTML(q.answer)}</b></p>${refreshOffer(q.skill)}` : ''}
 <p class="small muted">${q.ways.length > 1 ? 'There’s more than one way! Tap the tabs to compare.' : ''}</p>
 ${waysHTML(q.ways)}
 <button class="btn primary big" data-act="${next ? 'next' : 'closesheet'}">${next ? 'Next question' : 'Back to the problem'}</button>
 </div>`;
 showSheet(sh);
+}
+export function openWhy() {
+  const card = SKILL[sess.q?.skill]?.learn?.card;
+  const sh = $('.sheet');
+  if (!card || !sh) return;
+  sh.innerHTML = `<div class="sheet-card" role="dialog" aria-label="Why it works">
+<div class="sheet-head"><h2>Why it works</h2><button class="iconbtn" data-act="closesheet" aria-label="Close">${I.x}</button></div>
+<p>${card.why}</p>
+<button class="btn primary big" data-act="closesheet">Back to the problem</button>
+</div>`;
+  showSheet(sh);
 }
 export function toggleRead() {
 const q = sess.q; const panel = $('.read-panel'); const story = $('.story');
@@ -35,7 +49,7 @@ fb(`${ok ? `${I.check} Yes! ` : `It’s <b>${q.pre.correct}</b>. `}<span class="
 $('.pad').insertAdjacentHTML('beforeend', `<button class="btn primary big" data-act="presolve">Now solve it</button>`);
 }
 export function pauseOverlay(kind) {
-sess.paused = true;
+sess.paused = true; stopSpeech();
 const sh = $('.sheet'); if (!sh) return;
 sh.innerHTML = `<div class="sheet-card center">${kind === 'quit' ? `<h2>Stop for now?</h2><p class="muted">Everything you’ve done is saved.${sess.mode === 'daily' ? ' Finish every part to complete today’s page.' : ''}</p>
 <div class="row2"><button class="btn" data-act="resume">Keep going</button><button class="btn primary" data-act="stop">Stop</button></div>`

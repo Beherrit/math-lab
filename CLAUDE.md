@@ -1,10 +1,10 @@
 # Math Lab
 
 A kids' math practice web app. One learner per browser, no accounts, no server. Static site, vanilla JS ES modules,
-no build step, no dependencies. Progress lives in `localStorage` (`mathlab.v2`). Hosted on GitHub Pages as plain files (all paths are relative, so it runs from a subfolder).
+no build step, no dependencies. Progress lives in `localStorage` (`mathlab.v3`). Hosted on GitHub Pages as plain files (all paths are relative, so it runs from a subfolder).
 
-Daily page = ten minutes in three phases: times-table facts, one focus skill, a mix. Skills are grouped in a ladder of
-seven levels; a placement check ("Let's find your starting point") puts a new learner on a level.
+Daily page = ten minutes in three phases: times-table facts, one focus skill, a mix. When the time is up the day is marked done (streak moves once) and the child chooses "Keep going" (untimed, no end) or "Finish". Skills are grouped in a ladder of
+Early Start (level 0) plus seven levels; a placement check ("Let's find your starting point") puts a new learner on a level from 1 up, and a new learner can instead "Start from the very beginning" at Early Start.
 
 ## Run it
 
@@ -15,7 +15,7 @@ python -m http.server 8765      # then open http://localhost:8765/
 npx serve .
 ```
 
-Add `?debug` to the URL for `window.__ml` (`show(id, L)`, `place(level)`, `state()`, `sess()`).
+Add `?debug` to the URL for `window.__ml` (`show(id, L)`, `place(level)`, `master(level)` finishes a level, `state()`, `sess()`).
 
 ## Tests
 
@@ -35,7 +35,8 @@ service-worker precache list). Raise `CACHE_NAME` in that script when a release 
 - Folders by domain. Content (skills) is separate from logic (core) and UI (ui, session).
 - No duplication: extract a helper.
 - No emoji and no icon glyph characters in text or code. Inline SVG icons live in `js/ui/icons.js`.
-- Child-facing text never says "grade" and never shows a grade number. Children see "Level N" and the level title, and
+- No emoji, icon glyphs, arrows or tick marks in new text; buttons are words ("Hear it").
+- Child-facing text never says "grade" and never shows a grade number. Children see "Level N" and the level title (Early Start is only ever "Early Start", never "Level 0"), and
   "Step N of 3" for the three difficulty tiers inside a skill. Grade equivalents appear only on the Grown-ups screen
   (`js/ui/screens/parent-parts.js`, fed by `grades` in `js/levels.js`).
 - Do not rename skill ids (see "How to add a skill").
@@ -45,6 +46,7 @@ service-worker precache list). Raise `CACHE_NAME` in that script when a release 
 
 | Level | Title | Grades (Grown-ups screen only) |
 | --- | --- | --- |
+| 0 | Early Start (counting, numbers to 100, colors, shapes, letters; for ages 4 to 6 who may not read) | K to 1 |
 | 1 | Number sense (adding, subtracting, place value) | 1-2 |
 | 2 | Times tables and sharing (multiplying, dividing) | 3 |
 | 3 | Bigger numbers and first fractions | 4 |
@@ -55,7 +57,9 @@ service-worker precache list). Raise `CACHE_NAME` in that script when a release 
 
 A level is complete when every enabled school skill (`school: true`, not switched off) in it is mastered. Completing the
 learner's current level opens and selects the next one. Earlier levels stay reachable from the level chips on home.
-All seven levels have content. Level 1 has no times tables warm-up on its daily page; the warm-up starts at level 2.
+All eight levels have content. Levels 0 and 1 have no times tables warm-up on their daily page (the Mix-up also never asks facts at level 0); the warm-up starts at level 2.
+
+Early Start rules: the placement check never returns 0 (`js/placement.js` ignores it). A learner gets there by "Start from the very beginning" on the welcome screen or by a grown-up setting it on the Grown-ups page; both set `early: true`. The Early Start chip in the level switcher and the level 0 skills in the review pool show only for learners with `early: true`. Finishing Early Start unlocks and selects Level 1. At level 0 the times tables card is hidden on home, picture and letter options are large (two per row at most), and a `num` answer uses a digits-only pad (`css/early.css`). `js/core/entry.js` holds how a learner enters the ladder (`startFromBeginning`, `applyPlacement`, `setCurrentLevel`, `visibleLevels`).
 Every screen and the placement check still cope with an empty level (an
 empty level is a ceiling for placement, and practice uses the nearest lower level that has skills).
 
@@ -72,32 +76,68 @@ js/util/math.js        random, gcd/lcm, formatting (fmt, plain, places, money, a
 js/util/text.js        HTML snippets: b, k, way, nm, pow, F/M/fr/frText, column, table
 js/util/answers.js     num, frac, point, choice, answerHTML, check
 js/util/visuals.js     SVG/HTML diagrams: fracBar, numberLine, signedLine, pvChart, areaModel, prism, plane, linePlot, fracArea
-js/core/state.js       state shape, defaults, migrate (v1 -> v2)
+js/core/state.js       state shape, defaults, migrate (v1, v2 -> v3)
+js/core/entry.js       how a learner enters the ladder, which levels show (early flag)
+js/core/speech.js      speechSynthesis wrapper (speak, speakList, stop, available), never throws, injectable
+js/core/say.js         what to read aloud: spokenText (say or stripped HTML), spokenOptions, resultText, readAloudOn
+js/core/speech-gate.js steps that can only be heard (l0sound step 3) are capped to step 2 when speech is off
 js/core/store.js       live state S, localStorage load/save/clear, backup parse/export
 js/core/mastery.js     per-skill steps (L 1-3) and mastery
 js/core/progression.js level progress, completion, unlock, working level, review pool
-js/core/focus.js       today's focus skill
+js/core/focus.js       today's focus skill (learning path order), pathPick (next skill on the path)
+js/core/lesson.js      guided "Learn it" sequencing (pure): stages, steps, help, answers never counted
+js/core/learned.js     S.learned, markLearned, needsOffer (the one-time "learn it first?" offer)
+js/core/review.js      spaced review of mastered skills (INTERVALS, recordReview, dueReviews), dates injected
+js/core/mix.js         what the Mix-up phase asks next (due reviews first)
+js/core/extra.js       "Keep going" picker: alternates focus and mix, follows the path across level-ups
+js/core/strands.js     groups a level's skills by `strand` with mastered counts
 js/core/daily.js       streak, day log, phase split (facts/focus/mix)
 js/core/badges.js      stickers
 js/core/facts.js       times tables 1-12 box engine
 js/core/dates.js       date helpers
 js/skills/registry.js  SKILLS, SKILL, skillsOf(level), storySources(level), storySkillOf(level), generate()
 js/skills/levelN/      one folder per level; index.js exports SKILLS (and optional STORY_SOURCES)
+js/session/lesson-run.js, lesson-task.js   the Learn it lesson on screen (stage flow; answer input and help)
+js/session/aloud.js    read aloud on practice and lesson screens (speak question, results, Hear it actions)
+js/ui/hear.js          the "Hear it" and "Hear the choices" buttons
+js/session/extra-run.js  result screen after the daily page, keep going, Next skill
 js/session/            practice: start, flow (next question, clock), play (screen), pad (answer input UI),
                        input (keys), answer (check/stars/mastery/level-up), sheet (overlays), intro, summary,
                        placement-run (placement on screen), feedback (toast/confetti), timer, state
 js/ui/                 router, events, actions, parent-actions, dom, fragments, icons
-js/ui/screens/         one file per screen (welcome, home, lab, lists, skill, parent) plus *-parts.js helpers
+js/ui/screens/         one file per screen (welcome, home, lab, lists, skill, parent, lesson) plus *-parts.js helpers;
+                       strand-list.js draws collapsible strand groups for home and the focus picker
 tests/                 node:test files and fixtures; tools/build-sw.mjs builds sw.js
 ```
 
-## State (`mathlab.v2`)
+## State (`mathlab.v3`)
 
-`{ v:2, name, created, level, placed, levelsDone, settings:{minutes, gradual, off, focus}, facts, unlocked,
-skills:{id:{L,run,miss,hist,n,c,last,mastered}}, days, stars, streak, badges, focusLog, counters, todayFocus }`
+`{ v:3, name, created, level, placed, early, levelsDone, settings:{minutes, gradual, off, focus, speak}, facts, unlocked,
+skills:{id:{L,run,miss,hist,n,c,last,mastered,rev}}, days, stars, streak, badges, focusLog, counters, todayFocus, learned }`
 
-A saved `v:1` state (the original single skill list) migrates to `level: 4, placed: true`, progress untouched. The old
-key `mathlab.v1` is read but never modified or deleted by a migration. Backups of either version restore; export writes v2.
+`rev` is `null` or `{stage, due, miss}` (review schedule, see below). `learned` is `{skillId: 'YYYY-MM-DD'}`: set when the
+Learn it lesson is finished or the first-time offer is skipped. `todayFocus` may carry `auto: true` (the day's automatic
+pick, fixed when the daily page starts). `early` (default false, forced true at level 0) marks a learner who started at or was set to Early Start. `settings.speak` is the "Read questions aloud" choice; absent means on at level 0 and off elsewhere (starting from the beginning saves it as true). Older saves migrate on load: `v:1` becomes level 4, placed; `v:2` just gains
+`learned: {}` and `rev` (mastered skills start a schedule from their last practice day). `mathlab.v1` and `mathlab.v2` are
+read but never modified or deleted by a migration; the app writes `mathlab.v3`; "Erase all progress" removes all three.
+Backups of v1, v2 and v3 restore; export writes v3.
+
+## Learn it lesson
+
+Every skill has a guided lesson built from what it already has (no per-skill authoring): the idea (`learn`), watch one
+(a step-1 problem, first way revealed one step at a time, then the second way), do one together (hint, then worked steps
+one at a time, wrong answers only open the hint and never count), your turn (two more), done. Story problems with `read`
+get the reading steps first. Lesson answers never touch mastery, stars, streaks or the day log. Entry: the "Learn it" button
+on the skill page, and a one-time offer when a never-practiced skill is first the daily focus. Sequencing is in
+`js/core/lesson.js`; screens in `js/ui/screens/lesson.js`.
+
+## Review schedule and keep going
+
+A mastered skill gets `rev`: next review after 2, then 5, 10, 21, 45 days. A first-try right answer in review moves it up a
+stage; right after help keeps the stage; a miss moves it back one stage; two misses in a row un-master it to step 3. The
+Mix-up phase draws due reviews first (`js/core/mix.js`). Grown-ups shows how many are due. After the timed daily page the
+child can keep going without a timer: focus skill and mix alternate, the focus moves along the level's path when it is
+mastered, and it carries across level-ups. Free practice of one skill offers "Next skill" when it is mastered.
 
 ## How to add a skill
 
@@ -122,13 +162,18 @@ Then run `npm test` and `node tools/build-sw.mjs`.
 | Field | Meaning |
 | --- | --- |
 | `id` | Globally unique string across all levels. Never renamed or reused: it is the key in saved progress. |
-| `level` | 1-7, the level folder it lives in. |
+| `level` | 0-7, the level folder it lives in. |
 | `std` | Short standards tag shown small on the skill row, for example `3.OA.1`. Never the word "grade". |
 | `title`, `sub` | Skill name and a one-line subtitle. |
 | `gen` | `gen(L) => problem`, L is 1, 2 or 3. May return `null` to ask for another try. |
 | `school` | `true` if it counts toward finishing the level. `false` for added extras. |
 | `learn` | `big` (one sentence idea), `tips` (array of short strings), `words` (optional array of `[term, meaning]`). |
 | `story` | `true` only on a story-problem skill (see Story problems). |
+| `strand` | Optional heading for grouping in the home list and focus picker: `'Numbers'`, `'Adding and subtracting'`, `'Multiplying and dividing'`, `'Fractions and decimals'`, `'Ratios and percents'`, `'Algebra'`, `'Measurement'`, `'Shapes and space'`, `'Data and chance'`, `'Stories'`, `'Colors'` or `'Letters'` (the last two are used by Early Start). Groups show in the order strands first appear in the level's array, which is also the learning path. Skills without one go in a last group with no heading. |
+
+### Read aloud
+
+Setting "Read questions aloud" (Grown-ups page): on by default at Early Start, off elsewhere, saved in `settings.speak`. When on, each new question is spoken once (`say`, else the visible text), a "Hear it" button repeats it, "Hear the choices" appears when `sayOptions` exists, and a short result is spoken ("Yes, that is right.", "Not yet. Try again.", then the reveal). Speech stops on answering, on any screen change (`mount` in `js/ui/dom.js`) and when the tab is hidden. Browsers may refuse speech before the first tap; the buttons then work from a tap. With the setting off nothing changes or speaks. A step that has no word on screen (l0sound step 3) is capped at step 2 when speech is off or missing (`js/core/speech-gate.js`).
 
 ### Difficulty tiers (L 1-3)
 
@@ -153,6 +198,8 @@ the skill is mastered with 7 of the last 8 right. Two misses in a row step back 
 | `pre` | Optional first question `{ q, options, correct, why }` asked before solving (set by the story helper). |
 | `suffix` | Unit text shown after the answer box, for example `'cm'`. |
 | `choiceBig` | `true` for large choice buttons. |
+| `say` | Plain text that reads the whole question aloud (required at level 0; elsewhere optional, the visible text is read when missing). |
+| `sayOptions` | Choice problems: one plain-text string per option, or `null` when saying the options would give the answer away. Enables the "Hear the choices" button. |
 | `op` | Story problems only: `'add' 'sub' 'mul' 'div' 'multi'`, drives the `pre` question. |
 
 `generate()` adds `key`, `skill` and `level` to the problem; the app uses `key` to avoid repeats. Make `ask`/`expr`

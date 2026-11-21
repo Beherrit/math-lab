@@ -1,13 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { REC, RANGE, neg } from './level5.recompute.js';
-import { SHOWN, EXACT, CUSTOM } from './level5.shown.js';
+import { neg } from './level5.recompute.js';
+import { EXACT } from './level5.shown.js';
+import { REC, SHOWN, CUSTOM, RANGE as RANGE_ALL } from './level5.groups.js';
 import { plain, rendered, numbers, has, count, badArithmetic } from './level5.render.js';
 
 // Level 5 checks (used by tests/level5.test.js). For every skill and step it generates many problems and checks, on what the child would see:
 // the answer against an independent recomputation (level5.recompute.js), the operands against the rendered question
 // (level5.shown.js), the worked steps against the answer and their own arithmetic, the hints, and the text itself.
 // Random numbers come from a seeded generator: a failure prints the seed, and L5_SEED=<seed> repeats the run.
+// The older kinds and the kinds added with the newer skills live in separate files (level5.groups.js merges them).
+export const RANGE = RANGE_ALL;
 const SEED = Number(process.env.L5_SEED) || (Date.now() % 2147483647);
 const mulberry32 = a => () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 const hash = s => [...s].reduce((h, ch) => Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0, 2166136261);

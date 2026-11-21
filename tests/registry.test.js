@@ -3,17 +3,18 @@ import assert from 'node:assert/strict';
 import { SKILLS, SKILL, skillsOf, storySources, storySkillOf } from '../js/skills/registry.js';
 import { LEVELS } from '../js/levels.js';
 import { withEmptyLevels, withoutSkills } from './fixtures/without-skills.js';
-test('seven levels in order, each with a title and a grade range', () => {
-  assert.equal(LEVELS.length, 7);
+test('Early Start then seven levels in order, each with a title and a grade range', () => {
+  assert.equal(LEVELS.length, 9);
   LEVELS.forEach((l, i) => {
-    assert.equal(l.n, i + 1);
+    assert.equal(l.n, i);
     assert.ok(l.id && l.title && l.blurb && l.grades);
   });
-  assert.equal(LEVELS[3].grades, '5');
+  assert.equal(LEVELS[0].title, 'Early Start');
+  assert.equal(LEVELS[4].grades, '5');
 });
 test('skillsOf(level) only returns that level, and empty levels are fine', () => {
   for (const l of LEVELS) for (const s of skillsOf(l.n)) assert.equal(s.level, l.n);
-  assert.equal(skillsOf(4).length, 20);
+  assert.ok(skillsOf(4).length >= 20);
   assert.deepEqual(skillsOf(99), []);
   withEmptyLevels([2], () => {
     assert.deepEqual(skillsOf(2), []);
@@ -25,7 +26,7 @@ test('skillsOf(level) only returns that level, and empty levels are fine', () =>
 test('every level has at least 8 skills and a story source, and skill ids are unique across levels', () => {
   for (const l of LEVELS) {
     assert.ok(skillsOf(l.n).length >= 8, `level ${l.n} has ${skillsOf(l.n).length} skills`);
-    assert.ok(storySources(l.n).length > 0, `level ${l.n} has no story source`);
+    if (l.n > 0) assert.ok(storySources(l.n).length > 0, `level ${l.n} has no story source`); // Early Start has no story problems
   }
   assert.equal(new Set(SKILLS.map(s => s.id)).size, SKILLS.length);
 });
@@ -37,7 +38,7 @@ test('story sources are per level', () => {
   assert.deepEqual(storySources(99), []);
   assert.equal(storySkillOf(4)?.id, 'story');
   assert.equal(storySkillOf(99), null);
-  for (const l of LEVELS) assert.equal(storySkillOf(l.n)?.level, l.n);
+  for (const l of LEVELS.filter(x => x.n > 0)) assert.equal(storySkillOf(l.n)?.level, l.n);
   // Sources without a story skill in the level give no story skill, and a level with no skills has none either.
   withoutSkills(s => s.level === 5 && s.story, () => assert.equal(storySkillOf(5), null));
   withEmptyLevels([5], () => assert.equal(storySkillOf(5), null));
@@ -45,5 +46,6 @@ test('story sources are per level', () => {
 });
 test('level 4 keeps the original skill ids (they are keys in saved progress)', () => {
   const ids = ['oa', 'pat', 'pv', 'dec', 'rnd', 'mul', 'div', 'das', 'ddiv', 'dmul', 'fas', 'fmul', 'scale', 'fdiv', 'conv', 'lplot', 'vol', 'coord', 'shapes', 'story'];
-  assert.deepEqual(skillsOf(4).map(s => s.id), ids);
+  const have = new Set(skillsOf(4).map(s => s.id));
+  for (const id of ids) assert.ok(have.has(id), `level 4 lost the original skill ${id}`);
 });

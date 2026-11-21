@@ -18,7 +18,7 @@
   min-width: 160px;
   padding: 4px 18px;
   border-radius: 14px;
-  border: 2.5px solid var(--grape);
+  border: 2.5px solid var(--link);
   background: var(--card);
   text-align: center;
   line-height: 1.25;
@@ -110,7 +110,7 @@
 }
 
 .box.on {
-  border: 3px solid var(--grape);
+  border: 3px solid var(--link);
   box-shadow: 0 0 0 4px var(--grape-soft);
 }
 
@@ -134,7 +134,7 @@
   text-align: center;
   font-weight: 700;
   font-size: 18px;
-  color: var(--grape);
+  color: var(--link);
 }
 
 .fb {
