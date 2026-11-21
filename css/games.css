@@ -130,6 +130,37 @@
   margin-top: 16px;
 }
 
+.gnums {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0 0;
+}
+
+.gnums b {
+  min-width: 48px;
+  min-height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--grape-soft);
+  color: var(--ink);
+  font-size: 28px;
+}
+
+.clocks {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.srow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
 @media (min-width: 800px) {
   .game-list {
     grid-template-columns: 1fr 1fr;

@@ -3,6 +3,7 @@ import { S, save } from '../../core/store.js';
 import { today, longDate } from '../../core/dates.js';
 import { getFocus } from '../../core/focus.js';
 import { resumeId, pathDots } from '../../core/look.js';
+import { reviewQuestions } from '../../core/home-review.js';
 import { streakNow, phaseSplit } from '../../core/daily.js';
 import { syncChallenge, challengeStreak, streakLabel } from '../../core/challenge.js';
 import { helloName } from '../../core/learner.js';
@@ -15,6 +16,11 @@ import { weekStrip } from './home-parts.js';
 import { browseBlocks } from './home-browse.js';
 import { BADGES } from '../../core/badges.js';
 import { SKILL } from '../../skills/registry.js';
+function reviewCard() {
+  const n = reviewQuestions(S, today()).length;
+  if (!n) return '';
+  return `<section class="paper-card"><h2>Today's review</h2><p class="muted">${n} short questions. Your stars stay as they are.</p><button class="btn primary big" data-act="review">Review</button></section>`;
+}
 function challengeCard() {
   const date = today();
   const before = S.challenge?.today;
@@ -56,6 +62,7 @@ export function renderHome() {
   const stickers = S.badges.length ? S.badges.slice(-6).map(id => sticker(BADGES.find(b => b.id === id))).join('') : '<p class="muted small">Finish today’s practice to earn your first sticker.</p>';
   mount(`<div class="page home"><header class="hello"><div><p class="date">${longDate()}</p><h1>${who ? `Hi, ${esc(who)}!` : 'Hi!'}</h1>${hear}</div><div class="chips"><span class="chip flame" title="Day streak">${I.flame}<b>${streakNow(S)}</b></span><span class="chip starc" title="Stars">${I.star}<b>${fmt(S.stars)}</b></span></div></header>
   ${challengeCard()}
+  ${reviewCard()}
   <section class="today paper-card">${weekStrip()}${todayCard(getFocus(S))}</section>
   ${browseBlocks()}
   <section class="block"><div class="block-head"><h2>Stickers</h2><button class="link" data-go="badges">See all</button></div><div class="stickers">${stickers}</div></section>

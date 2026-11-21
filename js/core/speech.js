@@ -1,6 +1,7 @@
 // Read-aloud engine: a thin, never-throwing wrapper around the browser's speechSynthesis.
-// `createSpeech(getEnv)` takes a function returning { synth, Utterance } so tests can inject a fake; the default reads the globals.
-const RATE = 0.85;
+// Local voices keep this working offline. `createSpeech(getEnv)` takes a function returning
+// { synth, Utterance } so tests can inject a fake; the default reads the globals.
+export const RATE = 0.8; // slow enough for a child, still easy to follow
 const isEnglish = v => /^en([-_]|$)/i.test(v?.lang || '');
 const defaultEnv = () => ({ synth: globalThis.speechSynthesis, Utterance: globalThis.SpeechSynthesisUtterance });
 export function createSpeech(getEnv = defaultEnv) {

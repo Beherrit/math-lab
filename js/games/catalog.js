@@ -24,6 +24,16 @@ import { guessMeta, makeGuess } from './guess.js';
 import { buildMeta, makeBuild } from './build.js';
 import { riddleMeta, makeRiddle } from './riddle.js';
 import { matchMeta, makeMatch } from './match.js';
+import { pizzaMeta, makePizza } from './pizza.js';
+import { targetMeta, makeTarget } from './target.js';
+import { weightsMeta, makeWeights } from './weights.js';
+import { treasureMeta, makeTreasure } from './treasure.js';
+import { shopMeta, makeShop } from './shop.js';
+import { laterMeta, makeLater } from './later.js';
+import { mirrorMeta, makeMirror } from './mirror.js';
+import { spinMeta, makeSpin } from './spin.js';
+import { machineMeta, makeMachine } from './machine.js';
+import { sortMeta, makeSort } from './sort.js';
 
 const GAMES = [
   { ...patternMeta, make: makePattern },
@@ -50,6 +60,16 @@ const GAMES = [
   { ...buildMeta, make: makeBuild },
   { ...riddleMeta, make: makeRiddle },
   { ...matchMeta, make: makeMatch },
+  { ...pizzaMeta, make: makePizza },
+  { ...targetMeta, make: makeTarget },
+  { ...weightsMeta, make: makeWeights },
+  { ...treasureMeta, make: makeTreasure },
+  { ...shopMeta, make: makeShop },
+  { ...laterMeta, make: makeLater },
+  { ...mirrorMeta, make: makeMirror },
+  { ...spinMeta, make: makeSpin },
+  { ...machineMeta, make: makeMachine },
+  { ...sortMeta, make: makeSort },
 ];
 
 export const gameList = () => GAMES.map(({ id, title, blurb, skill, levels }) => ({ id, title, blurb, skill, levels }));

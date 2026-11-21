@@ -176,6 +176,7 @@ async function puzzleShots(page) {
   await page.locator('.why-card').waitFor();
   const gapWhy = await page.locator('.why-card p').innerText();
   if (!/empty box|pattern/i.test(gapWhy)) throw new Error(`gap explanation was: ${gapWhy}`);
+  await page.getByRole('button', { name: 'Hear the reason', exact: true }).waitFor();
   await page.locator('.why-card').evaluate(el => el.scrollIntoView({ block: 'center' }));
   await shot(page, 'phone-gap-why');
   await page.getByRole('button', { name: 'Back', exact: true }).click();
@@ -183,6 +184,7 @@ async function puzzleShots(page) {
 
   await playPuzzle(page, 'Magic square', 'phone-magic', /sum/i);
   await playPuzzle(page, 'Build the shape', 'phone-build', /piece/i);
+  await playPuzzle(page, 'Sort by color', 'phone-sort', /color/i);
   await page.getByRole('button', { name: 'Back', exact: true }).click();
 
   const more = [
@@ -190,6 +192,9 @@ async function puzzleShots(page) {
     ['Grade 4', 'Best estimate', 'phone-estimate', /clos/i],
     ['Grade 6', 'Number riddle', 'phone-riddle', /clue/i],
     ['Grade 8', 'Match the line', 'phone-match', /slope/i],
+    ['Grade 2', 'Build the fraction', 'phone-pizza', /equal pieces/i],
+    ['Grade 5', 'Treasure hunt', 'phone-treasure', /Across/i],
+    ['Grade 7', 'Fair spins', 'phone-spin', /expect/i],
   ];
   for (const [grade, name, file, whyRe] of more) {
     await page.getByRole('button', { name: grade, exact: true }).click();
@@ -206,6 +211,26 @@ async function puzzleShots(page) {
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     await page.getByRole('heading', { name: grade, exact: true }).waitFor();
   }
+}
+
+async function reviewShot(page) {
+  await page.evaluate(() => {
+    const s = JSON.parse(localStorage.getItem('mathlab.v3'));
+    s.stars = 4;
+    s.skills.l0shapes = { L: 3, run: 0, miss: 0, hist: [], n: 8, c: 8, last: '2026-11-01', mastered: true, rev: { stage: 0, due: '2026-11-01', miss: 0 } };
+    localStorage.setItem('mathlab.v3', JSON.stringify(s));
+  });
+  await page.reload();
+  await page.getByRole('heading', { name: "Today's review", exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Review', exact: true }).click();
+  await page.locator('.pbar b', { hasText: 'Review' }).waitFor();
+  await shot(page, 'phone-review');
+  const choice = page.locator('.choice').first();
+  if (await choice.count()) await choice.click();
+  else await page.getByRole('button', { name: 'Check', exact: true }).click();
+  await page.locator('.fb').waitFor();
+  const stars = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')).stars);
+  if (stars !== 4) throw new Error(`review changed stars to ${stars}`);
 }
 
 async function lookShots(page) {
@@ -265,6 +290,10 @@ try {
   await page.getByRole('button', { name: 'Start', exact: true }).waitFor();
   await page.getByRole('heading', { name: 'Kindergarten', exact: true }).waitFor();
   await page.getByRole('button', { name: 'Hear it', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Hear Numbers', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Hear Puzzles', exact: true }).waitFor();
+  await page.locator('.subject-grid').evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-hear-tiles');
   for (const name of ['Numbers', 'Adding', 'Shapes', 'Colors', 'Letters', 'Puzzles']) {
     await page.getByRole('button', { name, exact: true }).waitFor();
   }
@@ -648,6 +677,7 @@ try {
 
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
   await lookShots(page);
+  await reviewShot(page);
 
   const still = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
   if (still.grade !== 'K' || still.name !== 'Ada') throw new Error('progress was not kept');

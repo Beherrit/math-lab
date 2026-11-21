@@ -7,7 +7,7 @@ import { problemHTML } from '../ui/fragments.js';
 import { hearHTML } from '../ui/hear.js';
 import { sayQuestion } from './aloud.js';
 import { renderInput, wirePlane } from './pad.js';
-const open = () => sess.mode === 'free' || sess.mode === 'extra'; // untimed practice
+const open = () => sess.mode === 'free' || sess.mode === 'extra' || sess.mode === 'review'; // untimed practice
 function header() {
 if (sess.mode === 'refresh') return `<header class="pbar"><button class="iconbtn" data-act="refreshback" aria-label="Back">${I.back}</button><div class="pb-mid"><b>A short refresher</b><span class="small muted">${esc(SKILL[sess.refreshOf].title)}</span></div></header>`;
 const ph = sess.phases[sess.pi];
