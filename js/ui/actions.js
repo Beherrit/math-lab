@@ -1,7 +1,7 @@
 // Click actions (data-act="name"). Each takes the clicked element.
 import { S, save } from '../core/store.js';
 import { today } from '../core/dates.js';
-import { unlockedLevel } from '../core/progression.js';
+import { unlockedLevel, enabledIn } from '../core/progression.js';
 import { setCurrentLevel, canOpenLevel, startFromBeginning } from '../core/entry.js';
 import { SKILL } from '../skills/registry.js';
 import { $, $$ } from './dom.js';
@@ -24,7 +24,8 @@ import { lessonActions } from '../session/lesson-run.js';
 import { aloudActions } from '../session/aloud.js';
 import { speak } from '../core/speech.js';
 import { readAloudOn } from '../core/say.js';
-import { helloName } from '../core/learner.js';
+import { setGrade } from '../core/learner.js';
+import { homeSay } from '../core/browse.js';
 import { pickGame, nextGameRound, hearGame } from '../session/game-run.js';
 function setLevel(n, after) {
 setCurrentLevel(S, n); save(); after();
@@ -87,13 +88,9 @@ pickgrade: el => {
   if (!was) { el.classList.add('on'); el.setAttribute('aria-pressed', 'true'); }
   form.grade.value = was ? '' : el.dataset.grade;
 },
-hearhome: () => {
-  if (!readAloudOn(S)) return;
-  const who = helloName(S);
-  const hi = who ? `Hi, ${who}.` : 'Hi.';
-  const more = S.level === 0 ? ' Tap Start to practice. Tap Puzzles to play a game.' : ' Tap Start for today\'s practice.';
-  speak(hi + more);
-},
+setgrade: el => { setGrade(S, el.dataset.grade); save(); go('home'); },
+hearhome: () => { if (readAloudOn(S)) speak(homeSay(S, enabledIn(S, S.level))); },
+hearsay: el => { if (readAloudOn(S) && el.dataset.say) speak(el.dataset.say); },
 gamepick: el => pickGame(el.dataset.id),
 gamenext: () => nextGameRound(),
 heargame: () => hearGame(),

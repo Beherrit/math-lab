@@ -6,7 +6,8 @@ import { solidCount } from '../../core/facts.js';
 import { levelProgress, unlockedLevel } from '../../core/progression.js';
 import { dueCount } from '../../core/review.js';
 import { SKILLS, skillsOf } from '../../skills/registry.js';
-import { LEVELS, levelName, levelFull } from '../../levels.js';
+import { LEVELS, levelFull } from '../../levels.js';
+import { bandName } from '../../core/browse.js';
 import { GRADES } from '../../core/learner.js';
 import { available } from '../../core/speech.js';
 import { readAloudOn } from '../../core/say.js';
@@ -41,7 +42,7 @@ return `<div class="prow lrow ${cur ? 'cur' : ''}"><div><b>${levelFull(l.n)}</b>
 }).join('');
 return `<section class="block"><h2>Levels</h2>
 <div class="ptable">${rows}</div>
-<p class="small muted">Children see only “Level N” and its title, and Early Start only if they started there. Levels open one at a time as the last one is finished (up to Level ${open} now); setting the current level here opens it directly.</p>
+<p class="small muted">Children browse by subject and by grade. This list is the ladder behind that (open through ${bandName(open)}). Setting the current level here moves their grade to match.</p>
 <button class="btn sm" data-act="replace">Run the starting-point check again</button></section>`;
 }
 export function factsSection() {
@@ -52,14 +53,14 @@ function skillRows(list) {
 return list.map(s => { const st = S.skills[s.id]; return `<div class="prow"><div><b>${s.title}</b><span class="small muted">${s.std}${s.school ? '' : ' · added'}</span></div><div class="small">${st?.n ? `${st.mastered ? 'Mastered' : 'Step ' + st.L} · ${Math.round(st.c / st.n * 100)}% of ${st.n}` : '<span class="muted">not started</span>'}</div><label class="switch"><input type="checkbox" data-act="toggleskill" data-id="${s.id}" ${S.settings.off[s.id] ? '' : 'checked'}><span></span></label></div>`; }).join('');
 }
 export function skillsSection() {
-const groups = LEVELS.filter(l => skillsOf(l.n).length).map(l => `<h3 class="grp">${levelName(l.n)}</h3><div class="ptable">${skillRows(skillsOf(l.n))}</div>`).join('');
+const groups = LEVELS.filter(l => skillsOf(l.n).length).map(l => `<h3 class="grp">${bandName(l.n)}</h3><div class="ptable">${skillRows(skillsOf(l.n))}</div>`).join('');
 return `<section class="block"><h2>Skills</h2>${groups}
 <p class="small muted">Switches choose which skills show up in daily practice, and which count toward finishing a level. “Added” skills are standards that weren’t on the school list. Accuracy counts first tries only.</p></section>`;
 }
 export function settingsSection() {
 return `<section class="block settings"><h2>Settings</h2>
 <label class="set"><span>Daily session length</span><select data-act="minutes">${[5, 10, 15, 20].map(m => `<option value="${m}" ${S.settings.minutes === m ? 'selected' : ''}>${m} minutes</option>`).join('')}</select></label>
-<label class="set"><span>Daily focus skill</span><select data-act="focus"><option value="auto">Automatic (recommended)</option>${SKILLS.map(s => `<option value="${s.id}" ${S.settings.focus === s.id ? 'selected' : ''}>${levelName(s.level)}: ${s.title}</option>`).join('')}</select></label>
+<label class="set"><span>Daily focus skill</span><select data-act="focus"><option value="auto">Automatic (recommended)</option>${SKILLS.map(s => `<option value="${s.id}" ${S.settings.focus === s.id ? 'selected' : ''}>${bandName(s.level)}: ${s.title}</option>`).join('')}</select></label>
 <label class="set"><span>Unlock times tables gradually</span><span class="switch"><input type="checkbox" data-act="gradual" ${S.settings.gradual ? 'checked' : ''}><span></span></span></label>
 <label class="set"><span>Read questions aloud</span>${available() ? `<span class="switch"><input type="checkbox" data-act="speak" ${readAloudOn(S) ? 'checked' : ''}><span></span></span>` : '<span class="small muted">Not available on this device</span>'}</label>
 <label class="set"><span>Name</span><input data-act="rename" value="${esc(S.name)}" maxlength="20" placeholder="Name"></label>

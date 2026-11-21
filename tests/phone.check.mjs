@@ -1,4 +1,4 @@
-// Phone-size check (390x844): first run, home, a Kindergarten lesson, and the three puzzles.
+// Phone-size check (390x844): first run, subject and grade browsing, a Kindergarten lesson, and puzzles.
 // Run with a static server: npm run test:phone
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
@@ -41,28 +41,61 @@ try {
   await page.getByRole('button', { name: /Let.s go/ }).click();
   await page.getByRole('heading', { name: 'Hi, Ada!' }).waitFor();
   await page.getByRole('button', { name: 'Start', exact: true }).waitFor();
-  await page.getByRole('button', { name: /Puzzles/ }).waitFor();
-  await page.getByText('Tap Start to practice, or Puzzles to play.').waitFor();
+  await page.getByRole('heading', { name: 'Kindergarten', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Hear it', exact: true }).waitFor();
+  for (const name of ['Numbers', 'Adding', 'Shapes', 'Colors', 'Letters', 'Puzzles']) {
+    await page.getByRole('button', { name, exact: true }).waitFor();
+  }
   await shot(page, 'phone-home');
+  await page.locator('.grade-row').evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-home-grades');
 
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
   if (saved.name !== 'Ada' || saved.grade !== 'K' || saved.level !== 0 || saved.early !== true) {
     throw new Error(`saved learner was ${JSON.stringify({ name: saved.name, grade: saved.grade, level: saved.level })}`);
   }
 
-  await page.locator('[data-id="l0count"]').click();
-  await page.getByRole('button', { name: 'Learn it' }).click();
+  await page.getByRole('button', { name: 'Numbers', exact: true }).click();
+  await page.getByRole('heading', { name: 'Numbers', exact: true }).waitFor();
+  await page.locator('[data-act="learn"][data-id="l0count"]').waitFor();
+  await shot(page, 'phone-subject-numbers');
+  await page.locator('[data-act="learn"][data-id="l0count"]').click();
   await page.getByText('Counting means touching each thing once').waitFor();
   await page.getByRole('button', { name: 'Watch one' }).click();
+  // Step 1 sometimes asks for a group with no picture on the watch screen. Open again until the dots show.
+  for (let i = 0; i < 8 && !(await page.locator('.visual').count()); i++) {
+    await page.getByRole('button', { name: 'Close' }).click();
+    await page.locator('[data-act="learn"][data-id="l0count"]').click();
+    await page.getByRole('button', { name: 'Watch one' }).click();
+  }
+  if (!(await page.locator('.visual').count())) throw new Error('counting lesson never showed a picture');
   await page.getByRole('button', { name: 'Next step' }).click();
   await page.getByRole('button', { name: 'Next step' }).click();
   await page.getByText(/last number/i).waitFor();
-  await page.locator('.visual').first().waitFor();
+  await page.locator('.lsteps li.newest').scrollIntoViewIfNeeded();
   await shot(page, 'phone-k-lesson');
 
   await page.getByRole('button', { name: 'Close' }).click();
   await page.getByRole('button', { name: 'Back' }).click();
-  await page.getByRole('button', { name: /Puzzles/ }).click();
+  await page.getByRole('heading', { name: 'Numbers', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Shapes', exact: true }).click();
+  await page.getByRole('heading', { name: 'Shapes', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'What comes next' }).waitFor();
+  await page.getByRole('button', { name: 'Which piece fits' }).waitFor();
+  await shot(page, 'phone-subject-shapes');
+  await page.getByRole('button', { name: 'Back' }).click();
+
+  await page.getByRole('button', { name: 'Grade 3', exact: true }).click();
+  await page.getByRole('heading', { name: 'Grade 3', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Multiplying', exact: true }).scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade-3');
+  const mid = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
+  if (mid.grade !== '3' || mid.level !== 2 || mid.name !== 'Ada') throw new Error(`grade switch lost progress: ${mid.grade} ${mid.level}`);
+  await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
+  await page.getByRole('button', { name: 'Colors', exact: true }).waitFor();
+
+  await page.getByRole('button', { name: 'Puzzles', exact: true }).click();
   await page.getByRole('heading', { name: 'Puzzles' }).waitFor();
 
   async function openGame(name, file) {

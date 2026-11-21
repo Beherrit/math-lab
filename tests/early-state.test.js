@@ -50,10 +50,16 @@ test('the Early Start chip is shown only to learners with early true', () => {
   S.early = true;
   assert.deepEqual(visibleLevels(S).map(l => l.n), [0, 1, 2, 3, 4, 5, 6, 7]); assert.equal(canOpenLevel(S, 0), true);
 });
-test('the rendered level bar shows Early Start only with early true, and never says Level 0', async () => {
-  const { levelBar } = await import('../js/ui/screens/home-parts.js');
-  const S = freshState('A', '2026-11-19'); S.placed = true; S.level = 4; setState(S);
-  assert.ok(!levelBar().includes('Early Start'));
-  S.early = true; S.level = 0; setState(S);
-  const html = levelBar(); assert.ok(html.includes('Early Start')); assert.ok(!/Level 0/.test(html));
+test('home browse names Kindergarten and never says Early Start or Level 0', async () => {
+  const { browseBlocks } = await import('../js/ui/screens/home-browse.js');
+  const S = freshState('A', '2026-11-19'); S.placed = true; S.level = 4; S.grade = '5'; setState(S);
+  const older = browseBlocks();
+  assert.ok(!older.includes('Early Start'));
+  assert.ok(!/Level 0/.test(older));
+  assert.ok(older.includes('Kindergarten'));
+  S.early = true; S.level = 0; S.grade = 'K'; setState(S);
+  const html = browseBlocks();
+  assert.ok(html.includes('>Kindergarten</'));
+  assert.ok(!html.includes('Early Start'));
+  assert.ok(!/Level 0/.test(html));
 });

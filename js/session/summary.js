@@ -3,7 +3,7 @@ import { S, save } from '../core/store.js';
 import { dayLog, addTime } from '../core/daily.js';
 import { newBadges } from '../core/badges.js';
 import { SKILL } from '../skills/registry.js';
-import { levelName, levelFull } from '../levels.js';
+import { moveLine } from '../core/browse.js';
 import { I } from '../ui/icons.js';
 import { mount } from '../ui/dom.js';
 import { sticker } from '../ui/fragments.js';
@@ -14,8 +14,7 @@ import { confetti } from './feedback.js';
 export function bankTime() { const now = Date.now(); addTime(S, now - (sess.bank ?? sess.start)); sess.bank = now; }
 function levelLine(up) {
 if (!up) return '';
-const next = up.next ? ` Now on <b>${levelFull(up.next)}</b>.` : ' You finished every level!';
-return `<li>Finished <b>${levelName(up.done)}</b>!${next}</li>`;
+return `<li>${moveLine(up.done, up.next)}</li>`;
 }
 function summaryHTML(mode, title, st, badges, streakUp) {
 const dl = dayLog(S); const acc = st.q ? Math.round(st.c / st.q * 100) : 0;

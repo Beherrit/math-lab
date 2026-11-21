@@ -8,7 +8,7 @@ import { dayLog } from '../core/daily.js';
 import { checkLevelUp } from '../core/progression.js';
 import { pathPick } from '../core/focus.js';
 import { SKILL } from '../skills/registry.js';
-import { levelName, levelFull } from '../levels.js';
+import { moveLine } from '../core/browse.js';
 import { check, answerHTML, pick } from '../util.js';
 import { I } from '../ui/icons.js';
 import { $, $$, esc } from '../ui/dom.js';
@@ -105,6 +105,5 @@ const up = checkLevelUp(S);
 if (sess.mode === 'free' && sess.phases[0].type === 'skill' && pathPick(S)) sess.offerNext = true; // free practice: offer the next skill
 if (!up) return;
 sess.stats.levelUp = up;
-const next = up.next ? `Welcome to ${levelFull(up.next)}` : 'You finished every level!';
-setTimeout(() => toast(`${I.star} ${levelName(up.done)} complete! ${next}`), 2600);
+setTimeout(() => toast(`${I.star} ${moveLine(up.done, up.next)}`), 2600);
 }

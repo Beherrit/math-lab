@@ -1,7 +1,7 @@
 // First screen for a new learner, and the "find your starting point" intro and result.
 import { S } from '../../core/store.js';
 import { GRADES, helloName } from '../../core/learner.js';
-import { levelFull } from '../../levels.js';
+import { bandName } from '../../core/browse.js';
 import { I } from '../icons.js';
 import { mount, esc } from '../dom.js';
 import { logoSVG } from '../fragments.js';
@@ -36,7 +36,7 @@ mount(`<div class="page intro"><header class="top"><button class="iconbtn" data-
 }
 export function renderPlaceResult() {
 mount(`<div class="page intro"><div class="intro-card paper-card">
-<h1>You’re starting at ${levelFull(S.level)}</h1>
-<p>You can change levels any time from the home page.</p>
+<h1>You’re starting at ${bandName(S.level)}</h1>
+<p>You can pick another grade any time from the home page.</p>
 <button class="btn primary big" data-go="home">Go</button></div></div>`);
 }
