@@ -158,9 +158,9 @@ function sample(gen, L) { for (let t = 0; t < 50; t++) { const p = gen(L); if (p
 const STRANDS = ['Numbers', 'Adding and subtracting', 'Multiplying and dividing', 'Fractions and decimals', 'Ratios and percents', 'Algebra', 'Measurement', 'Shapes and space', 'Data and chance', 'Stories'];
 const NEW_IDS = ['l3times', 'l3pattern', 'l3shift', 'l3fparts', 'l3mixadd', 'l3tenhund', 'l3decorder', 'l3convert', 'l3lineplot', 'l3protractor', 'l3lines', 'l3symmetry', 'l3estimate'];
 
-test('level 3 has its 31 skills with unique, prefixed ids, each with a valid strand', () => {
-  assert.equal(SKILLS.length, 31);
-  assert.equal(new Set(SKILLS.map(s => s.id)).size, 31);
+test('level 3 has its 33 skills with unique, prefixed ids, each with a valid strand', () => {
+  assert.equal(SKILLS.length, 33);
+  assert.equal(new Set(SKILLS.map(s => s.id)).size, 33);
   for (const id of NEW_IDS) assert.ok(SKILLS.some(s => s.id === id), `${id} is missing`);
   for (const s of SKILLS) {
     assert.match(s.id, /^l3[a-z0-9]+$/);

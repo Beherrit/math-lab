@@ -1,11 +1,11 @@
 // Pictures for the method skills. Text on a colored box uses onshape (stays dark). Labels on the page use lab.
 // A narrow picture stretched to the card width becomes too tall on a phone, so pad the viewBox.
-const svg = (w, h, label, body) => {
+export const svg = (w, h, label, body) => {
   const W = h / w > 0.62 ? Math.max(w, Math.ceil(h / 0.5)) : w;
   return `<svg class="viz hs" viewBox="0 0 ${W} ${h}" role="img" aria-label="${label}">${body}</svg>`;
 };
-const box = (x, y, w, h, tone) => `<rect class="${tone || 'box'}" x="${x}" y="${y}" width="${w}" height="${h}" rx="8"/>`;
-const label = (x, y, text, cls = 'onshape') => `<text class="${cls}" x="${x}" y="${y}" text-anchor="middle">${text}</text>`;
+export const box = (x, y, w, h, tone) => `<rect class="${tone || 'box'}" x="${x}" y="${y}" width="${w}" height="${h}" rx="8"/>`;
+export const label = (x, y, text, cls = 'onshape') => `<text class="${cls}" x="${x}" y="${y}" text-anchor="middle">${text}</text>`;
 
 export function bondPic(whole, part) {
   return svg(220, 118, 'Number bond', [

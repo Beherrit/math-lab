@@ -18,7 +18,7 @@ seeded('every skill has one of the ten strands, each strand is one run of the li
   for (const id of NEW) assert.ok(L5.some(s => s.id === id), `${id} is missing`);
 });
 seeded('level 5 has its skills, with unique prefixed ids and adult-only standard codes', () => {
-  assert.equal(L5.length, 35);
+  assert.equal(L5.length, 37);
   for (const s of L5) {
     assert.match(s.id, /^l5[a-z]+$/); assert.equal(s.school, true); assert.ok(s.learn.big && s.learn.tips.length >= 3 && s.learn.words.length >= 2);
     assert.ok(!/grade/i.test(JSON.stringify(s.learn) + s.title + s.sub));

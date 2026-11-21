@@ -8,6 +8,8 @@ const SLIP = {
   l8line: /intercept/i,
   l8system: /intercept/i,
   l8factor: /corner|product/i,
+  l8ac: /multipl/i,
+  l8diff: /cancel|square/i,
   l8vertex: /sideways|corner/i,
   l8poly: /power/i,
   l8shift: /right/i,

@@ -2,6 +2,7 @@
 // so the read-aloud button can speak it. Questions are answered by tapping; only step 3 of the two counting skills types a number.
 import { STRAND } from './kit.js';
 import { genCount, genCount20 } from './counting.js';
+import { genFive, genCountOn } from './frames.js';
 import { genNumRec } from './numrec.js';
 import { genNext, genTens } from './sequence.js';
 import { genMore, genOrder } from './compare.js';
@@ -26,6 +27,11 @@ export const SKILLS = [
     { big: 'Counting means touching each thing once and saying one number for each. The last number you say tells how many.',
       tips: ['Let your child touch each dot as they count. Moving a finger along keeps them from counting one twice.', 'Say the numbers together at first, then let them go ahead alone.', 'If they skip or repeat, go back and count slowly together.'],
       words: [['count', 'say one number for each thing'], ['how many', 'the last number you say']] }),
+  skill('l0five', S.n, 'K.OA.3', 'Five frames', 'See five at a glance', genFive,
+    { big: 'A five frame is one row of five boxes. A full row is five, and the empty boxes show what is missing.',
+      tips: ['Count the dots if you are not sure, then try to see the number without counting.', 'A full frame is five. Two empty boxes means three dots.', 'Match the frame to a hand: five fingers, or fewer.'],
+      words: [['five frame', 'a row of five boxes for seeing numbers to five'], ['empty', 'a box with no dot']],
+      card: { title: 'Why a five frame works', why: 'The frame always holds five boxes, so a full row is five and the empty boxes are what is missing from five.' } }),
   skill('l0count20', S.n, 'K.CC.5, K.NBT.1', 'Counting 11 to 20', 'Ten and some more', genCount20,
     { big: 'A full ten frame is ten. Numbers from 11 to 19 are ten and some more, so you only count the extras.',
       tips: ['Point to the full frame and say ten. Then count on from there: eleven, twelve, thirteen.', 'Ask: how many are in the second frame? That is the "some more".', 'Count out loud to twenty on car rides or walks.'],
@@ -54,6 +60,11 @@ export const SKILLS = [
     { big: 'Putting two groups together makes a bigger group. The number in all is the sum of the two parts.',
       tips: ['Count the first group, then keep counting on through the second group.', 'Say it as a story: two dots and three more dots makes five dots.', 'Use real things to try it: put two crackers with three crackers.'],
       words: [['in all', 'everything put together'], ['plus', 'put together with']] }),
+  skill('l0on', S.a, 'K.OA.1-2', 'Counting on', 'Start from a number you know', genCountOn,
+    { big: 'When you already know the first group, you do not count it again. Say that number, then count the new dots.',
+      tips: ['Touch the first group and say its number.', 'Then touch each new dot and say the next number.', 'The last number you say is how many in all.'],
+      words: [['count on', 'start at a number and keep counting'], ['in all', 'everything put together']],
+      card: { title: 'Why counting on works', why: 'The first group is already counted, so you can start from that number and count only the new dots.' } }),
   skill('l0sub', S.a, 'K.OA.1-2, K.OA.5', 'Taking away', 'Subtracting with pictures', genSub,
     { big: 'Taking away means some are gone. Count what is left after the crossed out ones.',
       tips: ['Cover the crossed out counters with a finger and count the rest.', 'Say it as a story: five dots, two go away, three are left.', 'Act it out with real things, then take some away.'],

@@ -22,6 +22,8 @@ import { genMeasure } from './measure.js';
 import { genJump } from './jump.js';
 import { l1bonds } from './bonds.js';
 import { l1break } from './break.js';
+import { l1comp } from './comp.js';
+import { l1open } from './openline.js';
 import { l1bar } from './barmodel.js';
 import { genTrade } from './trade.js';
 import { genClock } from './time.js';
@@ -70,6 +72,8 @@ export const SKILLS = [
       card: { title: 'Why the jump works', why: 'The distance is the same whether you jump it at once or in two smaller jumps, so stopping on a ten is only a rest stop, not a new amount.' } } },
   l1bonds,
   l1break,
+  l1comp,
+  l1open,
   { id: 'l1sub20', level: 1, strand: 'Adding and subtracting', std: '1.OA.4, 1.OA.6', title: 'Subtracting within 20', sub: 'Think addition, back through ten, fact families', gen: genSub, school: true,
     learn: { big: 'Subtracting and adding are two views of the same fact. 13 − 9 asks the same thing as 9 + ? = 13.',
       tips: ['Think addition: for 15 − 7, ask what you add to 7 to reach 15.', 'Go back through ten: 15 − 7 is 15 − 5 (that is 10), then 2 more off. 8.', 'Count back only when the number you take away is small.', 'A fact family uses the same three numbers: 8 + 5 = 13, 5 + 8 = 13, 13 − 8 = 5, 13 − 5 = 8.'],

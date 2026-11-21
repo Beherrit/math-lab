@@ -13,6 +13,8 @@ const spanOf = (vs, at) => Math.max(...vs.map(v => v[at])) - Math.min(...vs.map(
 const max = (...xs) => Math.max(...xs.map(Math.abs));
 
 export const REC_NEW = {
+  xtable: ({ b, m }) => b * m,
+  pctswap: ({ p, n }) => (p * n) / 100,
   ldQuot: ({ n, d }) => n / d, ldRem: ({ n, d }) => n % d, ldDown: ({ n, d }) => Math.floor(n / d), ldUp: ({ n, d }) => Math.ceil(n / d),
   ldFirst: ({ n, d }) => PLACE[String(Math.floor(n / d)).length - 1],
   ldEstimate: ({ n, d }) => ({ test: o => Math.abs(num(o) - n / d) / (n / d) < 0.25 }),

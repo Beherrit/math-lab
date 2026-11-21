@@ -41,7 +41,7 @@ const CALC = {
 const LIMIT = { l1add20: [20, 20, 20], l1sub20: [20, 20, 20], l1pv: [99, 999, 1000], l1cmp: [99, 999, 999], l1addbig: [99, 999, 1000], l1subbig: [99, 999, 999],
   l1skip: [100, 1000, 150], l1round: [100, 1000, 1000], l1money: [100, 125, 500], l1story: [100, 125, 1000],
   l1jump: [20, 100, 100], l1trade: [40, 99, 99], l1clock: [60, 60, 60], l1tally: [20, 40, 50],
-  l1bonds: [20, 20, 100], l1break: [20, 120, 150], l1bar: [20, 40, 40], ...LIMIT_NEW };
+  l1bonds: [20, 20, 100], l1break: [20, 120, 150], l1bar: [20, 40, 40], l1comp: [20, 120, 200], l1open: [30, 150, 250], ...LIMIT_NEW };
 const NEEDS_VARIED_HINT = { l1cmp: [1, 2] };
 
 const numbersIn = v => (typeof v === 'number' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(numbersIn) : []);

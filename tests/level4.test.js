@@ -11,11 +11,11 @@ const STRANDS = ['Numbers', 'Adding and subtracting', 'Multiplying and dividing'
 const L4 = skillsOf(4), NEW = L4.filter(s => s.id.startsWith('l4'));
 
 seeded('level 4: every skill has a valid strand, the original ids are kept, the new ones are prefixed', () => {
-  assert.equal(L4.length, 32);
+  assert.equal(L4.length, 33);
   for (const s of L4) assert.ok(STRANDS.includes(s.strand), `${s.id}: strand ${s.strand}`);
   assert.equal(new Set(SKILLS.map(s => s.id)).size, SKILLS.length);
   for (const id of ORIGINAL_IDS) assert.ok(L4.some(s => s.id === id), `missing original ${id}`);
-  assert.equal(NEW.length, 12);
+  assert.equal(NEW.length, 13);
   assert.equal(L4[L4.length - 1].id, 'story');
 });
 seeded('level 4: new skills have learn text, adult-only standards and no grade wording', () => {

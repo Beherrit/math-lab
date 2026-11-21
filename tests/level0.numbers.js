@@ -9,6 +9,11 @@ const nums = s => (strip(s).match(/\d+/g) || []).map(Number);
 const only = (p, pred, where, why) => assert.deepEqual(opts(p).filter(pred), [right(p)], `${where}: exactly the marked option must ${why}`);
 const vals = p => opts(p).map(o => (attr(o, 'count') !== undefined ? Number(attr(o, 'count')) : Number(strip(o))));
 
+const fiveempty = (p, where) => {
+  const n = Number(attr(p.visual, 'count'));
+  assert.equal(countOf(p.visual, 'item', 'a'), n, `${where}: filled dots`);
+  assert.equal(rightNum(p), 5 - n, `${where}: empty boxes`);
+};
 const count = (p, where) => {
   const n = rightNum(p);
   assert.equal(countOf(p.visual, 'item', 'a'), n, `${where}: drew ${countOf(p.visual, 'item', 'a')} items, answer is ${n}`);
@@ -123,4 +128,4 @@ function pairs(p, where) {
 }
 const pairpick = (p, where) => { const T = nums(p.ask)[0]; only(p, o => { const [x, y] = nums(o); return x + y === T; }, where, `make ${T}`); };
 
-export const NUMBER_CHECKS = { count, findgroup, tenmore, tenplus, numfind, numshown, numdots: count, hasdigit, line, chart, more, same, than, extreme, gap, sortedrow, middle, add, addwhich, addswap, sub, subwhich, subtake, pairs, pairpick };
+export const NUMBER_CHECKS = { count, fiveempty, findgroup, tenmore, tenplus, numfind, numshown, numdots: count, hasdigit, line, chart, more, same, than, extreme, gap, sortedrow, middle, add, addwhich, addswap, sub, subwhich, subtake, pairs, pairpick };

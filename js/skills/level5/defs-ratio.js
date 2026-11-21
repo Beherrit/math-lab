@@ -6,6 +6,7 @@ import { genRate } from './rates.js';
 import { genUnitConv } from './unitconv.js';
 import { genRatioGraph } from './ratiograph.js';
 import { genWhatPct } from './whatpct.js';
+import { genCross, genSwap } from './methods.js';
 
 const skill = skillIn('Ratios and percents');
 
@@ -34,4 +35,12 @@ export const SKILLS = [
   skill('l5whatpct', '6.RP.3c', 'What percent is it?', 'Part and whole as a percent', genWhatPct, 'A percent compares a part with the whole as if the whole were 100. If you know the part and the whole, you can find the percent.',
     ['Write the part over the whole as a fraction, then change it to out of 100.', 'If the whole does not go into 100, find what 1 is worth: 100% divided by the whole.', 'When the new amount is bigger than the old one, the percent is over 100%.', 'When the part is tiny next to the whole, the percent is less than 1%.'],
     [['percent', 'out of 100'], ['part', 'a piece of the whole'], ['whole', 'the full amount, 100%']]),
+  skill('l5xtable', '6.RP.3a', 'Cross multiplication', 'The missing cell of a ratio table', genCross, 'Equivalent rows of a ratio table grow by the same factor, so the diagonal products are equal. That is cross multiplication.',
+    ['Find the multiplier from the column you can see in both rows.', 'Multiply the other cell by that same factor.', 'Or multiply diagonally: the two diagonal products match.', 'Adding across a row changes the mix, so it does not find the missing cell.'],
+    [['ratio table', 'rows of matching amounts'], ['cross multiply', 'set the diagonal products equal'], ['multiplier', 'the factor that takes one row to the next']],
+    { card: { title: 'Why cross multiplication works', why: 'The rows grow by the same factor, so the diagonal products are equal, and that missing cell is the one that makes them match.' } }),
+  skill('l5pctswap', '6.RP.3c', 'The percent swap', '8% of 50 is 50% of 8', genSwap, 'A percent of a number is their product divided by 100. Swapping the percent and the number keeps that same product.',
+    ['8% of 50 is the same amount as 50% of 8.', 'Half of 8 is easier than 8% of 50, and they match.', 'Multiply the two numbers, then divide by 100.', 'The swap does not work for 8% of 50 plus something else. It is only the percent of a number.'],
+    [['percent', 'out of 100'], ['of', 'multiply, for a percent'], ['swap', 'trade the percent and the number, then find the easier one']],
+    { card: { title: 'Why the percent swap works', why: 'A percent of a number is their product divided by 100, so swapping the percent and the number keeps the same product.' } }),
 ];
