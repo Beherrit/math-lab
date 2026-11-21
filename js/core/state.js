@@ -15,12 +15,21 @@ const from = sk.last || created;
 if (sk.rev === undefined) sk.rev = sk.mastered && from ? { stage: 0, due: addDays(from, INTERVALS[0]), miss: 0 } : null;
 return sk;
 }
+function fillChallenge(c) {
+const o = c && typeof c === 'object' ? c : {};
+const streak = o.streak && typeof o.streak === 'object' ? o.streak : {};
+o.streak = { n: Number(streak.n) || 0, last: streak.last || null };
+o.done = o.done && typeof o.done === 'object' && !Array.isArray(o.done) ? o.done : {};
+o.today = o.today && o.today.d && Array.isArray(o.today.items) ? o.today : null;
+return o;
+}
 function fillDefaults(s) {
 s.settings ||= {}; s.settings.minutes ??= 10; s.settings.gradual ??= true; s.settings.off ||= {}; s.settings.focus ??= 'auto';
 s.facts ||= {}; s.unlocked ||= [...START]; s.skills ||= {}; s.days ||= {}; s.stars ||= 0;
 s.streak ||= { n: 0, last: null }; s.badges ||= []; s.focusLog ||= []; s.counters ||= { story: 0, sprintBest: 0 };
 s.learned = s.learned && typeof s.learned === 'object' ? s.learned : {};
 s.grade = gradeById(s.grade) ? s.grade : null;
+s.challenge = fillChallenge(s.challenge);
 for (const sk of Object.values(s.skills)) fillReview(sk, s.created);
 s.level = clampLevel(s.level); s.placed = !!s.placed;
 s.early = s.early === true || s.level === MIN_LEVEL; // started at, or was set to, Early Start
