@@ -19,6 +19,10 @@ import { genArray } from './array.js';
 import { genShapes } from './shapes.js';
 import { genShares } from './shares.js';
 import { genMeasure } from './measure.js';
+import { genJump } from './jump.js';
+import { genTrade } from './trade.js';
+import { genClock } from './time.js';
+import { genTally } from './tally.js';
 import { genGraph } from './graphs.js';
 import { makeStory } from '../level4/story.js';
 
@@ -55,6 +59,10 @@ export const SKILLS = [
     learn: { big: 'Ten is the friendliest number there is. If you can get to ten, the rest of an addition is easy.',
       tips: ['Make a ten: 8 + 5 is 8 + 2 (that is 10) and 3 more. 13.', 'Doubles are worth knowing by heart: 6 + 6 = 12, 7 + 7 = 14.', 'Near doubles: 6 + 7 is just one more than 6 + 6.', 'You can add in any order, so start from the bigger number.'],
       words: [['sum', 'the answer to adding'], ['double', 'a number added to itself'], ['make a ten', 'split a number so one part fills up 10']] } },
+  { id: 'l1jump', level: 1, strand: 'Adding and subtracting', std: '1.OA.6, 2.NBT.5', title: 'Number line jumps', sub: 'Jump to the next ten, within 20 and within 100', gen: genJump, school: true,
+    learn: { big: 'A ten is a good place to stop. Jump to the ten first, then jump only what is left.',
+      tips: ['8 + 5 is a jump of 2 to 10, then a jump of 3. You land on 13.', '47 + 6 is a jump of 3 to 50, then a jump of 3. You land on 53.', 'Jumping back works the same way: 15 − 7 is back 5 to 10, then back 2 more.', 'Do not jump the whole amount again after you land on the ten. Those ones were already used.'],
+      words: [['jump', 'a move along the number line'], ['bridge', 'the jump that lands exactly on a ten']] } },
   { id: 'l1sub20', level: 1, strand: 'Adding and subtracting', std: '1.OA.4, 1.OA.6', title: 'Subtracting within 20', sub: 'Think addition, back through ten, fact families', gen: genSub, school: true,
     learn: { big: 'Subtracting and adding are two views of the same fact. 13 − 9 asks the same thing as 9 + ? = 13.',
       tips: ['Think addition: for 15 − 7, ask what you add to 7 to reach 15.', 'Go back through ten: 15 − 7 is 15 − 5 (that is 10), then 2 more off. 8.', 'Count back only when the number you take away is small.', 'A fact family uses the same three numbers: 8 + 5 = 13, 5 + 8 = 13, 13 − 8 = 5, 13 − 5 = 8.'],
@@ -67,6 +75,10 @@ export const SKILLS = [
     learn: { big: 'Tens are easy to work with, so use them. Change the tens first, then deal with the ones.',
       tips: ['10 more changes the tens digit up by one. 100 more changes the hundreds digit. The other digits stay put.', 'Adding 30 is three jumps of ten: 47, 57, 67, 77.', 'Bridge a ten: 82 − 5 is 82 − 2 (to land on 80) and then 3 more, which is 77.', 'Break numbers apart by place: 46 + 32 is 40 + 30 and 6 + 2, which is 70 + 8.'],
       words: [['bridge a ten', 'stop at the next ten on the way, then finish the rest'], ['multiple of 10', 'a number you say when counting by tens: 10, 20, 30...'], ['break apart', 'split a number into tens and ones to make it easier']] } },
+  { id: 'l1trade', level: 1, strand: 'Adding and subtracting', std: '2.NBT.5', title: 'Trading blocks', sub: 'Base-ten blocks for adding within 100', gen: genTrade, school: true,
+    learn: { big: 'Ones are little cubes and tens are rods. When the cubes reach 10, trade them for a rod.',
+      tips: ['Add the cubes first. 8 cubes and 7 cubes are 15 cubes.', '15 cubes is 1 rod and 5 cubes. Move that rod over with the other tens.', 'Forgetting the trade makes the answer 10 too small.', 'A rod is already a ten. Do not count it as one more cube.'],
+      words: [['trade', 'swap 10 ones for 1 ten'], ['rod', 'a block that stands for 10'], ['cube', 'a block that stands for 1']] } },
   { id: 'l1addbig', level: 1, strand: 'Adding and subtracting', std: '2.NBT.5, 2.NBT.7', title: 'Adding bigger numbers', sub: 'Two and three digits, trading 10 ones for a ten', gen: genAddBig, school: true,
     learn: { big: 'Add the same kind of thing together: ones with ones, tens with tens, hundreds with hundreds.',
       tips: ['Break each number into hundreds, tens and ones, add the matching parts, then put the parts together.', 'When a place reaches 10 or more, trade 10 of them for 1 of the next place up. That is all "carrying" means.', 'On a number line, jump the hundreds, then the tens, then the ones.', 'Check that the answer is about the size you expected.'],
@@ -95,10 +107,18 @@ export const SKILLS = [
     learn: { big: 'A ruler is a number line. Line up the start of the object with the 0 mark, then read the number where it ends.',
       tips: ['If the object starts at 0, the mark where it ends is its length. If it starts somewhere else, subtract the start from the end.', 'Pick a unit to suit the size: centimeters for small things, meters for rooms and pools, kilometers for long trips. Inches, feet and miles do the same job.', 'To find how much longer one thing is, subtract the two lengths.', 'To join lengths end to end, add them. Check that the units match.'],
       words: [['length', 'how long something is from one end to the other'], ['unit', 'the size you count in, like a centimeter or an inch'], ['centimeter (cm)', 'a small unit, about the width of a fingernail'], ['inch', 'a small unit, about the length of a thumb joint']] } },
+  { id: 'l1clock', level: 1, strand: 'Measurement', std: '1.MD.3, 2.MD.7', title: 'Telling time', sub: 'Clock faces to the hour, the half hour and five minutes', gen: genClock, school: true,
+    learn: { big: 'The short hand tells the hour. The long hand tells the minutes, and each number it points at is worth 5 minutes.',
+      tips: ['The short thick hand is the hour. The long hand is the minutes.', 'The long hand on the 4 means 20 minutes, not 4 minutes. Count by fives.', 'Half past is the long hand on the 6: 30 minutes.', 'When minutes pass 60 they become the next hour. 2:50 and 20 minutes more is 3:10.'],
+      words: [['hour hand', 'the short hand: it tells the hour'], ['minute hand', 'the long hand: each number is 5 minutes'], ['half past', '30 minutes past the hour']] } },
   { id: 'l1money', level: 1, strand: 'Measurement', std: '2.MD.7, 2.MD.8', title: 'Money and time', sub: 'Coins, dollars, cents, minutes and clock faces', gen: genMoney, school: true,
     learn: { big: 'Money and time are adding and subtracting with a unit attached. The one new thing: an hour has 60 minutes, not 100.',
       tips: ['Joining prices: add. Change, or money left: subtract.', 'Count coins biggest first and keep a running total: a quarter is 25 cents, a dime 10, a nickel 5, a penny 1.', '1 dollar is 100 cents. 1 hour is 60 minutes.', 'On a clock face the short hand shows the hour and the long hand shows the minutes. Each number is 5 minutes.', 'To find how long something lasts, count up from the start time to the end time.', 'When minutes pass 60, they become the next hour: 2:45 and 30 minutes more is 3:15.'],
       words: [['change', 'the money you get back when you pay with more than the price'], ['altogether', 'everything joined, so add'], ['lasts', 'how much time passes from start to end'], ['minute hand', 'the long hand on a clock: each number it points at is 5 minutes']] } },
+  { id: 'l1tally', level: 1, strand: 'Data and chance', std: '1.MD.4', title: 'Tally charts', sub: 'Bundles of five, then how many more', gen: genTally, school: true,
+    learn: { big: 'A tally is a mark for each thing you count. Every fifth mark slants across the bundle, so fives are easy to see.',
+      tips: ['Four upright marks and one slanted mark make 5.', 'The slanted mark is a mark too. It is not a decoration.', 'Count the bundles by fives, then count the extra marks.', 'To see which row has more, count both rows. A longer row is not always more if you forget that a bundle is 5.'],
+      words: [['tally', 'a mark that stands for one thing'], ['bundle', 'five tally marks, the fifth one slanted']] } },
   { id: 'l1graph', level: 1, strand: 'Data and chance', std: '2.MD.10', title: 'Reading graphs', sub: 'Picture graphs and bar graphs', gen: genGraph, school: true,
     learn: { big: 'A graph shows how many are in each group so you can compare at a glance. Read the key or the scale first, then the values.',
       tips: ['In a picture graph, one picture can stand for more than one. Read the key to see how many.', 'In a bar graph, line the top of the bar up with the numbers at the side. Check how much each grid line is worth.', 'The tallest bar or the longest row is the most. The shortest is the fewest.', 'To find how many more, subtract two values. To find the total, add them all.'],

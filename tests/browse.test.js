@@ -36,6 +36,11 @@ test('puzzles stay with the subject and grade they teach', () => {
   assert.ok(shapes.includes('kpattern') && shapes.includes('kfit'));
   assert.deepEqual(puzzlesFor(0, 'Adding and subtracting').map(g => g.id), ['kten']);
   assert.deepEqual(puzzlesFor(0, 'Colors'), []);
+  assert.deepEqual(puzzlesFor(1).map(g => g.id), ['g1jump', 'g1clock', 'g1shape']);
+  assert.deepEqual(puzzlesFor(1, 'Adding and subtracting').map(g => g.id), ['g1jump']);
+  assert.deepEqual(puzzlesFor(1, 'Measurement').map(g => g.id), ['g1clock']);
+  assert.deepEqual(puzzlesFor(1, 'Shapes and space').map(g => g.id), ['g1shape']);
+  assert.deepEqual(puzzlesFor(2), []);
   assert.deepEqual(puzzlesFor(3), []);
   assert.deepEqual(puzzlesFor(0, null, { l0pattern: true, l0shapes: true, l0pairs: true }), []);
 });

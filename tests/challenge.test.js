@@ -43,7 +43,19 @@ test('a skill item and its puzzle rebuild the same question and a reason', () =>
   assert.ok(r1.why.length > 0);
 });
 
-test('the set matches the grade: review can be earlier, stretch stays on the grade, no puzzle yet above Kindergarten', () => {
+test('grades 1 and 2 get a level 1 puzzle in the daily challenge', () => {
+  for (const grade of ['1', '2']) {
+    const set = buildChallenge(on('Ada', grade), '2026-11-21');
+    assert.equal(set.level, 1);
+    const puzzle = set.items.find(it => it.kind === 'puzzle');
+    assert.ok(['g1jump', 'g1clock', 'g1shape'].includes(puzzle.game));
+    assert.equal(SKILL[makeRound(puzzle.game, puzzle.seed).skill].level, 1);
+    const stretch = set.items.find(it => it.kind === 'stretch');
+    assert.equal(SKILL[stretch.skill].level, 1);
+  }
+});
+
+test('the set matches the grade: review can be earlier, stretch stays on the grade, no puzzle yet above Number sense', () => {
   const S = on('Bo', '3');
   S.skills.l0count = { ...newSkillState(), mastered: true, n: 8, c: 8, L: 3, rev: { stage: 0, due: '2026-11-21', miss: 0 } };
   const set = buildChallenge(S, '2026-11-21');

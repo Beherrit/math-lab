@@ -2,16 +2,19 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { gameList, makeRound, checkRound } from '../js/games/catalog.js';
 
-const IDS = ['kpattern', 'kfit', 'kten'];
+const IDS = ['kpattern', 'kfit', 'kten', 'g1jump', 'g1clock', 'g1shape'];
 
 function truth(round) {
   const f = round.facts;
   if (round.game === 'kpattern') return f.unit[f.shown % f.unit.length];
   if (round.game === 'kfit') return f.pieces.find(p => p.count === f.spaces).id;
+  if (round.game === 'g1jump') return String(f.land);
+  if (round.game === 'g1clock') return f.right;
+  if (round.game === 'g1shape') return f.made;
   return String(10 - f.filled);
 }
 
-test('three Kindergarten puzzles, each tied to a lesson', () => {
+test('puzzles are tied to a lesson', () => {
   const list = gameList();
   assert.deepEqual(list.map(g => g.id), IDS);
   for (const g of list) assert.ok(g.title && g.blurb && g.skill);

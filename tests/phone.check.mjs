@@ -171,6 +171,68 @@ try {
   await page.locator('.why-card').scrollIntoViewIfNeeded();
   await shot(page, 'phone-game-ten-why');
 
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('heading', { name: 'Puzzles', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Grade 1', exact: true }).click();
+  await page.getByRole('heading', { name: 'Grade 1', exact: true }).waitFor();
+  await shot(page, 'phone-grade1-home');
+
+  await page.getByRole('button', { name: 'Adding', exact: true }).click();
+  await page.getByRole('heading', { name: 'Adding', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Number line jumps', exact: true }).scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade1-adding');
+  await page.getByRole('button', { name: 'Jump to a ten', exact: true }).click();
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const jumpWhy = await page.locator('.why-card p').innerText();
+  if (!/ten/i.test(jumpWhy)) throw new Error(`jump explanation was: ${jumpWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade1-jump');
+
+  await page.getByRole('button', { name: 'See Number line jumps', exact: true }).click();
+  await page.getByRole('heading', { name: 'Number line jumps', exact: true }).waitFor();
+  await page.locator('.example .viz, .example .nline, .example svg').first().waitFor();
+  await page.locator('.example').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade1-jump-skill');
+  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await page.locator('.key[data-k="0"]').click();
+  await page.locator('.key.check').click();
+  await page.getByText('Not quite').waitFor();
+  await page.locator('.key[data-k="0"]').click();
+  await page.locator('.key.check').click();
+  await page.getByText('Here is why').waitFor();
+  const close = page.getByRole('button', { name: 'Close', exact: true });
+  if (await close.count()) await close.click();
+  await shot(page, 'phone-grade1-jump-why');
+  await page.locator('.pbar .btn', { hasText: 'Finish' }).click();
+  await page.getByRole('button', { name: 'Back home', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Measuring', exact: true }).click();
+  await page.getByRole('button', { name: 'Read the clock', exact: true }).click();
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const clockWhy = await page.locator('.why-card p').innerText();
+  if (!/hand|minute/i.test(clockWhy)) throw new Error(`clock explanation was: ${clockWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade1-clock');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Shapes', exact: true }).click();
+  await page.getByRole('button', { name: 'Pieces together', exact: true }).click();
+  await page.locator('.gvisual').waitFor();
+  await shot(page, 'phone-grade1-shape');
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const shapeWhy = await page.locator('.why-card p').innerText();
+  if (!/side/i.test(shapeWhy)) throw new Error(`shape explanation was: ${shapeWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade1-shape-why');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
+
   const still = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
   if (still.grade !== 'K' || still.name !== 'Ada') throw new Error('progress was not kept');
   console.log('phone check ok');

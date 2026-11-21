@@ -1,4 +1,4 @@
-// Puzzle list. Kindergarten games for now; later grades add their own.
+// Puzzle list for the grade that is open. Empty grades say so.
 import { S } from '../../core/store.js';
 import { puzzlesFor, activeGrade, subjectShort } from '../../core/browse.js';
 import { SKILL } from '../../skills/registry.js';
@@ -16,7 +16,7 @@ export function renderGames(strand) {
     <span class="game-blurb">${esc(g.blurb)}</span>
     <span class="game-link">Uses ${esc(SKILL[g.skill]?.title || 'a lesson')}</span>
   </button>`).join('');
-  const body = cards || '<p class="muted">No puzzles for this grade yet. Kindergarten has some under Shapes and Adding.</p>';
+  const body = cards || '<p class="muted">No puzzles for this grade yet. Kindergarten and Number sense have some.</p>';
   mount(`<div class="page games"><header class="top">${backBtn()}<h1>Puzzles</h1></header>
   <p class="lead-in">${esc(where)}. Tap a puzzle. Then see why the answer works.</p>
   <div class="game-art" aria-hidden="true">${art}</div>
