@@ -35,6 +35,13 @@ export function hopLine(from, to) {
   g += `<circle cx="${x1}" cy="${y}" r="6" fill="${INK}"/><circle cx="${x2}" cy="${y}" r="7" class="dot"/>`;
   return g + '</svg>';
 }
+// Products as the first factor counts down past zero. The second factor stays fixed.
+export function signPattern(c) {
+  const rows = [2, 1, 0, -1].map(m => `${fmt(m)} × (${fmt(c)}) = ${fmt(m * c)}`);
+  let s = open(280, 24 + rows.length * 26, `counting down times ${fmt(c)}`, 'shape');
+  rows.forEach((row, i) => { s += `<text x="140" y="${28 + i * 26}" text-anchor="middle" class="lbl">${row}</text>`; });
+  return s + '</svg>';
+}
 // Plus chips over minus chips. Each column with one of each is a zero pair.
 export function chips(plus, minus) {
   const n = Math.max(plus, minus, 1), u = 30, w = n * u + 8;

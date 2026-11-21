@@ -30,12 +30,15 @@ function solve(L) {
   const op = pick(L === 1 ? ['+', '+', '-', '-', '*'] : ['+', '-', '*', '/', '*', '/']), [a, c] = numbers(op, L), v = pick(['x', 'n', 'y', 't']), o = OPS[op], x = o.solve(a, c);
   if (x <= 0 || (op === '-' && L === 3 && c <= 0)) return solve(L);
   const flip = op === '+' && chance(0.3), left = flip ? `${fmt(a)} + ${v}` : o.left(v, a);
-  return T({ ask: `Solve for ${v}.`, expr: `${left} = ${fmt(c)}`, answer: num(x), ways: eqWays(op, a, c, v),
+  const pan = left.includes('<') ? flat(op, v, a) : left;
+  return T({ ask: `Solve for ${v}.`, expr: `${left} = ${fmt(c)}`, visual: balance(pan, fmt(c)), answer: num(x), ways: eqWays(op, a, c, v),
+    why: `Both sides weigh the same. Undo what was done to ${v} on both sides. Changing only one side, or repeating the same operation, tips the scale.`,
     hint: `What is being done to ${v}? Do the opposite to both sides.` }, 'eq', { op, a, c });
 }
 function whichValue() {
   const op = pick(['+', '-', '*']), [a, c] = numbers(op, 1), o = OPS[op], x = o.solve(a, c), wrong = { '+': [c + a, c, a], '-': [Math.abs(c - a), c, a], '*': [c - a, c + a, c] }[op];
-  return T({ ask: 'Which value of x makes the equation true?', expr: `${o.left('x', a)} = ${c}`, answer: numChoice(x, [...wrong, x + 1]),
+  return T({ ask: 'Which value of x makes the equation true?', expr: `${o.left('x', a)} = ${c}`, visual: balance(o.left('x', a), String(c)), answer: numChoice(x, [...wrong, x + 1]),
+    why: `Put the number back on both sides. Only one choice keeps the scale level. Doing the operation again, instead of undoing it, changes one side and tips the scale.`,
     ways: [way('Try each choice', [`A solution is a number that makes both sides equal when you put it in for x.`, `Try ${x}: ${{ '+': `${x} + ${a}`, '-': `${x} − ${a}`, '*': `${a} × ${x}` }[op]} = ${c}`, `The other choices do not give ${c}, so they are not solutions.`, `The answer is x = ${b(x)}.`]), eqWays(op, a, c)[0]],
     hint: 'Put each choice in place of x. Which one makes both sides the same?' }, 'eq', { op, a, c });
 }
