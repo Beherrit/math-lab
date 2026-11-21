@@ -12,7 +12,7 @@ import { sess, inp } from '../session/state.js';
 import { toast, clearFb } from '../session/feedback.js';
 import { pressKey } from '../session/input.js';
 import { renderInput } from '../session/pad.js';
-import { openWays, closeSheet, toggleRead, onPre, pauseOverlay } from '../session/sheet.js';
+import { openWays, closeSheet, toggleRead, onPre, pauseOverlay, openWhy } from '../session/sheet.js';
 import { submit, skipQuestion } from '../session/answer.js';
 import { advance, playPhase } from '../session/flow.js';
 import { startDaily, startFree, startPlacementCheck } from '../session/start.js';
@@ -73,6 +73,7 @@ presolve,
 submit: () => submit(),
 next: () => advance(),
 how: () => openWays(false),
+why: () => openWhy(),
 read: () => toggleRead(),
 plan: el => { el.hidden = true; el.nextElementSibling.hidden = false; },
 closesheet: () => closeSheet(),

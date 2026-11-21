@@ -15,8 +15,10 @@ const back = s.strand ? `<button class="iconbtn" data-go="subject" data-arg="${e
 const nodes = pathNodes(S, skillsIn(enabledIn(S, s.level), s.strand || 'More'));
 const locked = nodes.find(n => n.id === s.id)?.state === 'locked';
 const peek = locked ? '<p class="muted">This is further along the path. You can look now. Master the one before it and it is up next.</p>' : '';
+const card = s.learn.card ? `<div class="paper-card tip"><h2>${I.bulb} Why it works</h2><p>${esc(s.learn.card.why)}</p></div>` : '';
 mount(`<div class="page has-bar"><header class="top">${back}<div><h1>${s.title}</h1><p class="small muted">${s.sub}</p></div></header>
 ${peek}
+${card}
 <div class="paper-card learn">
 <p class="big-idea">${s.learn.big}</p>
 <ul class="tips">${s.learn.tips.map(t => `<li>${t}</li>`).join('')}</ul>

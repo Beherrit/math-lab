@@ -20,6 +20,9 @@ import { genShapes } from './shapes.js';
 import { genShares } from './shares.js';
 import { genMeasure } from './measure.js';
 import { genJump } from './jump.js';
+import { l1bonds } from './bonds.js';
+import { l1break } from './break.js';
+import { l1bar } from './barmodel.js';
 import { genTrade } from './trade.js';
 import { genClock } from './time.js';
 import { genTally } from './tally.js';
@@ -58,11 +61,15 @@ export const SKILLS = [
   { id: 'l1add20', level: 1, strand: 'Adding and subtracting', std: '1.OA.6, 2.OA.2', title: 'Adding within 20', sub: 'Make a ten, doubles, near doubles', gen: genAdd, school: true,
     learn: { big: 'Ten is the friendliest number there is. If you can get to ten, the rest of an addition is easy.',
       tips: ['Make a ten: 8 + 5 is 8 + 2 (that is 10) and 3 more. 13.', 'Doubles are worth knowing by heart: 6 + 6 = 12, 7 + 7 = 14.', 'Near doubles: 6 + 7 is just one more than 6 + 6.', 'You can add in any order, so start from the bigger number.'],
-      words: [['sum', 'the answer to adding'], ['double', 'a number added to itself'], ['make a ten', 'split a number so one part fills up 10']] } },
+      words: [['sum', 'the answer to adding'], ['double', 'a number added to itself'], ['make a ten', 'split a number so one part fills up 10']],
+      card: { title: 'Why make a ten works', why: 'Moving ones from one addend onto the other does not change the total, so you can make a ten and keep the same sum.' } } },
   { id: 'l1jump', level: 1, strand: 'Adding and subtracting', std: '1.OA.6, 2.NBT.5', title: 'Number line jumps', sub: 'Jump to the next ten, within 20 and within 100', gen: genJump, school: true,
     learn: { big: 'A ten is a good place to stop. Jump to the ten first, then jump only what is left.',
       tips: ['8 + 5 is a jump of 2 to 10, then a jump of 3. You land on 13.', '47 + 6 is a jump of 3 to 50, then a jump of 3. You land on 53.', 'Jumping back works the same way: 15 − 7 is back 5 to 10, then back 2 more.', 'Do not jump the whole amount again after you land on the ten. Those ones were already used.'],
-      words: [['jump', 'a move along the number line'], ['bridge', 'the jump that lands exactly on a ten']] } },
+      words: [['jump', 'a move along the number line'], ['bridge', 'the jump that lands exactly on a ten']],
+      card: { title: 'Why the jump works', why: 'The distance is the same whether you jump it at once or in two smaller jumps, so stopping on a ten is only a rest stop, not a new amount.' } } },
+  l1bonds,
+  l1break,
   { id: 'l1sub20', level: 1, strand: 'Adding and subtracting', std: '1.OA.4, 1.OA.6', title: 'Subtracting within 20', sub: 'Think addition, back through ten, fact families', gen: genSub, school: true,
     learn: { big: 'Subtracting and adding are two views of the same fact. 13 − 9 asks the same thing as 9 + ? = 13.',
       tips: ['Think addition: for 15 − 7, ask what you add to 7 to reach 15.', 'Go back through ten: 15 − 7 is 15 − 5 (that is 10), then 2 more off. 8.', 'Count back only when the number you take away is small.', 'A fact family uses the same three numbers: 8 + 5 = 13, 5 + 8 = 13, 13 − 8 = 5, 13 − 5 = 8.'],
@@ -123,6 +130,7 @@ export const SKILLS = [
     learn: { big: 'A graph shows how many are in each group so you can compare at a glance. Read the key or the scale first, then the values.',
       tips: ['In a picture graph, one picture can stand for more than one. Read the key to see how many.', 'In a bar graph, line the top of the bar up with the numbers at the side. Check how much each grid line is worth.', 'The tallest bar or the longest row is the most. The shortest is the fewest.', 'To find how many more, subtract two values. To find the total, add them all.'],
       words: [['key', 'tells you what one picture stands for'], ['scale', 'the numbers at the side of a bar graph'], ['most', 'the biggest value'], ['fewest', 'the smallest value']] } },
+  l1bar,
   { id: 'l1story', level: 1, strand: 'Stories', std: '1.OA.1, 2.OA.1', title: 'Story problems', sub: 'Add, subtract and compare: one step, two steps and missing parts', gen: genStory, school: true, story: true,
     learn: { big: 'A story problem is a small scene. Picture what happens to the amounts before you touch the numbers.',
       tips: ['Read the question first. What are you being asked to find?', 'Is something being joined, taken away, or compared? Joined means add. Taken away or compared means subtract.', 'Sometimes the missing number is the start or the change. A bar picture helps: the whole on top and the parts underneath.', 'Some stories have two things happening. Do one step, write it down, then do the next.', 'At the end, ask: is my answer a sensible size?'],
