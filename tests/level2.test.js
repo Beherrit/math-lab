@@ -33,7 +33,9 @@ const CALC = {
 };
 // The largest number a learner should meet at each step (operands and answer).
 const LIMIT = { l2groups: [36, 54, 90], l2order: [36, 99, 150], l2tricks: [96, 108, 144], l2div: [36, 90, 108], l2family: [45, 81, 108], l2tens: [400, 1200, 9900], l2area2: [130, 891, 891],
-  l2rem: [24, 89, 116], l2area: [36, 144, 144], l2frac: [10, 10, 30], l2fraccmp: [10, 10, 10], l2which: [45, 90, 90], l2story: [36, 1000, 5000] };
+  l2rem: [24, 89, 116], l2area: [36, 144, 144], l2frac: [10, 10, 30], l2fraccmp: [10, 10, 10], l2which: [45, 90, 90], l2story: [36, 1000, 5000],
+  l2equal: [40, 120, 500], l2sticks: [30, 100, 600], l2eleven: [99, 900, 1100], l2five: [1300, 4300, 9100],
+  l2lattice: [80, 200, 900], l2peasant: [100, 300, 600], l2short: [100, 200, 700] };
 
 Object.assign(CALC, CALC_NEW); Object.assign(LIMIT, LIMIT_NEW);
 const numbersIn = v => (typeof v === 'number' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(numbersIn) : []);

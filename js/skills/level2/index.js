@@ -6,6 +6,12 @@ import { genDiv } from './dividing.js';
 import { genFamily } from './family.js';
 import { genTens } from './tens.js';
 import { genArea2 } from './area2.js';
+import { l2equal } from './equal.js';
+import { l2sticks } from './sticks.js';
+import { l2eleven, l2five } from './vedic.js';
+import { l2lattice } from './lattice.js';
+import { l2peasant } from './peasant.js';
+import { l2short } from './short.js';
 import { genRem, remWord } from './remainders.js';
 import { genArea, areaWord } from './shapes.js';
 import { genFrac } from './fractions.js';
@@ -35,6 +41,7 @@ export const SKILLS = [
     learn: { big: 'Add and subtract one place at a time, then check with a quick estimate. Round to the nearest 10 or 100 first: the exact answer should be close to the estimate.',
       tips: ['Add or subtract the hundreds, the tens and the ones separately, then put the parts together.', 'When a place makes 10 or more, carry to the next place. When a digit is too small to take from, regroup from the next place.', 'To subtract, you can also count up from the smaller number to the bigger one.', 'To estimate, round each number first: 348 + 275 is about 350 + 280.'],
       words: [['estimate', 'a close answer found quickly with rounded numbers'], ['regroup', 'trade one ten for ten ones, or one hundred for ten tens'], ['round', 'change a number to a nearby friendly one, such as the nearest 10 or 100']] } },
+  l2equal,
   { id: 'l2groups', level: 2, strand: 'Multiplying and dividing', std: '3.OA.1', title: 'What multiplying means', sub: 'Equal groups, arrays and repeated addition', gen: genGroups, school: true,
     learn: { big: 'Multiplying is a short way to count equal groups. 3 × 4 means 3 groups of 4, which is 4 + 4 + 4.',
       tips: ['Read × as "groups of": 5 × 6 is 5 groups of 6.', 'An array is equal groups lined up in rows: 3 rows of 4 is 3 × 4.', 'Count one group, then skip count by that number, once for each group.', 'One more group just adds one more of the same number: 5 × 6 is 4 × 6 plus 6.'],
@@ -46,7 +53,8 @@ export const SKILLS = [
   { id: 'l2tricks', level: 2, strand: 'Multiplying and dividing', std: '3.OA.5, 3.OA.7', title: 'Hard facts from easy ones', sub: 'Doubles, ten then halve, break apart', gen: genTricks, school: true,
     learn: { big: 'You never have to be stuck on a times-table fact. Every hard fact can be built from easy ones you already know.',
       tips: ['× 2 is double. × 4 is double, then double again. × 8 is double three times.', '× 5 is half of × 10: 5 × 8 is half of 80.', '× 9 is × 10 minus one group: 9 × 7 = 70 − 7.', 'Break apart: 7 × 8 is 5 × 8 plus 2 × 8. That is 40 + 16.'],
-      words: [['double', 'two of the same, or times 2'], ['halve', 'split into two equal parts'], ['break apart', 'split one multiplication into two easier ones and add them']] } },
+      words: [['double', 'two of the same, or times 2'], ['halve', 'split into two equal parts'], ['break apart', 'split one multiplication into two easier ones and add them']],
+      card: { title: 'Why the fact tricks work', why: 'Doubling, halving and splitting all count the same groups, so two of a number is times 2, half of times 10 is times 5, and the parts of a split still add to the same product.' } } },
   { id: 'l2props', level: 2, strand: 'Multiplying and dividing', std: '3.OA.5', title: 'Easier ways to multiply', sub: 'Grouping, splitting and any order', gen: genProps, school: true,
     learn: { big: 'Three rules make multiplying easier: you can multiply in any order, group the numbers any way you like, and split one number into two parts.',
       tips: ['Any order: 4 × 7 = 7 × 4.', 'Any grouping: 2 × 5 × 7 is 10 × 7, because 2 × 5 is easy.', 'Split one number: 7 × 14 = 7 × 10 + 7 × 4, which is 70 + 28.', 'Every part of a split must be multiplied: 6 × 8 = 6 × 5 + 6 × 3, not 6 × 5 + 3.'],
@@ -74,7 +82,14 @@ export const SKILLS = [
   { id: 'l2area2', level: 2, strand: 'Multiplying and dividing', std: '3.OA.5, 4.NBT.5', title: 'Two digits times one digit', sub: 'Break apart with an area model', gen: genArea2, school: true,
     learn: { big: 'A bigger multiplication is two small ones. Split the big number into tens and ones, multiply each part, and add.',
       tips: ['14 × 3 is 10 × 3 plus 4 × 3. That is 30 + 12 = 42.', 'An area model is a rectangle cut into a tens part and a ones part.', 'Do the tens part first. It is most of the answer, so it tells you roughly how big the answer is.', 'In the column method the carried digit is just the tens from the ones part.'],
-      words: [['area model', 'a rectangle split into parts to show a multiplication'], ['partial product', 'the answer for one part, before adding']] } },
+      words: [['area model', 'a rectangle split into parts to show a multiplication'], ['partial product', 'the answer for one part, before adding']],
+      card: { title: 'Why the area model works', why: 'The rectangle is the product, so cutting it into tens and ones cuts the product into parts. Adding the parts puts the same rectangle back together.' } } },
+  l2sticks,
+  l2eleven,
+  l2five,
+  l2lattice,
+  l2peasant,
+  l2short,
   { id: 'l2rem', level: 2, strand: 'Multiplying and dividing', std: '4.OA.3', title: 'Division with remainders', sub: 'Left overs and what they mean', gen: genRem, school: true,
     learn: { big: 'Not everything shares out evenly. The remainder is what is left when no more full groups can be made.',
       tips: ['17 ÷ 5: three groups of 5 make 15, and 2 are left over. 3 remainder 2.', 'The remainder is always smaller than the number you divide by.', 'In a story, think about the left overs. Do they need one more car? Do they not count? Or are they the answer?', 'Check: groups × size + remainder gives back the number you started with.'],

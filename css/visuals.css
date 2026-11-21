@@ -202,3 +202,4 @@
 .hs .box2 { fill: #ffe9a3; stroke: var(--ink); stroke-width: 2; }
 .hs .band { fill: #e6e0ff; stroke: var(--ink); stroke-width: 1.5; }
 .hs .onshape { fill: #1b2645; font-size: 14px; font-weight: 700; }
+.hs .lab { font-size: 16px; font-weight: 700; fill: var(--ink); }

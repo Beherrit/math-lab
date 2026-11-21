@@ -19,7 +19,8 @@ return `<header class="pbar"><button class="iconbtn" data-act="quit" aria-label=
 function helpers(q) {
 if (q.fact) return '';
 if (sess.mode === 'place') return `<div class="helpers"><button class="chipbtn" data-act="skipq">I haven’t learned this yet</button></div>`;
-return `<div class="helpers">${q.read ? `<button class="chipbtn" data-act="read">${I.eye} Help me read it</button>` : ''}<button class="chipbtn" data-act="how">${I.bulb} Show me how</button></div>`;
+const why = SKILL[q.skill]?.learn?.card ? `<button class="chipbtn" data-act="why">${I.bulb} Why it works</button>` : '';
+return `<div class="helpers">${q.read ? `<button class="chipbtn" data-act="read">${I.eye} Help me read it</button>` : ''}${why}<button class="chipbtn" data-act="how">${I.bulb} Show me how</button></div>`;
 }
 export function renderPlay() {
 const q = sess.q; const ph = sess.phases[sess.pi]; const place = sess.mode === 'place';

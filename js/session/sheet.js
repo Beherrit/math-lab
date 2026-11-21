@@ -4,6 +4,7 @@ import { answerHTML } from '../util.js';
 import { I } from '../ui/icons.js';
 import { $, $$ } from '../ui/dom.js';
 import { waysHTML } from '../ui/fragments.js';
+import { SKILL } from '../skills/registry.js';
 import { fb } from './feedback.js';
 import { stop as stopSpeech } from '../core/speech.js';
 const showSheet = sh => { sh.hidden = false; requestAnimationFrame(() => sh.classList.add('in')); };
@@ -20,6 +21,17 @@ ${waysHTML(q.ways)}
 <button class="btn primary big" data-act="${next ? 'next' : 'closesheet'}">${next ? 'Next question' : 'Back to the problem'}</button>
 </div>`;
 showSheet(sh);
+}
+export function openWhy() {
+  const card = SKILL[sess.q?.skill]?.learn?.card;
+  const sh = $('.sheet');
+  if (!card || !sh) return;
+  sh.innerHTML = `<div class="sheet-card" role="dialog" aria-label="Why it works">
+<div class="sheet-head"><h2>Why it works</h2><button class="iconbtn" data-act="closesheet" aria-label="Close">${I.x}</button></div>
+<p>${card.why}</p>
+<button class="btn primary big" data-act="closesheet">Back to the problem</button>
+</div>`;
+  showSheet(sh);
 }
 export function toggleRead() {
 const q = sess.q; const panel = $('.read-panel'); const story = $('.story');
