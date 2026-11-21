@@ -52,6 +52,72 @@ async function methodShot(page, grade, subject, title, file) {
   await page.locator('.pbar .btn', { hasText: 'Finish' }).click();
   await page.getByRole('button', { name: 'Back home', exact: true }).click();
 }
+async function missForRefresh(page) {
+  for (let n = 0; n < 8; n++) {
+    await page.locator('.choice').first().waitFor();
+    const before = await page.locator('.qcard').innerText();
+    await page.locator('.choice:not([disabled])').first().click();
+    const retry = page.getByText('Not quite');
+    const next = page.getByRole('button', { name: 'Next', exact: true });
+    await Promise.race([retry.waitFor(), next.waitFor()]);
+    if (await retry.isVisible()) {
+      await page.locator('.choice:not([disabled])').first().click();
+      const offer = page.locator('.sheet').getByRole('button', { name: /Refresh/ });
+      try {
+        await offer.waitFor({ timeout: 1500 });
+        return;
+      } catch { /* the second try was right, so the next question has no offer */ }
+    }
+    await page.waitForFunction(prev => document.querySelector('.qcard')?.innerText !== prev, before);
+  }
+  throw new Error('refresher was not offered');
+}
+async function foundationShots(page) {
+  await page.getByRole('button', { name: 'Grade 9', exact: true }).click();
+  await page.getByRole('heading', { name: 'Grade 9', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Algebra', exact: true }).click();
+  await page.getByRole('heading', { name: 'Algebra', exact: true, level: 1 }).waitFor();
+  const diff = page.locator('article.path-card', { has: page.getByRole('heading', { name: 'Difference of squares', exact: true }) });
+  await diff.scrollIntoViewIfNeeded();
+  await diff.getByRole('button', { name: 'Peek' }).click();
+  await page.getByRole('heading', { name: 'This builds on', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'This builds on', exact: true }).evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-builds-diff');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
+  await page.getByRole('heading', { name: 'Kindergarten', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Adding', exact: true }).click();
+  await page.getByRole('heading', { name: 'Adding', exact: true, level: 1 }).waitFor();
+  const card = page.locator('article.path-card', { has: page.getByRole('heading', { name: 'Counting on', exact: true }) });
+  await card.scrollIntoViewIfNeeded();
+  await card.getByRole('button', { name: 'Peek' }).click();
+  await page.getByRole('heading', { name: 'This builds on', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'This builds on', exact: true }).evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-builds');
+  await page.getByRole('button', { name: 'Putting together', exact: true }).click();
+  await page.getByRole('heading', { name: 'Putting together', exact: true, level: 1 }).waitFor();
+  await shot(page, 'phone-builds-link');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  const again = page.locator('article.path-card', { has: page.getByRole('heading', { name: 'Counting on', exact: true }) });
+  await again.getByRole('button', { name: 'Peek' }).click();
+  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await missForRefresh(page);
+  const offer = page.locator('.sheet').getByRole('button', { name: /Refresh/ });
+  await page.locator('.sheet-card').evaluate(el => { el.scrollTop = 0; });
+  await page.locator('.sheet-card').screenshot({ path: `${out}/phone-refresh-offer.png` });
+  await offer.click();
+  await page.getByRole('heading', { name: 'A short refresher', exact: true }).waitFor();
+  await shot(page, 'phone-refresh');
+  await page.getByRole('button', { name: 'Try one', exact: true }).click();
+  await page.locator('.qcard').waitFor();
+  const choice = page.locator('.choice').first();
+  if (await choice.count()) await choice.click();
+  await page.getByRole('button', { name: /Back to/ }).click();
+  await page.locator('.pbar .btn', { hasText: 'Finish' }).click();
+  await page.getByRole('button', { name: 'Back home', exact: true }).click();
+}
 
 const server = serve();
 let browser;
@@ -449,6 +515,7 @@ try {
   await methodShot(page, 'Grade 6', 'Ratios', 'The percent swap', 'phone-pct');
   await methodShot(page, 'Grade 9', 'Algebra', 'The AC method', 'phone-ac');
   await methodShot(page, 'Grade 9', 'Algebra', 'Difference of squares', 'phone-diff');
+  await foundationShots(page);
 
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
 
