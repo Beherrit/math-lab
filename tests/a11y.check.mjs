@@ -57,6 +57,9 @@ try {
   await page.getByRole('button', { name: 'Puzzles', exact: true }).click();
   await page.getByRole('heading', { name: 'Puzzles', exact: true }).waitFor();
   report('puzzles', await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze());
+  await page.getByRole('button', { name: /Sort by color/ }).click();
+  await page.getByRole('heading', { name: 'Sort by color', exact: true }).waitFor();
+  report('sort', await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze());
   console.log('axe check ok');
 } finally {
   await browser?.close();

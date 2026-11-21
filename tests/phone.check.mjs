@@ -183,6 +183,7 @@ async function puzzleShots(page) {
 
   await playPuzzle(page, 'Magic square', 'phone-magic', /sum/i);
   await playPuzzle(page, 'Build the shape', 'phone-build', /piece/i);
+  await playPuzzle(page, 'Sort by color', 'phone-sort', /color/i);
   await page.getByRole('button', { name: 'Back', exact: true }).click();
 
   const more = [
@@ -190,6 +191,9 @@ async function puzzleShots(page) {
     ['Grade 4', 'Best estimate', 'phone-estimate', /clos/i],
     ['Grade 6', 'Number riddle', 'phone-riddle', /clue/i],
     ['Grade 8', 'Match the line', 'phone-match', /slope/i],
+    ['Grade 2', 'Build the fraction', 'phone-pizza', /equal pieces/i],
+    ['Grade 5', 'Treasure hunt', 'phone-treasure', /Across/i],
+    ['Grade 7', 'Fair spins', 'phone-spin', /expect/i],
   ];
   for (const [grade, name, file, whyRe] of more) {
     await page.getByRole('button', { name: grade, exact: true }).click();
