@@ -7,6 +7,7 @@ import { today } from '../core/dates.js';
 import { dayLog } from '../core/daily.js';
 import { checkLevelUp } from '../core/progression.js';
 import { pathPick } from '../core/focus.js';
+import { suggestNext } from '../core/path.js';
 import { SKILL } from '../skills/registry.js';
 import { moveLine } from '../core/browse.js';
 import { check, answerHTML, pick } from '../util.js';
@@ -102,7 +103,7 @@ if (res.up) { sess.stats.ups.push(id); toast(`${I.star} Step up! ${SKILL[id].tit
 if (!res.mastered) return;
 sess.stats.mastered.push(id); toast(`${I.star} You mastered ${SKILL[id].title}!`); confetti();
 const up = checkLevelUp(S);
-if (sess.mode === 'free' && sess.phases[0].type === 'skill' && pathPick(S)) sess.offerNext = true; // free practice: offer the next skill
+if (sess.mode === 'free' && sess.phases[0].type === 'skill' && (suggestNext(S) || pathPick(S))) sess.offerNext = true; // free practice: offer the next skill on the path
 if (!up) return;
 sess.stats.levelUp = up;
 setTimeout(() => toast(`${I.star} ${moveLine(up.done, up.next)}`), 2600);

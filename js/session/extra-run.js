@@ -3,6 +3,7 @@ import { S, save } from '../core/store.js';
 import { completeDay } from '../core/daily.js';
 import { newBadges } from '../core/badges.js';
 import { pathPick } from '../core/focus.js';
+import { suggestNext } from '../core/path.js';
 import { SKILL } from '../skills/registry.js';
 import { I } from '../ui/icons.js';
 import { mount } from '../ui/dom.js';
@@ -31,7 +32,7 @@ playPhase();
 }
 // Free practice of one skill, once it is mastered: carry on with the next skill on the path.
 export function nextSkill() {
-const id = pathPick(S); if (!id) return;
+const id = suggestNext(S) || pathPick(S); if (!id) return;
 sess.offerNext = false;
 sess.phases[0] = { type: 'skill', skill: id, ms: Infinity, label: SKILL[id].title };
 nextQuestion();
