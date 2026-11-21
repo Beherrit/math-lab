@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createSpeech } from '../js/core/speech.js';
+import { createSpeech, RATE } from '../js/core/speech.js';
 import { stripHtml, spokenText, spokenOptions, resultText, readAloudOn } from '../js/core/say.js';
 import { hearButtons } from '../js/ui/hear.js';
 import { freshState } from '../js/core/state.js';
@@ -23,7 +23,7 @@ test('speak cancels the previous utterance before the new one, at a slower rate'
   const f = fake(); const sp = createSpeech(() => f.env);
   assert.equal(sp.speak('one'), true); sp.speak('two');
   assert.deepEqual(f.log, ['cancel', 'speak:one', 'cancel', 'speak:two']);
-  assert.ok(f.spoken[0].rate < 1 && f.spoken[0].rate > 0.5); assert.equal(f.spoken[0].lang, 'en-US');
+  assert.equal(f.spoken[0].rate, RATE); assert.equal(RATE, 0.8); assert.equal(f.spoken[0].lang, 'en-US');
 });
 test('it picks an English voice once voices have loaded, preferring a local one', () => {
   const voices = [{ lang: 'fr-FR', localService: true }, { lang: 'en-GB', localService: false, name: 'net' }, { lang: 'en-US', localService: true, name: 'local' }];

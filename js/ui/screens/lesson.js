@@ -2,7 +2,7 @@
 import { TURNS, hasAnotherWay, watchLeft, stepsLeft, recap, lessonProgress } from '../../core/lesson.js';
 import { I } from '../icons.js';
 import { problemHTML } from '../fragments.js';
-import { hearHTML } from '../hear.js';
+import { hearHTML, explainHear } from '../hear.js';
 const DOTS = 4;
 const btn = (act, label, primary) => `<button class="btn big ${primary ? 'primary' : ''}" data-act="${act}">${label}</button>`;
 function frame(skill, l, body, bar) {
@@ -14,7 +14,7 @@ ${body}<footer class="pad lbar">${bar}</footer></div>`;
 }
 export function ideaScreen(skill, l) {
 const w = skill.learn.words;
-const body = `<div class="paper-card learn"><p class="big-idea">${skill.learn.big}</p>
+const body = `<div class="paper-card learn"><p class="big-idea">${skill.learn.big}</p>${explainHear(skill.learn.big, 'Hear the idea')}
 <ul class="tips">${skill.learn.tips.map(t => `<li>${t}</li>`).join('')}</ul>
 ${w?.length ? `<dl class="words">${w.map(([a, m]) => `<div><dt>${a}</dt><dd>${m}</dd></div>`).join('')}</dl>` : ''}</div>`;
 return frame(skill, l, body, btn('lnext', 'Watch one', true));

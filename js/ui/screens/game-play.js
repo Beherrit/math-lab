@@ -3,6 +3,7 @@ import { SKILL } from '../../skills/registry.js';
 import { readAloudOn } from '../../core/say.js';
 import { S } from '../../core/store.js';
 import { mount, esc } from '../dom.js';
+import { explainHear } from '../hear.js';
 import { I } from '../icons.js';
 
 function choiceBtn(c, result, answer) {
@@ -18,6 +19,7 @@ export function gameScreen(meta, round, result) {
   const why = result ? `<div class="why-card paper-card ${result.ok ? 'yes' : 'no'}" role="status">
     <h2>${result.ok ? 'Yes' : 'Not yet'}</h2>
     <p>${esc(round.why)}</p>
+    ${explainHear(round.why, 'Hear the reason')}
     <button class="btn" data-act="skill" data-id="${esc(round.skill)}">See ${esc(SKILL[round.skill].title)}</button>
   </div>` : '';
   const bar = result
