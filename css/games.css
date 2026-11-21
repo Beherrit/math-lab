@@ -35,7 +35,7 @@
 }
 
 .game-link {
-  color: var(--grape);
+  color: var(--link);
   font-weight: 600;
   font-size: 14px;
 }

@@ -14,7 +14,8 @@ test('v1 migrates to v3 at level 4, placed, with all progress intact', () => {
   const old = v1(); const s = migrate(old);
   assert.equal(s.v, 3); assert.equal(s.level, 4); assert.equal(s.placed, true); assert.deepEqual(s.levelsDone, []);
   for (const f of ['name', 'created', 'facts', 'unlocked', 'skills', 'days', 'stars', 'streak', 'badges', 'focusLog', 'counters', 'todayFocus', 'settings']) {
-    assert.deepEqual(f === 'skills' ? noRev(s[f]) : s[f], v1()[f], `${f} changed`);
+    const expect = f === 'settings' ? { ...v1().settings, sound: false, letters: false, theme: 'system' } : v1()[f];
+    assert.deepEqual(f === 'skills' ? noRev(s[f]) : s[f], expect, `${f} changed`);
   }
   assert.deepEqual(s.learned, {});
   assert.deepEqual(s.skills.oa.rev, { stage: 0, due: '2026-11-12', miss: 0 }); // mastered: the schedule starts from the last practice
@@ -23,7 +24,10 @@ test('v1 migrates to v3 at level 4, placed, with all progress intact', () => {
 test('v2 migrates to v3 with every field intact and the new fields defaulted', () => {
   const s = migrate(v2()); const o = v2();
   assert.equal(s.v, 3); assert.deepEqual(s.learned, {}); assert.equal(s.level, 5); assert.deepEqual(s.levelsDone, [4]);
-  for (const f of ['name', 'created', 'facts', 'unlocked', 'days', 'stars', 'streak', 'badges', 'focusLog', 'counters', 'todayFocus', 'settings', 'placed']) assert.deepEqual(s[f], o[f], `${f} changed`);
+  for (const f of ['name', 'created', 'facts', 'unlocked', 'days', 'stars', 'streak', 'badges', 'focusLog', 'counters', 'todayFocus', 'settings', 'placed']) {
+    const expect = f === 'settings' ? { ...o.settings, sound: false, letters: false, theme: 'system' } : o[f];
+    assert.deepEqual(s[f], expect, `${f} changed`);
+  }
   assert.deepEqual(noRev(s.skills), o.skills);
   assert.deepEqual(s.skills.oa.rev, { stage: 0, due: '2026-11-14', miss: 0 });
   assert.deepEqual(s.skills.old.rev, { stage: 0, due: '2026-10-22', miss: 0 }); // never dated: counted from the day it was created

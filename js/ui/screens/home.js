@@ -2,6 +2,7 @@
 import { S, save } from '../../core/store.js';
 import { today, longDate } from '../../core/dates.js';
 import { getFocus } from '../../core/focus.js';
+import { resumeId, pathDots } from '../../core/look.js';
 import { streakNow, phaseSplit } from '../../core/daily.js';
 import { syncChallenge, challengeStreak, streakLabel } from '../../core/challenge.js';
 import { helloName } from '../../core/learner.js';
@@ -24,15 +25,30 @@ function challengeCard() {
   const label = left ? "Play today's challenge" : "See today's challenge";
   return `<section class="paper-card ch-card"><h2>Today's challenge</h2><p class="muted">${esc(line)}</p><button class="btn primary big" data-go="challenge">${label}</button></section>`;
 }
+function pathMap() {
+  const dots = pathDots(S);
+  if (!dots.length) return '';
+  const done = dots.filter(d => d.state === 'done').length;
+  const pips = dots.map(d => `<span class="pip ${d.state}"></span>`).join('');
+  return `<div class="path-map" role="img" aria-label="${done} of ${dots.length} steps done">${pips}</div>`;
+}
+function goButton() {
+  const id = resumeId(S);
+  if (id) return `<button class="btn primary big" data-act="practice" data-id="${esc(id)}">Keep going</button>`;
+  return '<button class="btn primary big" data-act="start">Start</button>';
+}
 function todayCard(focus) {
   const done = S.days[today()]?.done;
   const mins = S.settings.minutes;
   const sp = phaseSplit(S);
-  if (done) return `<h2 class="done-title">Today’s page is done ${I.check}</h2><p class="muted">Great work. Come back tomorrow, or pick a subject below.</p><button class="btn ghost" data-act="start">Do another round</button>`;
-  if (S.level === 0) return `<h2>Today’s practice</h2><p class="muted">Tap Start. Then pick a subject when you want more.</p><button class="btn primary big" data-act="start">Start</button>`;
+  const resumed = resumeId(S);
+  const head = resumed ? `<h2>Continue</h2><p class="muted">${esc(SKILL[resumed].title)}</p>` : '';
+  if (done && !resumed) return `<h2 class="done-title">Today’s page is done ${I.check}</h2><p class="muted">Great work. Come back tomorrow, or pick a subject below.</p>${pathMap()}<button class="btn ghost" data-act="start">Do another round</button>`;
+  if (S.level === 0) return `${head || '<h2>Today’s practice</h2>'}${pathMap()}${goButton()}`;
+  if (resumed) return `${head}${pathMap()}${goButton()}`;
   const facts = sp.facts ? `<li><b>Times tables warm-up</b><span>${Math.round(mins * sp.facts)} min</span></li>` : '';
   const name = focus ? SKILL[focus].title : 'Times tables';
-  return `<h2>Today’s ${mins} minutes</h2><ol class="plan">${facts}<li><b>Focus: ${name}</b><span>${Math.round(mins * sp.focus)} min</span><button class="link" data-go="pick">change</button></li><li><b>Mix-up</b><span>${Math.max(1, Math.round(mins * sp.mix))} min</span></li></ol><button class="btn primary big" data-act="start">Start</button>`;
+  return `<h2>Today’s ${mins} minutes</h2><ol class="plan">${facts}<li><b>Focus: ${name}</b><span>${Math.round(mins * sp.focus)} min</span><button class="link" data-go="pick">change</button></li><li><b>Mix-up</b><span>${Math.max(1, Math.round(mins * sp.mix))} min</span></li></ol>${pathMap()}${goButton()}`;
 }
 export function renderHome() {
   const who = helloName(S);

@@ -194,7 +194,7 @@
 .tab.on {
   background: var(--grape);
   color: #fff;
-  border-color: var(--grape);
+  border-color: var(--link);
 }
 
 .way {
@@ -234,7 +234,7 @@
   height: 28px;
   border-radius: 50%;
   background: var(--grape-soft);
-  color: var(--grape);
+  color: var(--link);
   font-family: var(--font-num);
   font-weight: 700;
   display: grid;

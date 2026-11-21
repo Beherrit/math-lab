@@ -4,6 +4,7 @@ import { SKILL } from '../skills/registry.js';
 import { levelTitle } from '../levels.js';
 import { gameList } from '../games/catalog.js';
 import { GRADES, gradeById, helloName } from './learner.js';
+import { resumeId } from './look.js';
 
 const SHORT = {
   'Numbers': 'Numbers',
@@ -62,5 +63,6 @@ export function homeSay(S, skills) {
   const hi = helloName(S) ? `Hi, ${helloName(S)}.` : 'Hi.';
   const subs = subjectsAt(skills).map(s => s.short).join(', ');
   const grade = activeGrade(S).label;
-  return `${hi} You are in ${grade}. Tap Start to practice. Or tap a subject: ${subs}.`;
+  const go = resumeId(S) ? 'Keep going' : 'Start';
+  return `${hi} You are in ${grade}. Tap ${go} to practice. Or tap a subject: ${subs}.`;
 }

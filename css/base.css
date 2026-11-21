@@ -1,23 +1,24 @@
 :root {
-  --paper: #eef3f9;
-  --grid: #d8e3ef;
-  --card: #ffffff;
-  --card-grid: #e8eef6;
-  --ink: #1b2645;
-  --ink-2: #56627e;
-  --line: #cdd8e6;
+  --paper: #f7f1e8;
+  --grid: #eadfce;
+  --card: #fffdf9;
+  --card-grid: #f3ebe1;
+  --ink: #241c16;
+  --ink-2: #5c5146;
+  --line: #e0d4c4;
   --grape: #5b3fd6;
+  --link: #5b3fd6;
   --grape-2: #4528b8;
   --grape-soft: #ece7ff;
   --hi: #ffe352;
   --hi-soft: #fff4b0;
-  --good: #138a57;
-  --good-hi: #a8f0c9;
-  --bad: #d23a76;
-  --bad-hi: #ffd0e2;
-  --key: #ffffff;
-  --key-edge: #c9d3e3;
-  --shadow: 0 1px 0 rgba(27,38,69,.06),0 6px 18px rgba(27,38,69,.07);
+  --good: #0f6b3c;
+  --good-hi: #d8f5e4;
+  --bad: #9f1239;
+  --bad-hi: #fde7ee;
+  --key: #fffdf9;
+  --key-edge: #d9cbb8;
+  --shadow: 0 1px 0 rgba(36,28,22,.06),0 6px 18px rgba(36,28,22,.07);
   --m-x: #e3e9f2;
   --m0: #ffb3cd;
   --m1: #ffd98a;
@@ -37,26 +38,26 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #121a33;
-    --grid: #1b2546;
-    --card: #1a2444;
-    --card-grid: #212c51;
-    --ink: #eef2ff;
-    --ink-2: #a8b3d1;
-    --line: #2f3b66;
+    --paper: #1c1714;
+    --grid: #2a231e;
+    --card: #2a231e;
+    --card-grid: #342b25;
+    --ink: #f6efe6;
+    --ink-2: #d2c3b4;
+    --line: #4a3f36;
     --grape: #8b74ff;
     --grape-2: #a594ff;
     --grape-soft: #2a2563;
     --hi: #c9a800;
     --hi-soft: #5a4d10;
-    --good: #4fd69a;
+    --good: #8ee0b4;
     --good-hi: #135c3d;
-    --bad: #ff7fae;
+    --bad: #ffb3cc;
     --bad-hi: #5c1d38;
-    --key: #222d55;
-    --key-edge: #121a35;
+    --key: #342b25;
+    --key-edge: #1c1714;
     --shadow: 0 1px 0 rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
-    --m-x: #26315a;
+    --m-x: #3d342c;
     --m0: #7a2c4d;
     --m1: #7a5a1e;
     --m2: #6d6420;
@@ -71,6 +72,22 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
+  --paper: #1c1714;
+  --grid: #2a231e;
+  --card: #2a231e;
+  --card-grid: #342b25;
+  --ink: #f6efe6;
+  --ink-2: #d2c3b4;
+  --line: #4a3f36;
+  --good: #8ee0b4;
+  --good-hi: #135c3d;
+  --bad: #ffb3cc;
+  --bad-hi: #5c1d38;
+  --key: #342b25;
+  --key-edge: #1c1714;
+  --shadow: 0 1px 0 rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+  --m-x: #3d342c;
+  --fbar-off: #342b25;
 }
 
 * {
@@ -146,7 +163,7 @@ b {
 }
 
 :focus-visible {
-  outline: 3px solid var(--grape);
+  outline: 3px solid var(--link);
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -228,7 +245,7 @@ b {
 .link {
   background: none;
   border: 0;
-  color: var(--grape);
+  color: var(--link);
   font-weight: 600;
   min-height: 44px;
   display: inline-flex;
@@ -272,6 +289,6 @@ b {
   padding: 8px 14px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--grape);
+  color: var(--link);
   min-height: 44px;
 }

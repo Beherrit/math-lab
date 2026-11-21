@@ -170,8 +170,8 @@
 .blank {
   display: inline-block;
   min-width: 1.2em;
-  border-bottom: 4px solid var(--grape);
-  color: var(--grape);
+  border-bottom: 4px solid var(--link);
+  color: var(--link);
   text-align: center;
   line-height: 1;
 }

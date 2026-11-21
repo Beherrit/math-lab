@@ -3,6 +3,7 @@ import { S } from '../core/store.js';
 import { speak } from '../core/speech.js';
 import { readAloudOn } from '../core/say.js';
 import { gameMeta, makeRound, checkRound } from '../games/catalog.js';
+import { chimeResult } from '../core/sound.js';
 import { mount } from '../ui/dom.js';
 import { gameScreen } from '../ui/screens/game-play.js';
 import { renderGames } from '../ui/screens/games.js';
@@ -35,6 +36,7 @@ export function pickGame(choiceId) {
   const r = checkRound(run.round, choiceId);
   if (!r.known) return;
   run.result = { ok: r.ok, pick: choiceId };
+  chimeResult(S, r.ok);
   draw();
   say(`${r.ok ? 'Yes.' : 'Not yet.'} ${run.round.why}`);
 }

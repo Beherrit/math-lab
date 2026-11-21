@@ -24,13 +24,13 @@
   min-width: 112px;
   min-height: 48px;
   font-size: 17px;
-  color: var(--grape);
-  border-color: var(--grape);
+  color: var(--link);
+  border-color: var(--link);
 }
 
 .choice.hearing {
   background: var(--hi-soft);
-  box-shadow: 0 3px 0 var(--grape),inset 0 0 0 3px var(--grape);
+  box-shadow: 0 3px 0 var(--link),inset 0 0 0 3px var(--link);
 }
 
 .key-gap {
