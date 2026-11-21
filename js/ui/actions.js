@@ -22,6 +22,10 @@ import { abortPlacement } from '../session/placement-run.js';
 import { adultActions } from './parent-actions.js';
 import { lessonActions } from '../session/lesson-run.js';
 import { aloudActions } from '../session/aloud.js';
+import { speak } from '../core/speech.js';
+import { readAloudOn } from '../core/say.js';
+import { helloName } from '../core/learner.js';
+import { pickGame, nextGameRound, hearGame } from '../session/game-run.js';
 function setLevel(n, after) {
 setCurrentLevel(S, n); save(); after();
 }
@@ -76,6 +80,23 @@ stop: () => finish(),
 keepgoing: () => keepGoing(),
 nextskill: () => nextSkill(),
 closeparent: () => { parentState.open = false; go('home'); },
+pickgrade: el => {
+  const form = el.closest('form'); if (!form?.grade) return;
+  const was = el.classList.contains('on');
+  form.querySelectorAll('[data-act="pickgrade"]').forEach(b => { b.classList.remove('on'); b.setAttribute('aria-pressed', 'false'); });
+  if (!was) { el.classList.add('on'); el.setAttribute('aria-pressed', 'true'); }
+  form.grade.value = was ? '' : el.dataset.grade;
+},
+hearhome: () => {
+  if (!readAloudOn(S)) return;
+  const who = helloName(S);
+  const hi = who ? `Hi, ${who}.` : 'Hi.';
+  const more = S.level === 0 ? ' Tap Start to practice. Tap Puzzles to play a game.' : ' Tap Start for today\'s practice.';
+  speak(hi + more);
+},
+gamepick: el => pickGame(el.dataset.id),
+gamenext: () => nextGameRound(),
+heargame: () => hearGame(),
 ...adultActions,
 ...lessonActions,
 ...aloudActions,

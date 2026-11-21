@@ -7,6 +7,12 @@ import { unlockedLevel, hasSkills, levelProgress } from '../../core/progression.
 import { levelInfo, levelName, levelFull } from '../../levels.js';
 import { visibleLevels } from '../../core/entry.js';
 import { I } from '../icons.js';
+import { shapeSVG, FILLS } from '../../games/draw.js';
+export function puzzlesCard() {
+  const art = shapeSVG('circle', FILLS.yellow, 40) + shapeSVG('square', FILLS.grape, 40) + shapeSVG('triangle', FILLS.green, 40);
+  const big = S.level === 0 ? ' big' : '';
+  return `<section class="block"><button class="puzzle-card${big}" data-go="games"><span class="puzzle-art" aria-hidden="true">${art}</span><span class="puzzle-copy"><b>Puzzles</b><span>Figure it out, then see why</span></span></button></section>`;
+}
 export function weekStrip() {
 const t = today(); const dow = (new Date().getDay() + 6) % 7; // Monday first
 const names = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
