@@ -4,7 +4,7 @@
 import { readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-const CACHE_NAME = 'mathlab-v16';
+const CACHE_NAME = 'mathlab-v17';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 function walk(dir) {
   return readdirSync(join(root, dir)).sort().flatMap(name => {

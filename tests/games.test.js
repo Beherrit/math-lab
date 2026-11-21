@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { gameList, makeRound, checkRound } from '../js/games/catalog.js';
 
-const IDS = ['kpattern', 'kfit', 'kten', 'g1jump', 'g1clock', 'g1shape', 'g3split', 'g4bars', 'g5order', 'g6mix', 'g6balance', 'g7signs', 'g8squares', 'g9cross', 'g9corner', 'g9growth', 'g9secant', 'magic', 'kenken', 'gap', 'guess', 'build', 'riddle', 'match'];
+const IDS = ['kpattern', 'kfit', 'kten', 'g1jump', 'g1clock', 'g1shape', 'g3split', 'g4bars', 'g5order', 'g6mix', 'g6balance', 'g7signs', 'g8squares', 'g9cross', 'g9corner', 'g9growth', 'g9secant', 'magic', 'kenken', 'gap', 'guess', 'build', 'riddle', 'match', 'pizza', 'target', 'weights', 'treasure', 'shop', 'later', 'mirror', 'spin', 'machine', 'sort'];
 const NEED = { rect: 'triangle', house: 'triangle', window: 'square', peak: 'triangle' };
 
 function closest(target, picks) {
@@ -63,7 +63,34 @@ function truth(round) {
     return mul > sum ? 'mul' : sum > mul ? 'add' : 'same';
   }
   if (round.game === 'g9secant') return Math.abs(3 - 2) < Math.abs((2 + f.h) - 2) ? 'short' : 'long';
+  if (round.game === 'pizza') return `${f.n}/${f.d}`;
+  if (round.game === 'target') return targetCode(f);
+  if (round.game === 'weights') return `add:${f.left < f.right ? 'left' : 'right'}:${Math.abs(f.left - f.right)}`;
+  if (round.game === 'treasure') return `(${f.x}, ${f.y})`;
+  if (round.game === 'shop') return String(f.paid - f.price);
+  if (round.game === 'later') return f.ask === 'gap' ? String(f.add) : laterStamp(f);
+  if (round.game === 'mirror') return f.left.map(row => row.concat([...row].reverse()).join('')).join('-');
+  if (round.game === 'spin') return String(f.spins * f.red / f.total);
+  if (round.game === 'machine') return f.kind === 'add' ? `add ${f.k}` : f.kind === 'mul' ? `times ${f.k}` : `times ${f.m}, then add ${f.k}`;
+  if (round.game === 'sort') return f.mode === 'count' ? String(f.n) : f.color;
   return String(10 - f.filled);
+}
+
+function targetCode(f) {
+  const run = { '+': (a, b) => a + b, '-': (a, b) => a - b, x: (a, b) => a * b };
+  let v = f.nums[0];
+  let s = String(f.nums[0]);
+  for (let i = 0; i < f.ops.length; i++) {
+    v = run[f.ops[i]](v, f.nums[i + 1]);
+    s = `(${s} ${f.ops[i]} ${f.nums[i + 1]})`;
+  }
+  return v === f.value ? s : 'bad-target';
+}
+
+function laterStamp(f) {
+  const mins = (f.h % 12) * 60 + f.m + f.add;
+  const hour = Math.floor(mins / 60) % 12;
+  return `${hour === 0 ? 12 : hour}:${String(mins % 60).padStart(2, '0')}`;
 }
 
 test('puzzles are tied to a lesson', () => {
@@ -117,6 +144,18 @@ test('each new puzzle covers its grade range and says why', () => {
       }
       if (id === 'build') assert.ok(round.choices.some(c => c.id === 'circle' && c.id !== round.answer));
     }
+  }
+});
+
+test('the second set of puzzles covers its grades and says why', () => {
+  const ranges = {
+    pizza: [1, 2, 3, 4], target: [2, 3, 4, 5, 6, 7], weights: [4, 5, 6, 7, 8], treasure: [4, 5, 6, 7],
+    shop: [1, 2, 3], later: [1, 2], mirror: [1, 2, 3, 4, 5], spin: [5, 6, 7, 8], machine: [2, 3, 4, 5, 6, 7, 8], sort: [0],
+  };
+  const why = { pizza: /equal pieces/, target: /once each/, weights: /balance/, treasure: /Across/, shop: /Change/, later: /minutes/, mirror: /mirror/, spin: /expect/, machine: /every row/, sort: /color/ };
+  for (const [id, levels] of Object.entries(ranges)) {
+    assert.deepEqual(gameList().find(g => g.id === id).levels, levels);
+    for (const level of levels) assert.match(makeRound(id, `${id}-${level}`, level).why, why[id]);
   }
 });
 
