@@ -191,3 +191,14 @@
   stroke-width: 2.2;
   fill: none;
 }
+
+.hs .curve { fill: none; stroke: var(--grape); stroke-width: 3; }
+.hs .sec { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 5 4; }
+.hs .ax { stroke: var(--ink); stroke-width: 2; }
+.hs .gl { stroke: var(--line); stroke-width: 1.5; }
+.hs .tk { font-size: 12px; fill: var(--ink-2); }
+.hs .pt { fill: var(--grape); }
+.hs .box { fill: #e6e0ff; stroke: var(--ink); stroke-width: 2; }
+.hs .box2 { fill: #ffe9a3; stroke: var(--ink); stroke-width: 2; }
+.hs .band { fill: #e6e0ff; stroke: var(--ink); stroke-width: 1.5; }
+.hs .onshape { fill: #1b2645; font-size: 14px; font-weight: 700; }

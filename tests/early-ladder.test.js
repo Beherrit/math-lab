@@ -13,14 +13,14 @@ import { withFakeSkills, fake } from './fixtures/fake-skills.js';
 const learner = level => { const s = freshState('T', '2026-11-19'); s.placed = true; s.level = level; return s; };
 const master = (S, ids) => ids.forEach(id => { S.skills[id] = { L: 3, run: 0, miss: 0, hist: [], n: 9, c: 9, last: null, mastered: true, rev: null }; });
 test('level 0 is the first rung, titled Early Start, with a grade range for grown-ups only', () => {
-  assert.equal(LEVELS[0].n, 0); assert.equal(MIN_LEVEL, 0); assert.equal(MAX_LEVEL, 7);
+  assert.equal(LEVELS[0].n, 0); assert.equal(MIN_LEVEL, 0); assert.equal(MAX_LEVEL, 8);
   assert.equal(levelInfo(0).title, 'Early Start'); assert.equal(levelInfo(0).grades, 'K to 1');
   assert.equal(levelName(0), 'Early Start'); assert.equal(levelFull(0), 'Early Start');
   assert.equal(levelName(3), 'Level 3'); assert.equal(levelFull(3), `Level 3: ${levelTitle(3)}`);
-  assert.equal(nextLevel(0), 1); assert.equal(nextLevel(7), null); assert.equal(nextLevel(99), null);
+  assert.equal(nextLevel(0), 1); assert.equal(nextLevel(7), 8); assert.equal(nextLevel(8), null); assert.equal(nextLevel(99), null);
 });
 test('clampLevel keeps 0 and does not turn it into 1; garbage becomes 1', () => {
-  assert.equal(clampLevel(0), 0); assert.equal(clampLevel('0'), 0); assert.equal(clampLevel(-3), 0); assert.equal(clampLevel(99), 7);
+  assert.equal(clampLevel(0), 0); assert.equal(clampLevel('0'), 0); assert.equal(clampLevel(-3), 0); assert.equal(clampLevel(99), 8);
   assert.equal(clampLevel(NaN), 1); assert.equal(clampLevel('x'), 1); assert.equal(clampLevel(undefined), 1);
 });
 test('every exported function that takes a level copes with 0', () => {

@@ -36,6 +36,8 @@ try {
   await page.goto(base);
   await page.getByRole('heading', { name: 'Math Lab' }).waitFor();
   await page.locator('#nm').fill('Ada');
+  await page.getByRole('button', { name: 'Year 12', exact: true }).scrollIntoViewIfNeeded();
+  await shot(page, 'phone-welcome-years');
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
   await shot(page, 'phone-welcome');
   await page.getByRole('button', { name: /Let.s go/ }).click();
@@ -333,6 +335,78 @@ try {
   await shot(page, 'phone-grade8-squares-why');
   await page.getByRole('button', { name: 'Back', exact: true }).click();
   await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Grade 9', exact: true }).scrollIntoViewIfNeeded();
+  await page.getByRole('button', { name: 'Grade 9', exact: true }).click();
+  await page.getByRole('heading', { name: 'Grade 9', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Grade 9', exact: true }).evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-grade9-home');
+  const grade9 = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
+  if (grade9.grade !== '9' || grade9.level !== 8 || grade9.name !== 'Ada') {
+    throw new Error(`grade 9 did not stick: ${grade9.grade} ${grade9.level}`);
+  }
+  await page.getByRole('button', { name: 'Algebra', exact: true }).click();
+  await page.getByRole('heading', { name: 'Straight lines', exact: true }).scrollIntoViewIfNeeded();
+  await page.getByRole('button', { name: 'Practice', exact: true }).first().click();
+  await page.locator('.visual').first().waitFor();
+  await page.locator('.visual').first().scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade9-line');
+  await page.locator('.pbar .btn', { hasText: 'Finish' }).click();
+  await page.getByRole('button', { name: 'Back home', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Puzzles', exact: true }).click();
+  await page.getByRole('heading', { name: 'Puzzles', exact: true }).waitFor();
+  await page.getByRole('button', { name: /Where they cross/ }).click();
+  await page.locator('.gvisual').waitFor();
+  await shot(page, 'phone-grade9-cross');
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const crossWhy = await page.locator('.why-card p').innerText();
+  if (!/intercept/i.test(crossWhy)) throw new Error(`cross explanation was: ${crossWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade9-cross-why');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: /The corner/ }).click();
+  await page.locator('.gvisual').waitFor();
+  await shot(page, 'phone-grade9-corner');
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const cornerWhy = await page.locator('.why-card p').innerText();
+  if (!/corner/i.test(cornerWhy)) throw new Error(`corner explanation was: ${cornerWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade9-corner-why');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: /Which grows faster/ }).click();
+  await page.locator('.gvisual').waitFor();
+  await shot(page, 'phone-grade9-growth');
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const growWhy = await page.locator('.why-card p').innerText();
+  if (!/multiplying/i.test(growWhy)) throw new Error(`growth explanation was: ${growWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade9-growth-why');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: /Closer to the curve/ }).click();
+  await page.locator('.gvisual').waitFor();
+  await shot(page, 'phone-grade9-secant');
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const secWhy = await page.locator('.why-card p').innerText();
+  if (!/shorter/i.test(secWhy)) throw new Error(`secant explanation was: ${secWhy}`);
+  await page.locator('.why-card').scrollIntoViewIfNeeded();
+  await shot(page, 'phone-grade9-secant-why');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Grade 12', exact: true }).scrollIntoViewIfNeeded();
+  await page.getByRole('button', { name: 'Grade 12', exact: true }).click();
+  await page.getByRole('heading', { name: 'Grade 12', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Algebra', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Grade 12', exact: true }).evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-grade12-home');
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
 
   const still = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));

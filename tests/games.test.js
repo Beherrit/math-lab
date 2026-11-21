@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { gameList, makeRound, checkRound } from '../js/games/catalog.js';
 
-const IDS = ['kpattern', 'kfit', 'kten', 'g1jump', 'g1clock', 'g1shape', 'g3split', 'g4bars', 'g5order', 'g6mix', 'g6balance', 'g7signs', 'g8squares'];
+const IDS = ['kpattern', 'kfit', 'kten', 'g1jump', 'g1clock', 'g1shape', 'g3split', 'g4bars', 'g5order', 'g6mix', 'g6balance', 'g7signs', 'g8squares', 'g9cross', 'g9corner', 'g9growth', 'g9secant'];
 
 function truth(round) {
   const f = round.facts;
@@ -18,6 +18,14 @@ function truth(round) {
   if (round.game === 'g6balance') return String(f.c - f.a);
   if (round.game === 'g7signs') return String(f.a * f.c);
   if (round.game === 'g8squares') return String(f.a * f.a + f.c * f.c);
+  if (round.game === 'g9cross') return String((f.b2 - f.b1) / (f.m1 - f.m2));
+  if (round.game === 'g9corner') return String(f.a * f.b);
+  if (round.game === 'g9growth') {
+    const mul = f.s * f.m ** f.step;
+    const sum = f.s + f.add * f.step;
+    return mul > sum ? 'mul' : sum > mul ? 'add' : 'same';
+  }
+  if (round.game === 'g9secant') return Math.abs(3 - 2) < Math.abs((2 + f.h) - 2) ? 'short' : 'long';
   return String(10 - f.filled);
 }
 

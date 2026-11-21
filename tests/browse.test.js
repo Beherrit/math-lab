@@ -5,7 +5,7 @@ import { freshState } from '../js/core/state.js';
 import { subjectsAt, skillsIn, puzzlesFor, bandName, moveLine, homeSay, activeGrade } from '../js/core/browse.js';
 
 test('every skill sits in one subject, and subjects follow the path', () => {
-  for (let n = 0; n <= 7; n++) {
+  for (let n = 0; n <= 8; n++) {
     const skills = skillsOf(n);
     const subjects = subjectsAt(skills);
     const ids = subjects.flatMap(s => s.ids);
@@ -53,6 +53,8 @@ test('puzzles stay with the subject and grade they teach', () => {
   assert.deepEqual(puzzlesFor(6, 'Multiplying and dividing').map(g => g.id), ['g7signs']);
   assert.deepEqual(puzzlesFor(7).map(g => g.id), ['g8squares']);
   assert.deepEqual(puzzlesFor(7, 'Shapes and space').map(g => g.id), ['g8squares']);
+  assert.deepEqual(puzzlesFor(8).map(g => g.id), ['g9cross', 'g9corner', 'g9growth', 'g9secant']);
+  assert.deepEqual(puzzlesFor(8, 'Algebra').map(g => g.id), ['g9cross', 'g9corner', 'g9growth', 'g9secant']);
   assert.deepEqual(puzzlesFor(0, null, { l0pattern: true, l0shapes: true, l0pairs: true }), []);
 });
 

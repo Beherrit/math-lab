@@ -13,6 +13,10 @@ import { mixMeta, makeMix } from './mix.js';
 import { balanceMeta, makeBalance } from './balance.js';
 import { signsMeta, makeSigns } from './signs.js';
 import { squaresMeta, makeSquares } from './squares.js';
+import { crossMeta, makeCross } from './cross.js';
+import { cornerMeta, makeCorner } from './corner.js';
+import { growthMeta, makeGrowth } from './growth.js';
+import { secantMeta, makeSecant } from './secant.js';
 
 const GAMES = [
   { ...patternMeta, make: makePattern },
@@ -28,6 +32,10 @@ const GAMES = [
   { ...balanceMeta, make: makeBalance },
   { ...signsMeta, make: makeSigns },
   { ...squaresMeta, make: makeSquares },
+  { ...crossMeta, make: makeCross },
+  { ...cornerMeta, make: makeCorner },
+  { ...growthMeta, make: makeGrowth },
+  { ...secantMeta, make: makeSecant },
 ];
 
 export const gameList = () => GAMES.map(({ id, title, blurb, skill }) => ({ id, title, blurb, skill }));
