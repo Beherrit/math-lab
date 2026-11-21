@@ -89,8 +89,14 @@ try {
 
   await page.getByRole('button', { name: 'Numbers', exact: true }).click();
   await page.getByRole('heading', { name: 'Numbers', exact: true }).waitFor();
-  await page.locator('[data-act="learn"][data-id="l0count"]').waitFor();
+  await page.getByText('Up next', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Peek', exact: true }).first().waitFor();
   await shot(page, 'phone-subject-numbers');
+  await page.getByRole('button', { name: 'Peek', exact: true }).first().click();
+  await page.getByText('further along the path').waitFor();
+  await shot(page, 'phone-path-peek');
+  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('heading', { name: 'Numbers', exact: true }).waitFor();
   await page.locator('[data-act="learn"][data-id="l0count"]').click();
   await page.getByText('Counting means touching each thing once').waitFor();
   await page.getByRole('button', { name: 'Watch one' }).click();
@@ -124,6 +130,12 @@ try {
   await shot(page, 'phone-grade-3');
   const mid = await page.evaluate(() => JSON.parse(localStorage.getItem('mathlab.v3')));
   if (mid.grade !== '3' || mid.level !== 2 || mid.name !== 'Ada') throw new Error(`grade switch lost progress: ${mid.grade} ${mid.level}`);
+  await page.getByRole('button', { name: 'Multiplying', exact: true }).click();
+  await page.getByRole('heading', { name: 'Multiplying', exact: true }).waitFor();
+  await page.getByText('Up next', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Peek', exact: true }).first().waitFor();
+  await shot(page, 'phone-path-grade3');
+  await page.getByRole('button', { name: 'Back' }).click();
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
   await page.getByRole('button', { name: 'Colors', exact: true }).waitFor();
 

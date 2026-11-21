@@ -5,24 +5,25 @@ import { gameMeta } from '../games/catalog.js';
 import { rngFrom } from '../games/rng.js';
 import { dueReviews } from './review.js';
 import { enabledIn, lowestLevel, workingLevel } from './progression.js';
-import { pathPick } from './focus.js';
+import { suggestNext, dueOnPath } from './path.js';
 import { puzzlesFor, activeGrade } from './browse.js';
 import { addDays } from './dates.js';
 
 const REVIEW_N = 2;
 
 function stretchId(S, level) {
-  const id = pathPick(S);
+  const id = suggestNext(S, level);
   if (id && SKILL[id]?.level === level) return id;
   return enabledIn(S, level + 1).find(s => !s.story)?.id || null;
 }
 
 function reviewIds(S, date, level, stretch, rng) {
+  const onPath = dueOnPath(S, level, date).filter(id => id !== stretch);
   const due = dueReviews(S, date).filter(id => {
     const s = SKILL[id];
-    return s && !s.story && s.level <= level && id !== stretch;
+    return s && !s.story && s.level <= level && id !== stretch && !onPath.includes(id);
   });
-  const ids = due.slice(0, REVIEW_N);
+  const ids = [...onPath, ...due].slice(0, REVIEW_N);
   const extras = [];
   for (let n = level; n >= lowestLevel(S); n--) {
     for (const s of enabledIn(S, n)) {
