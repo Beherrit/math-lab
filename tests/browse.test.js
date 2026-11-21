@@ -46,7 +46,13 @@ test('puzzles stay with the subject and grade they teach', () => {
   assert.deepEqual(puzzlesFor(3, 'Fractions and decimals').map(g => g.id), ['g4bars']);
   assert.deepEqual(puzzlesFor(4).map(g => g.id), ['g5order']);
   assert.deepEqual(puzzlesFor(4, 'Algebra').map(g => g.id), ['g5order']);
-  assert.deepEqual(puzzlesFor(5), []);
+  assert.deepEqual(puzzlesFor(5).map(g => g.id), ['g6mix', 'g6balance']);
+  assert.deepEqual(puzzlesFor(5, 'Ratios and percents').map(g => g.id), ['g6mix']);
+  assert.deepEqual(puzzlesFor(5, 'Algebra').map(g => g.id), ['g6balance']);
+  assert.deepEqual(puzzlesFor(6).map(g => g.id), ['g7signs']);
+  assert.deepEqual(puzzlesFor(6, 'Multiplying and dividing').map(g => g.id), ['g7signs']);
+  assert.deepEqual(puzzlesFor(7).map(g => g.id), ['g8squares']);
+  assert.deepEqual(puzzlesFor(7, 'Shapes and space').map(g => g.id), ['g8squares']);
   assert.deepEqual(puzzlesFor(0, null, { l0pattern: true, l0shapes: true, l0pairs: true }), []);
 });
 

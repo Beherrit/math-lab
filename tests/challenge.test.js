@@ -66,6 +66,17 @@ test('grades 3, 4 and 5 each get the puzzle for that level', () => {
   }
 });
 
+test('grades 6, 7 and 8 each get a puzzle for that level', () => {
+  const expect = { 6: ['g6mix', 'g6balance'], 7: ['g7signs'], 8: ['g8squares'] };
+  for (const grade of ['6', '7', '8']) {
+    const set = buildChallenge(on('Ada', grade), '2026-11-21');
+    assert.equal(set.level, Number(grade) - 1);
+    const puzzle = set.items.find(it => it.kind === 'puzzle');
+    assert.ok(expect[grade].includes(puzzle.game));
+    assert.equal(SKILL[makeRound(puzzle.game, puzzle.seed).skill].level, set.level);
+  }
+});
+
 test('the set matches the grade: review can be earlier, stretch stays on the grade, and Grade 3 has its puzzle', () => {
   const S = on('Bo', '3');
   S.skills.l0count = { ...newSkillState(), mastered: true, n: 8, c: 8, L: 3, rev: { stage: 0, due: '2026-11-21', miss: 0 } };

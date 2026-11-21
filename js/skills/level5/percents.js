@@ -31,7 +31,10 @@ function easyPercent() {
 function percentOf(L) {
   const p = L === 2 ? pick([5, 15, 30, 35, 40, 45, 60, 65, 70, 75, 80, 90, 95]) : rnd(1, 99), n = L === 2 ? rnd(1, 20) * 20 : rnd(1, 9) * 100;
   if (L === 3 && p % 5 === 0) return percentOf(L);
-  return T({ ask: `What is ${b(p + '%')} of ${b(fmt(n))}?`, answer: num(p * n / 100), ways: [way('Build it from easy chunks', chunkSteps(p, n)), decWay(p, n)],
+  const bar = p % 5 === 0 ? pctBar(20, p / 5, '0', fmt(n)) : undefined;
+  return T({ ask: `What is ${b(p + '%')} of ${b(fmt(n))}?`, visual: bar, answer: num(p * n / 100),
+    why: `${p}% means ${p} out of every 100 of the number, not ${p} taken off it. A common slip is to subtract ${p}, or to treat ${p}% as the answer itself.`,
+    ways: [way('Build it from easy chunks', chunkSteps(p, n)), decWay(p, n)],
     hint: 'Start with 10% of the number (divide by 10), then build up.' }, 'pct', { p, n });
 }
 // [thing, cheapest, dearest] in whole dollars, so the price before the discount is believable.

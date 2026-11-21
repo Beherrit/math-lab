@@ -9,6 +9,10 @@ import { shapeMeta, makeCompose } from './compose.js';
 import { splitMeta, makeSplit } from './split.js';
 import { barsMeta, makeBars } from './bars.js';
 import { orderMeta, makeOrder } from './order.js';
+import { mixMeta, makeMix } from './mix.js';
+import { balanceMeta, makeBalance } from './balance.js';
+import { signsMeta, makeSigns } from './signs.js';
+import { squaresMeta, makeSquares } from './squares.js';
 
 const GAMES = [
   { ...patternMeta, make: makePattern },
@@ -20,6 +24,10 @@ const GAMES = [
   { ...splitMeta, make: makeSplit },
   { ...barsMeta, make: makeBars },
   { ...orderMeta, make: makeOrder },
+  { ...mixMeta, make: makeMix },
+  { ...balanceMeta, make: makeBalance },
+  { ...signsMeta, make: makeSigns },
+  { ...squaresMeta, make: makeSquares },
 ];
 
 export const gameList = () => GAMES.map(({ id, title, blurb, skill }) => ({ id, title, blurb, skill }));
