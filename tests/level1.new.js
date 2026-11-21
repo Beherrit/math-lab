@@ -26,6 +26,7 @@ export const CALC_NEW = {
   gval: t => t.vals[t.i], gsum: t => sum(t.idx.map(i => t.vals[i])), gdiff: t => t.vals[t.i] - t.vals[t.j], grange: t => Math.max(...t.vals) - Math.min(...t.vals), gext: t => uniqueExtreme(t, t.which),
   shapefact: t => FLAT_T[t.shape].sides, solidfact: t => SOLID_T[t.shape][t.prop], shapesum: t => sum(t.shapes.map(s => FLAT_T[s].sides)), shapediff: t => SOLID_T[t.a][t.prop] - SOLID_T[t.b][t.prop],
   name: t => t.shape, object: t => OBJECT_T[t.item], bigger: t => (SHARES[t.a] < SHARES[t.c] ? t.a : t.c),
+  pickrow: t => t.names[t.i],
 };
 export const LIMIT_NEW = { l1count: [100, 300, 1000], l1evenodd: [20, 100, 1000], l1mental: [100, 1000, 1000], l1equal: [20, 20, 100], l1addmany: [99, 200, 400],
   l1array: [25, 25, 25], l1shapes: [8, 8, 30], l1shares: [4, 4, 8], l1length: [20, 100, 100], l1graph: [30, 50, 200] };
