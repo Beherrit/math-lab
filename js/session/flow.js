@@ -25,8 +25,22 @@ const f = FX.makeFact(S, key, table);
 const p = f.a * f.c;
 return { ...f, ask: f.missing ? 'What’s the missing number?' : '', expr: f.missing ? `${f.a} × <span class="blank">?</span> = ${p}` : `${f.a} × ${f.c}`, answer: num(f.missing ? f.c : p), ways: FX.factWays(f.a, f.c, f.missing), hint: FX.strategy(f.a, f.c) };
 }
+function reviewQuestion(ph) {
+  if (ph.cursor >= ph.ids.length) return endPhase();
+  const id = ph.ids[ph.cursor++];
+  const step = speechCap(id, skillState(S, id).L, speechUsable(S));
+  const q = generate(id, step, sess.avoid) || makeFactProblem();
+  q.review = true;
+  q.quiet = true;
+  sess.avoid.add(q.key || q.expr);
+  Object.assign(sess, { q, tries: 0, assisted: false, preDone: !q.pre, answered: false, qStart: performance.now(), wrongChoices: new Set() });
+  sess.n++;
+  resetInp();
+  renderPlay();
+}
 export function nextQuestion() {
 const ph = sess.phases[sess.pi];
+if (ph?.type === 'review') return reviewQuestion(ph);
 if (sess.phaseDone && sess.mode !== 'free') return endPhase();
 let q;
 const now = today(); const place = sess.mode === 'place';

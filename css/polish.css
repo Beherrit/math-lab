@@ -77,6 +77,20 @@
   background: var(--grape-soft);
 }
 
+.puzzle-card .tile-open {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-height: 72px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
 .puzzle-art {
   display: flex;
   gap: 4px;

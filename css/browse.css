@@ -20,6 +20,26 @@
   box-shadow: var(--shadow);
 }
 
+.subject-tile .tile-open {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-height: 72px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.subject-tile.pic .tile-open {
+  align-items: center;
+  text-align: center;
+}
+
 .subject-tile b {
   font-family: var(--font-num);
   font-size: 22px;

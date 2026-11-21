@@ -3,6 +3,7 @@ import { S, save } from '../core/store.js';
 import * as FX from '../core/facts.js';
 import { recordSkill } from '../core/mastery.js';
 import { recordReview } from '../core/review.js';
+import { applyQuietReview } from '../core/home-review.js';
 import { today } from '../core/dates.js';
 import { dayLog } from '../core/daily.js';
 import { checkLevelUp } from '../core/progression.js';
@@ -14,6 +15,7 @@ import { check, answerHTML, pick } from '../util.js';
 import { I } from '../ui/icons.js';
 import { $, $$, esc } from '../ui/dom.js';
 import { becauseText } from '../core/say.js';
+import { explainHear } from '../ui/hear.js';
 import { sess } from './state.js';
 import { toast, confetti, fb, RIGHT } from './feedback.js';
 import { currentInput } from './input.js';
@@ -49,9 +51,18 @@ const q = sess.q; sess.answered = true; recordPlacement(false); chimeResult(S, f
 fb(`The answer is <b>${answerHTML(q.answer)}</b>. That one comes later.`, 'soft keep'); nextButton();
 }
 export function skipQuestion() { if (!sess || sess.answered) return; sess.answered = true; recordPlacement(false); advance(); }
+function quietRight(q, first) {
+  sess.answered = true; chimeResult(S, true);
+  if (q.review && q.skill) applyQuietReview(S, q.skill, first ? 'right' : 'half', today());
+  save(); markCorrect(q); sayResult('right', q);
+  fb(`${I.check} ${pick(RIGHT)}`, 'good');
+  nextButton();
+  if (!q.story) setTimeout(() => { if (sess?.q === q && !$('.sheet:not([hidden])')) advance(); }, aloudOn() ? 2400 : 1300);
+}
 function onRight(note) {
 const q = sess.q; const ms = performance.now() - sess.qStart;
 const first = sess.tries === 0 && !sess.assisted;
+if (q.quiet) return quietRight(q, first);
 sess.answered = true; sess.stats.q++; const dl = dayLog(S); dl.q++; chimeResult(S, true);
 if (first) { sess.stats.c++; sess.stats.stars++; S.stars++; dl.c++; }
 if (q.fact) {
@@ -89,13 +100,21 @@ $('.ans')?.classList.add('no'); sayResult('retry', q);
 fb(`Not quite. Try again!<br><span class="small">${I.bulb} ${q.hint}</span>`, 'bad');
 resetAttempt(q); renderInput(); return;
 }
-sess.answered = true; sess.stats.q++; dayLog(S).q++;
+sess.answered = true;
+if (q.quiet) {
+  if (q.review && q.skill) applyQuietReview(S, q.skill, 'wrong', today());
+  save(); sayResult('reveal', q);
+  const quietWhy = becauseText(q);
+  fb(`The answer is <b>${answerHTML(q.answer)}</b>.${quietWhy ? `<br><span class="small">Here is why: ${esc(quietWhy)}</span>${explainHear(quietWhy, 'Hear the reason')}` : ''}`, 'bad keep');
+  nextButton(); return;
+}
+sess.stats.q++; dayLog(S).q++;
 sayResult('reveal', q);
 levelNews(recordSkill(S, q.skill, 'wrong'), q.skill);
 if (q.review) recordReview(S.skills[q.skill], 'wrong', today());
 save();
 const why = becauseText(q);
-fb(`The answer is <b>${answerHTML(q.answer)}</b>.${why ? `<br><span class="small">Here is why: ${esc(why)}</span>` : ''}`, 'bad keep');
+fb(`The answer is <b>${answerHTML(q.answer)}</b>.${why ? `<br><span class="small">Here is why: ${esc(why)}</span>${explainHear(why, 'Hear the reason')}` : ''}`, 'bad keep');
 if (q.answer.kind === 'choice') $$('.choice')[q.answer.correct]?.classList.add('ok');
 if (q.answer.kind === 'point') drawPoint({ x: q.answer.x, y: q.answer.y }, 'ok');
 nextButton();

@@ -8,6 +8,8 @@ import { setSess, newSess } from './state.js';
 import { phaseIntro } from './intro.js';
 import { playPhase } from './flow.js';
 import { beginPlacement } from './placement-run.js';
+import { reviewQuestions } from '../core/home-review.js';
+import { today } from '../core/dates.js';
 export function startDaily() {
 const M = S.settings.minutes * 60000; const focus = getFocus(S); const sp = phaseSplit(S);
 if (focus) logFocus(S, focus); save();
@@ -27,3 +29,9 @@ if (type === 'sprint') { setSess(newSess('sprint', [{ type: 'facts', ms: 60000, 
 playPhase();
 }
 export function startPlacementCheck() { beginPlacement(); playPhase(); }
+export function startReviewRound() {
+  const ids = reviewQuestions(S, today());
+  if (!ids.length) return;
+  setSess(newSess('review', [{ type: 'review', ids, cursor: 0, ms: Infinity, label: 'Review' }]));
+  playPhase();
+}
