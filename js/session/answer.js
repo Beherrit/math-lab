@@ -15,6 +15,7 @@ import { check, answerHTML, pick } from '../util.js';
 import { I } from '../ui/icons.js';
 import { $, $$, esc } from '../ui/dom.js';
 import { becauseText } from '../core/say.js';
+import { explainHear } from '../ui/hear.js';
 import { sess } from './state.js';
 import { toast, confetti, fb, RIGHT } from './feedback.js';
 import { currentInput } from './input.js';
@@ -103,7 +104,8 @@ sess.answered = true;
 if (q.quiet) {
   if (q.review && q.skill) applyQuietReview(S, q.skill, 'wrong', today());
   save(); sayResult('reveal', q);
-  fb(`The answer is <b>${answerHTML(q.answer)}</b>.`, 'bad keep');
+  const quietWhy = becauseText(q);
+  fb(`The answer is <b>${answerHTML(q.answer)}</b>.${quietWhy ? `<br><span class="small">Here is why: ${esc(quietWhy)}</span>${explainHear(quietWhy, 'Hear the reason')}` : ''}`, 'bad keep');
   nextButton(); return;
 }
 sess.stats.q++; dayLog(S).q++;
@@ -112,7 +114,7 @@ levelNews(recordSkill(S, q.skill, 'wrong'), q.skill);
 if (q.review) recordReview(S.skills[q.skill], 'wrong', today());
 save();
 const why = becauseText(q);
-fb(`The answer is <b>${answerHTML(q.answer)}</b>.${why ? `<br><span class="small">Here is why: ${esc(why)}</span>` : ''}`, 'bad keep');
+fb(`The answer is <b>${answerHTML(q.answer)}</b>.${why ? `<br><span class="small">Here is why: ${esc(why)}</span>${explainHear(why, 'Hear the reason')}` : ''}`, 'bad keep');
 if (q.answer.kind === 'choice') $$('.choice')[q.answer.correct]?.classList.add('ok');
 if (q.answer.kind === 'point') drawPoint({ x: q.answer.x, y: q.answer.y }, 'ok');
 nextButton();

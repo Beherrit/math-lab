@@ -176,6 +176,7 @@ async function puzzleShots(page) {
   await page.locator('.why-card').waitFor();
   const gapWhy = await page.locator('.why-card p').innerText();
   if (!/empty box|pattern/i.test(gapWhy)) throw new Error(`gap explanation was: ${gapWhy}`);
+  await page.getByRole('button', { name: 'Hear the reason', exact: true }).waitFor();
   await page.locator('.why-card').evaluate(el => el.scrollIntoView({ block: 'center' }));
   await shot(page, 'phone-gap-why');
   await page.getByRole('button', { name: 'Back', exact: true }).click();
@@ -289,6 +290,10 @@ try {
   await page.getByRole('button', { name: 'Start', exact: true }).waitFor();
   await page.getByRole('heading', { name: 'Kindergarten', exact: true }).waitFor();
   await page.getByRole('button', { name: 'Hear it', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Hear Numbers', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Hear Puzzles', exact: true }).waitFor();
+  await page.locator('.subject-grid').evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-hear-tiles');
   for (const name of ['Numbers', 'Adding', 'Shapes', 'Colors', 'Letters', 'Puzzles']) {
     await page.getByRole('button', { name, exact: true }).waitFor();
   }

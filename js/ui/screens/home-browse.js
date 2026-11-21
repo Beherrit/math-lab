@@ -5,14 +5,18 @@ import { GRADES } from '../../core/learner.js';
 import { subjectsAt, puzzlesFor, activeGrade, bandName } from '../../core/browse.js';
 import { TONES } from '../../core/look.js';
 import { esc } from '../dom.js';
+import { explainHear } from '../hear.js';
 import { subjectArt } from '../subject-art.js';
 import { shapeSVG, FILLS } from '../../games/draw.js';
 
 function tiles(subjects) {
-  const pic = S.level === 0 ? ' pic' : '';
+  const early = S.level === 0;
   return subjects.map(s => {
-    const tone = S.level === 0 && TONES[s.name] ? ` tone-${TONES[s.name]}` : '';
-    return `<button class="subject-tile${pic}${tone}" data-go="subject" data-arg="${esc(s.name)}" aria-label="${esc(s.short)}"><span class="subject-art" aria-hidden="true">${subjectArt(s.name)}</span><b>${esc(s.short)}</b></button>`;
+    const tone = early && TONES[s.name] ? ` tone-${TONES[s.name]}` : '';
+    const art = `<span class="subject-art" aria-hidden="true">${subjectArt(s.name)}</span><b>${esc(s.short)}</b>`;
+    const open = `<button class="tile-open" data-go="subject" data-arg="${esc(s.name)}" aria-label="${esc(s.short)}">${art}</button>`;
+    const hear = early ? explainHear(s.short, `Hear ${s.short}`) : '';
+    return `<div class="subject-tile${early ? ' pic' : ''}${tone}">${open}${hear}</div>`;
   }).join('');
 }
 
@@ -26,8 +30,10 @@ function grades(current) {
 
 function puzzleTile() {
   const art = shapeSVG('circle', FILLS.yellow, 40) + shapeSVG('square', FILLS.grape, 40) + shapeSVG('triangle', FILLS.green, 40);
-  const big = S.level === 0 ? ' big' : '';
-  return `<button class="puzzle-card${big}" data-go="games" aria-label="Puzzles"><span class="puzzle-art" aria-hidden="true">${art}</span><span class="puzzle-copy"><b>Puzzles</b><span>Figure it out, then see why</span></span></button>`;
+  const face = `<span class="puzzle-art" aria-hidden="true">${art}</span><span class="puzzle-copy"><b>Puzzles</b><span>Figure it out, then see why</span></span>`;
+  if (S.level !== 0) return `<button class="puzzle-card" data-go="games" aria-label="Puzzles">${face}</button>`;
+  const open = `<button class="tile-open" data-go="games" aria-label="Puzzles">${face}</button>`;
+  return `<div class="puzzle-card big">${open}${explainHear('Puzzles. Figure it out, then see why.', 'Hear Puzzles')}</div>`;
 }
 
 export function browseBlocks() {
