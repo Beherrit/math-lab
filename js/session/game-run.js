@@ -25,7 +25,7 @@ export function beginGame(id) {
 
 function deal() {
   run.result = null;
-  run.round = makeRound(run.meta.id, `${run.meta.id}:${run.salt}:${run.n}`);
+  run.round = makeRound(run.meta.id, `${run.meta.id}:${run.salt}:${run.n}`, S.level);
   draw();
   say(run.round.say);
 }

@@ -17,6 +17,13 @@ import { crossMeta, makeCross } from './cross.js';
 import { cornerMeta, makeCorner } from './corner.js';
 import { growthMeta, makeGrowth } from './growth.js';
 import { secantMeta, makeSecant } from './secant.js';
+import { magicMeta, makeMagic } from './magic.js';
+import { cageMeta, makeCage } from './cage.js';
+import { gapMeta, makeGap } from './gap.js';
+import { guessMeta, makeGuess } from './guess.js';
+import { buildMeta, makeBuild } from './build.js';
+import { riddleMeta, makeRiddle } from './riddle.js';
+import { matchMeta, makeMatch } from './match.js';
 
 const GAMES = [
   { ...patternMeta, make: makePattern },
@@ -36,15 +43,23 @@ const GAMES = [
   { ...cornerMeta, make: makeCorner },
   { ...growthMeta, make: makeGrowth },
   { ...secantMeta, make: makeSecant },
+  { ...magicMeta, make: makeMagic },
+  { ...cageMeta, make: makeCage },
+  { ...gapMeta, make: makeGap },
+  { ...guessMeta, make: makeGuess },
+  { ...buildMeta, make: makeBuild },
+  { ...riddleMeta, make: makeRiddle },
+  { ...matchMeta, make: makeMatch },
 ];
 
-export const gameList = () => GAMES.map(({ id, title, blurb, skill }) => ({ id, title, blurb, skill }));
+export const gameList = () => GAMES.map(({ id, title, blurb, skill, levels }) => ({ id, title, blurb, skill, levels }));
 export const gameMeta = id => gameList().find(g => g.id === id) || null;
 
-export function makeRound(id, seed) {
+export function makeRound(id, seed, level) {
   const g = GAMES.find(x => x.id === id);
   if (!g) return null;
-  const round = g.make(rngFrom(seed));
+  const lv = level == null ? (g.levels ? g.levels[0] : undefined) : level;
+  const round = g.make(rngFrom(seed), lv);
   round.game = id;
   round.skill = g.skill;
   return round;

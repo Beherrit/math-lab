@@ -26,7 +26,7 @@ function openItem(index) {
   const item = S.challenge.today.items[index];
   if (!item) { run = null; renderChallenge(); return; }
   if (item.kind === 'puzzle') {
-    run = { index, item, round: makeRound(item.game, item.seed), answered: null };
+    run = { index, item, round: makeRound(item.game, item.seed, S.challenge.today.level), answered: null };
     draw(); say(run.round.say); return;
   }
   const problem = seededProblem(S, item);

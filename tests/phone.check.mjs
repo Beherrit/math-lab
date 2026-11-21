@@ -118,6 +118,95 @@ async function foundationShots(page) {
   await page.locator('.pbar .btn', { hasText: 'Finish' }).click();
   await page.getByRole('button', { name: 'Back home', exact: true }).click();
 }
+async function playPuzzle(page, name, file, whyRe) {
+  const card = page.getByRole('button', { name: new RegExp(name) }).first();
+  await card.scrollIntoViewIfNeeded();
+  await card.click();
+  await page.getByRole('heading', { name: name, exact: true }).waitFor();
+  await page.locator('.gq').evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, file);
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const why = await page.locator('.why-card p').innerText();
+  if (!whyRe.test(why)) throw new Error(`${name} explanation was: ${why}`);
+  await page.locator('.why-card').evaluate(el => el.scrollIntoView({ block: 'center' }));
+  await shot(page, `${file}-why`);
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('heading', { name: 'Puzzles', exact: true }).waitFor();
+}
+async function estimateShots(page) {
+  const seen = { jar: false, line: false };
+  for (let n = 0; n < 8 && !(seen.jar && seen.line); n++) {
+    const ask = await page.locator('.ask').innerText();
+    const kind = /line/i.test(ask) ? 'line' : 'jar';
+    if (!seen[kind]) {
+      await page.locator('.gq').evaluate(el => el.scrollIntoView({ block: 'start' }));
+      await shot(page, kind === 'line' ? 'phone-estimate-line' : 'phone-estimate');
+      seen[kind] = true;
+    }
+    await page.locator('.game-choice').first().click();
+    await page.locator('.why-card').waitFor();
+    const why = await page.locator('.why-card p').innerText();
+    if (!/clos/i.test(why)) throw new Error(`estimate explanation was: ${why}`);
+    if (n === 0) {
+      await page.locator('.why-card').evaluate(el => el.scrollIntoView({ block: 'center' }));
+      await shot(page, 'phone-estimate-why');
+    }
+    if (seen.jar && seen.line) break;
+    await page.getByRole('button', { name: 'Next puzzle', exact: true }).click();
+    await page.locator('.game-choice:not([disabled])').first().waitFor();
+  }
+  if (!seen.jar || !seen.line) throw new Error('estimate did not show the jar and the number line');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('heading', { name: 'Puzzles', exact: true }).waitFor();
+}
+async function puzzleShots(page) {
+  await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
+  await page.getByRole('heading', { name: 'Kindergarten', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Shapes', exact: true }).click();
+  await page.getByRole('heading', { name: 'Shapes', exact: true, level: 1 }).waitFor();
+  const puzzles = page.getByRole('heading', { name: 'Puzzles', exact: true });
+  await puzzles.evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-subject-puzzles');
+  await page.getByRole('button', { name: 'Find the gap', exact: true }).click();
+  await page.getByRole('heading', { name: 'Find the gap', exact: true }).waitFor();
+  await page.locator('.gq').evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await shot(page, 'phone-gap');
+  await page.locator('.game-choice').first().click();
+  await page.locator('.why-card').waitFor();
+  const gapWhy = await page.locator('.why-card p').innerText();
+  if (!/empty box|pattern/i.test(gapWhy)) throw new Error(`gap explanation was: ${gapWhy}`);
+  await page.locator('.why-card').evaluate(el => el.scrollIntoView({ block: 'center' }));
+  await shot(page, 'phone-gap-why');
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('heading', { name: 'Puzzles', exact: true }).waitFor();
+
+  await playPuzzle(page, 'Magic square', 'phone-magic', /sum/i);
+  await playPuzzle(page, 'Build the shape', 'phone-build', /piece/i);
+  await page.getByRole('button', { name: 'Back', exact: true }).click();
+
+  const more = [
+    ['Grade 4', 'Number cages', 'phone-cages', /cage/i],
+    ['Grade 4', 'Best estimate', 'phone-estimate', /clos/i],
+    ['Grade 6', 'Number riddle', 'phone-riddle', /clue/i],
+    ['Grade 8', 'Match the line', 'phone-match', /slope/i],
+  ];
+  for (const [grade, name, file, whyRe] of more) {
+    await page.getByRole('button', { name: grade, exact: true }).click();
+    await page.getByRole('heading', { name: grade, exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Puzzles', exact: true }).click();
+    await page.getByRole('heading', { name: 'Puzzles', exact: true }).waitFor();
+    if (name === 'Best estimate') {
+      const card = page.getByRole('button', { name: /Best estimate/ }).first();
+      await card.scrollIntoViewIfNeeded();
+      await card.click();
+      await page.getByRole('heading', { name: 'Best estimate', exact: true }).waitFor();
+      await estimateShots(page);
+    } else await playPuzzle(page, name, file, whyRe);
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    await page.getByRole('heading', { name: grade, exact: true }).waitFor();
+  }
+}
 
 const server = serve();
 let browser;
@@ -516,6 +605,7 @@ try {
   await methodShot(page, 'Grade 9', 'Algebra', 'The AC method', 'phone-ac');
   await methodShot(page, 'Grade 9', 'Algebra', 'Difference of squares', 'phone-diff');
   await foundationShots(page);
+  await puzzleShots(page);
 
   await page.getByRole('button', { name: 'Kindergarten', exact: true }).click();
 
