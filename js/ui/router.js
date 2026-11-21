@@ -6,12 +6,15 @@ import { renderLab, renderTable } from './screens/lab.js';
 import { renderBadges, renderPickFocus } from './screens/lists.js';
 import { renderSkill } from './screens/skill.js';
 import { renderParent } from './screens/parent.js';
+import { renderGames } from './screens/games.js';
+import { beginGame } from '../session/game-run.js';
 let view = 'home', viewArg = null;
 export const currentView = () => ({ view, arg: viewArg });
 export function go(v, arg = null) { view = v; viewArg = arg; render(); window.scrollTo(0, 0); }
 const SCREENS = {
 home: renderHome, lab: renderLab, table: a => renderTable(a), skill: a => renderSkill(a),
 parent: renderParent, pick: renderPickFocus, badges: renderBadges, place: renderPlaceIntro,
+games: renderGames, game: id => beginGame(id),
 };
 export function render() {
 if (!S) return renderWelcome();

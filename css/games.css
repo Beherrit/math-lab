@@ -1,0 +1,106 @@
+/* Puzzle screens. Choices stay large enough for a thumb. */
+.game-art {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+
+.game-list {
+  display: grid;
+  gap: 12px;
+}
+
+.game-card {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  width: 100%;
+  min-height: 92px;
+  padding: 16px;
+  border-radius: var(--r-lg);
+  border: 2px solid var(--line);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.game-title {
+  font-family: var(--font-num);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.game-blurb {
+  color: var(--ink-2);
+}
+
+.game-link {
+  color: var(--grape);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.game-play .ask {
+  font-size: clamp(24px, 7vw, 32px);
+  text-align: center;
+  margin: 0 0 8px;
+}
+
+.gvisual {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  margin: 8px 0 4px;
+}
+
+.game-choices {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.game-choice {
+  min-height: 104px;
+  display: grid;
+  place-items: center;
+}
+
+.game-choice .gnum {
+  font-family: var(--font-num);
+  font-size: 44px;
+  font-weight: 800;
+}
+
+.why-card {
+  margin-top: 14px;
+}
+
+.why-card h2 {
+  margin-bottom: 6px;
+}
+
+.why-card.yes {
+  border-color: var(--good);
+  background: var(--good-hi);
+}
+
+.why-card.no {
+  border-color: var(--bad);
+}
+
+.why-card .btn {
+  margin-top: 8px;
+}
+
+.game-play .pad {
+  margin-top: 16px;
+}
+
+@media (min-width: 800px) {
+  .game-list {
+    grid-template-columns: 1fr 1fr;
+  }
+  .game-list .game-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}

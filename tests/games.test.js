@@ -1,0 +1,50 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { gameList, makeRound, checkRound } from '../js/games/catalog.js';
+
+const IDS = ['kpattern', 'kfit', 'kten'];
+
+function truth(round) {
+  const f = round.facts;
+  if (round.game === 'kpattern') return f.unit[f.shown % f.unit.length];
+  if (round.game === 'kfit') return f.pieces.find(p => p.count === f.spaces).id;
+  return String(10 - f.filled);
+}
+
+test('three Kindergarten puzzles, each tied to a lesson', () => {
+  const list = gameList();
+  assert.deepEqual(list.map(g => g.id), IDS);
+  for (const g of list) assert.ok(g.title && g.blurb && g.skill);
+});
+
+for (const id of IDS) {
+  test(`${id} is solvable, stable, and checked against the picture`, () => {
+    const seeds = Array.from({ length: 40 }, (_, i) => `${id}-seed-${i}`);
+    for (const seed of seeds) {
+      const a = makeRound(id, seed);
+      const b = makeRound(id, seed);
+      assert.equal(a.answer, b.answer);
+      assert.deepEqual(a.facts, b.facts);
+      assert.ok(a.prompt && a.say && a.visual && a.why.length > 20);
+      assert.ok(a.choices.length >= 2 && a.choices.length <= 4);
+      assert.equal(new Set(a.choices.map(c => c.id)).size, a.choices.length);
+      const right = truth(a);
+      assert.equal(a.answer, right, `answer does not match the picture for ${id}`);
+      assert.ok(a.choices.some(c => c.id === right));
+      assert.equal(checkRound(a, right).ok, true);
+      const wrong = a.choices.find(c => c.id !== right);
+      assert.equal(checkRound(a, wrong.id).ok, false);
+      assert.match(checkRound(a, wrong.id).why, /\w/);
+      assert.equal(checkRound(a, 'not-a-choice').known, false);
+      assert.equal(checkRound(a, 'not-a-choice').ok, false);
+    }
+  });
+}
+
+test('make ten really makes ten', () => {
+  for (let i = 0; i < 20; i++) {
+    const round = makeRound('kten', i + 3);
+    assert.equal(round.facts.filled + round.facts.need, 10);
+    assert.ok(round.facts.filled >= 1 && round.facts.filled <= 9);
+  }
+});

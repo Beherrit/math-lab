@@ -30,3 +30,8 @@ return 'Not yet.';
 }
 // Read aloud is a saved setting; with no choice made it is on for a learner at Early Start and off for everyone else.
 export const readAloudOn = S => (typeof S?.settings?.speak === 'boolean' ? S.settings.speak : S?.level === MIN_LEVEL);
+// The one-line reason a problem is true: a skill can set `why`, otherwise the last step of the first worked way.
+export function becauseText(q) {
+  const raw = q?.why || q?.ways?.[0]?.s?.at?.(-1) || '';
+  return stripHtml(raw);
+}

@@ -3,6 +3,7 @@ import { S, setState, save, clearSaved, exportJSON, parseBackup } from '../core/
 import { today } from '../core/dates.js';
 import { checkLevelUp } from '../core/progression.js';
 import { levelName, levelFull } from '../levels.js';
+import { setGrade } from '../core/learner.js';
 import { stop as stopSpeech } from '../core/speech.js';
 import { render } from './router.js';
 import { renderParent, parentState } from './screens/parent.js';
@@ -36,7 +37,8 @@ minutes: el => { S.settings.minutes = +el.value; },
 focus: el => { S.settings.focus = el.value; },
 gradual: el => { S.settings.gradual = el.checked; },
 speak: el => { S.settings.speak = el.checked; if (!el.checked) stopSpeech(); },
-rename: el => { S.name = el.value.trim() || S.name; },
+rename: el => { S.name = el.value.trim().slice(0, 20); },
+grade: el => { setGrade(S, el.value); },
 };
 export function onChange(e) {
 const el = e.target; const a = el.dataset.act; if (!a) return;

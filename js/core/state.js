@@ -3,6 +3,7 @@ import { START } from './facts.js';
 import { clampLevel, MIN_LEVEL, MAX_LEVEL } from '../levels.js';
 import { addDays } from './dates.js';
 import { INTERVALS } from './review.js';
+import { gradeById } from './learner.js';
 export const STATE_VERSION = 3;
 export const KEY_V1 = 'mathlab.v1';
 export const KEY_V2 = 'mathlab.v2';
@@ -19,6 +20,7 @@ s.settings ||= {}; s.settings.minutes ??= 10; s.settings.gradual ??= true; s.set
 s.facts ||= {}; s.unlocked ||= [...START]; s.skills ||= {}; s.days ||= {}; s.stars ||= 0;
 s.streak ||= { n: 0, last: null }; s.badges ||= []; s.focusLog ||= []; s.counters ||= { story: 0, sprintBest: 0 };
 s.learned = s.learned && typeof s.learned === 'object' ? s.learned : {};
+s.grade = gradeById(s.grade) ? s.grade : null;
 for (const sk of Object.values(s.skills)) fillReview(sk, s.created);
 s.level = clampLevel(s.level); s.placed = !!s.placed;
 s.early = s.early === true || s.level === MIN_LEVEL; // started at, or was set to, Early Start

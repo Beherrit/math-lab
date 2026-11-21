@@ -7,6 +7,7 @@ import { levelProgress, unlockedLevel } from '../../core/progression.js';
 import { dueCount } from '../../core/review.js';
 import { SKILLS, skillsOf } from '../../skills/registry.js';
 import { LEVELS, levelName, levelFull } from '../../levels.js';
+import { GRADES } from '../../core/learner.js';
 import { available } from '../../core/speech.js';
 import { readAloudOn } from '../../core/say.js';
 import { fmt } from '../../util.js';
@@ -61,7 +62,8 @@ return `<section class="block settings"><h2>Settings</h2>
 <label class="set"><span>Daily focus skill</span><select data-act="focus"><option value="auto">Automatic (recommended)</option>${SKILLS.map(s => `<option value="${s.id}" ${S.settings.focus === s.id ? 'selected' : ''}>${levelName(s.level)}: ${s.title}</option>`).join('')}</select></label>
 <label class="set"><span>Unlock times tables gradually</span><span class="switch"><input type="checkbox" data-act="gradual" ${S.settings.gradual ? 'checked' : ''}><span></span></span></label>
 <label class="set"><span>Read questions aloud</span>${available() ? `<span class="switch"><input type="checkbox" data-act="speak" ${readAloudOn(S) ? 'checked' : ''}><span></span></span>` : '<span class="small muted">Not available on this device</span>'}</label>
-<label class="set"><span>Name</span><input data-act="rename" value="${esc(S.name)}" maxlength="20"></label>
+<label class="set"><span>Name</span><input data-act="rename" value="${esc(S.name)}" maxlength="20" placeholder="Name"></label>
+<label class="set"><span>Grade</span><select data-act="grade"><option value="" ${S.grade ? '' : 'selected'}>Not set</option>${GRADES.map(g => `<option value="${g.id}" ${S.grade === g.id ? 'selected' : ''}>${g.label}</option>`).join('')}</select></label>
 <div class="set"><span>Backup</span><span class="row-btns"><button class="btn sm" data-act="export">Download backup</button><label class="btn sm">Restore<input type="file" accept="application/json" data-act="import" hidden></label></span></div>
 <p class="small muted">Progress lives in this phone’s browser. Add the app to the home screen so it stays put, and download a backup now and then.</p>
 <button class="btn danger sm" data-act="reset">Erase all progress</button>

@@ -30,7 +30,9 @@ if (r.solved) {
 sess.answered = true; markCorrect(t.p); sayResult('right', t.p);
 fb('Yes, that is it.', 'good'); $('.pad').innerHTML = continueBar(lesson);
 } else {
-sayResult('retry', t.p); resetAttempt(t.p); fb('Not yet. Have another go, or open the next step.', 'soft'); renderInput();
+if (t.tries >= 2 && t.shown === 0) showStep(t);
+sayResult('retry', t.p); resetAttempt(t.p);
+fb(`Not yet. ${t.p.hint}`, 'soft'); renderInput();
 }
 paintHelp();
 }

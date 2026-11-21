@@ -7,11 +7,13 @@ import { solidCount } from '../../core/facts.js';
 import { enabledIn } from '../../core/progression.js';
 import { BADGES } from '../../core/badges.js';
 import { SKILL } from '../../skills/registry.js';
+import { helloName } from '../../core/learner.js';
+import { readAloudOn } from '../../core/say.js';
 import { fmt } from '../../util.js';
 import { I } from '../icons.js';
 import { mount, esc } from '../dom.js';
 import { sticker } from '../fragments.js';
-import { weekStrip, miniGrid, skillRow, levelBar, emptyLevelNote } from './home-parts.js';
+import { weekStrip, miniGrid, skillRow, levelBar, emptyLevelNote, puzzlesCard } from './home-parts.js';
 import { strandList } from './strand-list.js';
 function todayCard(focus) {
 const done = S.days[today()]?.done; const mins = S.settings.minutes; const sp = phaseSplit(S);
@@ -34,15 +36,19 @@ const timesCard = solid => `<section class="block">
 export function renderHome() {
 const focus = getFocus(S); const solid = solidCount(S);
 const skills = enabledIn(S, S.level);
+const who = helloName(S);
+const hear = readAloudOn(S) ? '<button class="btn sm hear-btn" data-act="hearhome">Hear it</button>' : '';
 mount(`<div class="page home">
 <header class="hello">
-<div><p class="date">${longDate()}</p><h1>Hi, ${esc(S.name)}!</h1></div>
+<div><p class="date">${longDate()}</p><h1>${who ? `Hi, ${esc(who)}!` : 'Hi!'}</h1>${hear}</div>
 <div class="chips"><span class="chip flame" title="Day streak">${I.flame}<b>${streakNow(S)}</b></span><span class="chip starc" title="Stars">${I.star}<b>${fmt(S.stars)}</b></span></div>
 </header>
 <section class="today paper-card">
 ${weekStrip()}
 ${todayCard(focus)}
 </section>
+${S.level === 0 ? '<p class="lead-in">Tap Start to practice, or Puzzles to play.</p>' : ''}
+${puzzlesCard()}
 ${S.level === 0 ? '' : timesCard(solid)}
 <section class="block">
 ${levelBar()}
